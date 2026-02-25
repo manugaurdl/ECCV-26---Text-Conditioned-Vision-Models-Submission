@@ -1,4 +1,30 @@
 \section{Methodology}
+
+% method text-conditioned visual
+    % architecture modifications
+    % datasets + training signals
+    % inference-time text conditioning (jona)
+% experiments (hypothesis validating) ## arxiv - before method
+    % conditional retrieval kNN
+        % baseline: late fusion
+    % without losing classification
+        % pareto explain
+    % attention does steer to text descriptions (results by segmentation)
+% analysis / applications
+    % personalized: how to condition (PODS)
+    % anomaly detection
+    % where are my keys (?)
+    % (???) hallucination detection, negation 
+    % (???) VQA
+% ablations / features of our approach -- justifying choices of method (a subset of task)
+    % architecture (sigmoid gating, FFN block, CA blocks)
+    % backbones (MAE, SigLIP) (?)
+    % scale the model (ViT-L)
+    % losses (?)
+    % resolution (?)
+    % token length [optional!]
+% conclusion
+
 \label{sec:method}
 
 SHIFT injects text conditioning into a frozen Vision Transformer through sparse, gated cross-attention layers that steer visual features without degrading them.
