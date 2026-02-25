@@ -1,9 +1,9 @@
 \section{Methodology}
 \label{sec:method}
 
-SteerViT injects text conditioning into a frozen Vision Transformer through sparse, gated cross-attention layers that steer visual features without degrading them.
+SHIFT injects text conditioning into a frozen Vision Transformer through sparse, gated cross-attention layers that steer visual features without degrading them.
 As illustrated in Figure~\ref{fig:arch}, our architecture consists of three components: (1) a frozen RoBERTa-Large text encoder that produces token-level embeddings from the input prompt, (2) a lightweight multimodal adapter that projects these text embeddings into the visual embedding space, and (3) tanh-gated cross-attention layers interleaved within a frozen ViT that progressively fuse textual cues into the visual representation.
-Given an image and a text prompt, SteerViT produces text-contextualized patch-level visual features that remain in the base ViT's embedding space.
+Given an image and a text prompt, SHIFT produces text-contextualized patch-level visual features that remain in the base ViT's embedding space.
 We train the model on a diverse mixture of referential segmentation datasets (Section~\ref{sec:data}) using a binary segmentation objective at the ViT patch level (Section~\ref{sec:objective}).
 The segmentation head serves solely as a training signal and is discarded at inference; the output of interest is the steered visual representation itself.
 
@@ -44,7 +44,7 @@ The final transformer block always remains unmodified, ensuring that the output 
 \subsection{Training Objective}
 \label{sec:objective}
 
-We train SteerViT on binary referential segmentation at the ViT's patch resolution rather than at the pixel level.
+We train SHIFT on binary referential segmentation at the ViT's patch resolution rather than at the pixel level.
 Given an image $X_v$ and a referential expression $X_t$ describing a single target object, the model predicts which patches overlap the referred object.
 
 The ViT partitions the image into an $n \times n$ grid of non-overlapping patches.

@@ -1,23 +1,8 @@
 
 \begin{abstract}
-General purpose visual encoders have a \textit{saliency} bias, where they effectively encode the image 
-% through salient visual concepts
-through the loudest visual concepts in the scene.
-To address this, we introduce SteerViT, a method that equips any Vision Transformer with the ability to steer 
-% the semantics of
-its features with text. 
-Our approach dynamically routes attention to task-relevant 
-% visual concepts 
-objects,
-achieving a Pareto improvement in text steerability while preserving the visual representation quality.
-% (unlike SAM3/GroundingDino??).
-Through extensive experiments, we show that SteerViT can guide the semantics of its visual features with  text.
-It consistently outperforms query-agnostic ViT baselines across model families (DinoV2, SigLIP, MAE) on fine-grained dense prediction and retrieval tasks, exhibiting strong generalization to out-of-distribution domains.
-
-
-    
-
-
-  
-  \keywords{Visual Representation \and Semantic Steering \and Text-Conditioning  }
+Pretrained Vision Transformers exhibit a \textit{saliency bias}: their features collapse toward the most prominent objects in a scene, ignoring task-relevant details.
+Existing approaches either produce rich but unsteerable representations (e.g., DINOv2) or achieve text-guided attention at the cost of degraded feature quality (e.g., SAM2, GroundingDINO).
+We introduce SHIFT, a method that inserts sparse, tanh-gated cross-attention layers into any frozen ViT trained on referential segmentation, steering both global and dense visual features with natural language while preserving the quality of the underlying representation.
+SHIFT achieves a Pareto improvement over prior work: across three ViT families (DINOv2, SigLIP, MAE), it consistently outperforms query-agnostic baselines on conditional retrieval, dense prediction, and personalized object discrimination, and generalizes zero-shot to out-of-distribution domains, reaching 64.2 AuPRO on MVTec anomaly detection (vs.\ 34.0 for CLIPSeg and 48.2 for SAM2).
+  \keywords{Visual Representation \and Semantic Steering \and Text-Conditioning}
 \end{abstract}
