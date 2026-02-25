@@ -10,8 +10,8 @@ We benchmark our proposed text-conditioned vision encoder against a number of ex
 For \textbf{late-fusion dual-encoders} (e.g., CLIP~\cite{radford2021_clip}, SigLIP~\cite{zhai2023_siglip}), images and prompts are embedded independently using their respective encoders, limiting multimodal interaction to a simple post-hoc fusion, where the resulting global or dense image embeddings are combined with the text representations via element-wise addition. 
 Similarly to our considered unimodal baselines, global feature aggregation is conducted as intended by the base method (e.g., CLS or mean pooling). 
 Text-conditioned representations are obtained from \textbf{open-vocabulary grounding and segmentation methods} via the modality-fused encoder states, ignoring decoder components responsible for generating bounding boxes or segmentation mask. 
-Specifically, with SAM-3 \cite{}, we take the patch-level outputs of the \textit{Fusion Encoder} and apply mean-pooling to get image-level features. 
-Similarly, we use the outputs of the cross-modal \textit{Feature Enhancer} layer of GroundingDINO~\cite{}. However, as features are available across multiple spatial scales, we first interpolate them to a common intermediate feature scale before being averaged to get dense pseudo-patch-level features. 
+Specifically, with SAM2~\cite{ravi2024sam2}, we take the patch-level outputs of the \textit{Fusion Encoder} and apply mean-pooling to get image-level features. 
+Similarly, we use the outputs of the cross-modal \textit{Feature Enhancer} layer of GroundingDINO~\cite{liu2023groundingdino}. However, as features are available across multiple spatial scales, we first interpolate them to a common intermediate feature scale before being averaged to get dense pseudo-patch-level features. 
 We extract dense text-conditioned vision representations from \textbf{MLLMs} by concatenating the user prompt $t$ and image $I$ into a multimodal input sequence and selecting the last hidden states at image-token positions. 
 For global features, we adapt the last-token pooling approach of E5-V~\cite{Jiang2024E5VUE} and append a postfix instructing the model to summarize the image contents in one word while focusing on the aspect specified by $t$.
 \todo{ensure consistency with Methodology Section}
@@ -122,8 +122,8 @@ As illustrated in Figure 1, existing base models typically fall into two extreme
 \textbf{Low Steerability, High Quality}: Standard vision encoders like DINO and SigLIP provide rich visual features but lack text-steerability.
 In contrast, our approach bridges this gap, achieving both robust visual task performance and high steerability
 \subsubsection{Controlling the Tradeoff with a Knob}.
-We contextualize text information within the visual features using cross-attention blocks that are sigmoid gated.
-Because these gated blocks are zero-initialized, our model is mathematically identical to DINO at initialization (gate factor = 0.0). Through training the model learns to incorporate text features to steer its visual representation. \textcolor{red}{(refer ablation that shows sigmoid gating is crucial arch choice)?}
+We contextualize text information within the visual features using cross-attention blocks that are tanh-gated (Eq.~\ref{eq:gated_ca}).
+Because these gated blocks are zero-initialized, our model is mathematically identical to DINO at initialization (gate factor = 0.0). Through training the model learns to incorporate text features to steer its visual representation.
 Interestingly, the gate can act as a continuous control "knob," allowing us to explicitly manage the tradeoff between feature quality and steerability.
 By scaling the gate magnitude, we can smoothly nudge the representations between their original DINO subspace and a text-conditioned state.
 Plotting this trajectory (the green curve in Figure 1) reveals a clear Pareto frontier. 
@@ -154,7 +154,7 @@ early fusion vs late fusion: alignment(cos\_sim), query-aware visual representat
       % \caption{DinoV2 Attention Maps}
       % \label{fig:dinov2-attn}
   \end{subfigure}
-  \caption{\textbf{Left:} Cosine Similarity between DINO and our method's <CLS> token across transformer layers for different scalings of the sigmoid gate. \textbf{Right:} Effect of scaling the sigmoid gate in our model (at 0 its identical to DINO) on Mosaic benchmark performance.}
+  \caption{\textbf{Left:} Cosine Similarity between DINO and our method's \texttt{[CLS]} token across transformer layers for different scalings of the tanh gate. \textbf{Right:} Effect of scaling the tanh gate in our model (at 0 it is identical to DINO) on Mosaic benchmark performance.}
   \label{fig:token-length}
 \end{figure}
 

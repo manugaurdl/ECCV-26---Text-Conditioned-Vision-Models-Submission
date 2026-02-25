@@ -1,0 +1,5 @@
+.DS_Store/
+context/
+%OUTDIR%/
+main.pdf
+main.synctex.gz

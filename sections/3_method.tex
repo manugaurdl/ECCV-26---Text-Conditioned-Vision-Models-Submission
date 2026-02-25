@@ -1,70 +1,75 @@
 \section{Methodology}
+\label{sec:method}
 
-% method text-conditioned visual
-    % architecture modifications
-    % datasets + training signals
-    % inference-time text conditioning (jona)
-% experiments (hypothesis validating) ## arxiv - before method
-    % conditional retrieval kNN
-        % baseline: late fusion
-    % without losing classification
-        % pareto explain
-    % attention does steer to text descriptions (results by segmentation)
-% analysis / applications
-    % personalized: how to condition (PODS)
-    % anomaly detection
-    % where are my keys (?)
-    % (???) hallucination detection, negation 
-    % (???) VQA
-% ablations / features of our approach -- justifying choices of method (a subset of task)
-    % architecture (sigmoid gating, FFN block, CA blocks)
-    % backbones (MAE, SigLIP) (?)
-    % scale the model (ViT-L)
-    % losses (?)
-    % resolution (?)
-    % token length [optional!]
-% conclusion
+SteerViT injects text conditioning into a frozen Vision Transformer through sparse, gated cross-attention layers that steer visual features without degrading them.
+As illustrated in Figure~\ref{fig:arch}, our architecture consists of three components: (1) a frozen RoBERTa-Large text encoder that produces token-level embeddings from the input prompt, (2) a lightweight multimodal adapter that projects these text embeddings into the visual embedding space, and (3) tanh-gated cross-attention layers interleaved within a frozen ViT that progressively fuse textual cues into the visual representation.
+Given an image and a text prompt, SteerViT produces text-contextualized patch-level visual features that remain in the base ViT's embedding space.
+We train the model on a diverse mixture of referential segmentation datasets (Section~\ref{sec:data}) using a binary segmentation objective at the ViT patch level (Section~\ref{sec:objective}).
+The segmentation head serves solely as a training signal and is discarded at inference; the output of interest is the steered visual representation itself.
 
-% This section describes SteerViT: a visual language model/text guided visual encoder that accepts text and image as input and outputs a latent representation. The key architectural components shown in Figure~\ref{fig:arch} are chosen to leverage pretrained vision and language encoders and bridge them effectively. First, the RoBERTa receives the text input and outputs a variable length text tokens. Second, these text tokens are used to condition the frozen visual encoder using cross-attention layers (Section 2.2) that are interleaved between the pretrained ViT layers. These new layers offer an expressive way for the visual encoder to gradually incorporate text information with its visual features. SteerViT is trained with a linear head to binary segment the object described by text at the ViT feature level. The model is trained on a diverse mixture of datasets as described in Section 2.4.
-
-% \subsubsection{Architecture}
-
-% \textbf{Visual Encoder}: Our method constrains the visual representation within the same embedding space as the frozen Vision Transformer (ViT). For an input image Xv, we turn the frozen ViT to produce rich, text contextualized visual features Zv with GATED XATTN-DENSE layers.
-
-% \textbf{Text Encoder}: For an input text Xt, we adopt a pretrained and frozen RoBERTa-Large as our text encoder. We extract the variable length output embeddings tokens Zt, normalize them, project them into the visual encoder’s embedding space using our multimodal adapter.
-
-% \textbf{Multimodal Adapter}: We use a trainable two layer MLP to convert Zt into image embedding tokens Ht. We add trainable positional embeddings to Ht, and incorporate the text information into the ViT’s residual stream using GATED XATTN-DENSE layers.
-
-% \textbf{Text Conditioning Visual Features}: We adopt Flamingo’s GATED XATTN-DENSE layers to incorporate text information into the ViT’s residual stream. Similar to Flamingo, we initialize the cross-attention and FFN blocks with zero-initialized tanh gating. Hence, the frozen ViT is kept intact at initialization, and the model learns to incorporate text information as training progresses.
-
-This section introduces SteerViT, a text-guided visual encoder designed to map paired image and text inputs into a unified latent representation. As illustrated in Figure~\ref{fig:arch}, our architecture integrates frozen, pretrained vision and language models through learned routing mechanisms. Specifically, a RoBERTa model processes the input prompt to extract a variable-length sequence of text tokens. These textual representations subsequently condition a frozen Vision Transformer (ViT) via cross-attention modules (detailed in Section 2.2) interleaved among the standard ViT layers. This integration mechanism enables the visual encoder to progressively fuse semantic text cues with spatial visual features. To optimize the network, we apply a linear classification head over the modulated ViT features to perform binary segmentation of the text-specified object. The model is trained on a diverse mixture of datasets, as detailed in Section 2.4.
 \subsection{Architecture}
+\label{sec:arch}
 
-\textbf{Visual Encoder}: Our approach maintains the visual representations within the native embedding space of the frozen Vision Transformer (ViT). Given an input image $X_v$, we modulate the frozen ViT to yield text-contextualized visual features $Z_v$ by injecting dense, gated cross-attention layers.
+\textbf{Visual Encoder.}
+We use a frozen DINOv2 ViT-B/14~\cite{oquab2024dinov2} as our visual backbone.
+For an input image $X_v \in \mathbb{R}^{H \times W \times 3}$, the ViT produces a sequence of $N$ patch tokens $Z_v \in \mathbb{R}^{N \times d}$ along with a \texttt{[CLS]} token, where $d$ is the embedding dimension.
+All original ViT parameters remain frozen throughout training; new capacity enters exclusively through the interleaved cross-attention layers described below.
 
-\textbf{Text Encoder}: We employ a frozen, pretrained RoBERTa-Large model to process the input text $X_t$. The network extracts a variable-length sequence of token embeddings $Z_t$, which are subsequently normalized and projected into the dimensional space of the visual encoder via a dedicated multimodal adapter.
+\textbf{Text Encoder.}
+We adopt a frozen, pretrained RoBERTa-Large~\cite{liu2019roberta} as the text encoder.
+Given an input prompt $X_t$, the encoder extracts a variable-length sequence of token embeddings $Z_t \in \mathbb{R}^{L \times d_t}$, where $L$ is the number of text tokens and $d_t$ is the text embedding dimension.
+We $\ell_2$-normalize these embeddings before passing them to the multimodal adapter.
 
-\textbf{Multimodal Adapter}: A trainable two-layer Multilayer Perceptron (MLP) transforms the text representations $Z_t$ into visual-aligned embedding tokens $H_t$. Following the addition of learnable positional encodings to $H_t$, these semantic signals are injected into the residual stream of the ViT using the gated cross-attention mechanism.
+\textbf{Multimodal Adapter.}
+A trainable two-layer MLP projects the normalized text embeddings $Z_t$ into visual-aligned tokens $H_t \in \mathbb{R}^{L \times d}$, matching the ViT's embedding dimension $d$.
+We add learnable positional encodings to $H_t$ to preserve token order before injecting them into the ViT through the gated cross-attention mechanism.
 
-\textbf{Text Conditioning of Visual Features}: To fuse textual guidance into the ViT's residual stream, we adapt the gated dense cross-attention formulation introduced in Flamingo. The cross-attention and FFN blocks are integrated utilizing a zero-initialized $\tanh$ gating mechanism. This initialization strategy ensures that the functional behavior of the frozen ViT is perfectly preserved at the start of training, allowing the model to smoothly and progressively learn to incorporate text conditioning during optimization.
+\textbf{Gated Cross-Attention Layers.}
+To fuse textual guidance into the ViT's residual stream, we adapt the gated cross-attention dense formulation from Flamingo~\cite{alayrac2022flamingo}.
+Each inserted layer applies multi-head cross-attention followed by a feed-forward network (FFN), where the visual patch tokens $Z_v^{(\ell)}$ at layer $\ell$ serve as queries and the adapted text tokens $H_t$ serve as keys and values:
+\begin{equation}
+    \hat{Z}_v^{(\ell)} = \text{CA}(Z_v^{(\ell)}, H_t) = \text{softmax}\!\left(\frac{Q K^\top}{\sqrt{d_k}}\right) V, \quad Q = Z_v^{(\ell)} W_Q, \; K = H_t W_K, \; V = H_t W_V.
+\end{equation}
+The cross-attention output is integrated into the residual stream through a tanh gate with a layer-specific learnable scalar $\alpha_\ell$, initialized to zero:
+\begin{equation}
+    Z_v^{(\ell+1)} = Z_v^{(\ell)} + \tanh(\alpha_\ell) \cdot \text{FFN}\!\left(\hat{Z}_v^{(\ell)}\right).
+    \label{eq:gated_ca}
+\end{equation}
+Since $\tanh(0) = 0$, the model is mathematically identical to the frozen ViT at initialization.
+As training progresses, the gates learn to open, allowing the model to smoothly incorporate text conditioning.
 
+We insert these cross-attention layers at every third transformer block starting from block 2 (i.e., blocks 2, 5, 8, 11 for the 12-block ViT-B).
+The final transformer block always remains unmodified, ensuring that the output features stay close to the pretrained ViT's representation space.
 
-\subsection{Training}
-The model is trained with referential segmentation.
-Given a referential expression or caption, we segment the target object.
-its binary segmentation i.e only one object corresponds to the text. 
-we operate not in the pixel space, but do prediction at the ViT patch level. \
-We train with soft cross-entropy loss: we tokenize the image into NxN tokens, given binary ground truth masks that are also tokenized into NxN tokens 
+\subsection{Training Objective}
+\label{sec:objective}
 
-\textbf{Objective}
+We train SteerViT on binary referential segmentation at the ViT's patch resolution rather than at the pixel level.
+Given an image $X_v$ and a referential expression $X_t$ describing a single target object, the model predicts which patches overlap the referred object.
 
+The ViT partitions the image into an $n \times n$ grid of non-overlapping patches.
+We tokenize the ground-truth binary segmentation mask $M \in \{0, 1\}^{H \times W}$ into patch-level labels $\hat{y} \in [0, 1]^{n \times n}$ by computing the fraction of foreground pixels within each patch.
+A linear classification head maps each patch token $z_i \in \mathbb{R}^{d}$ to a scalar logit $p_i$.
+We optimize the network with a binary cross-entropy loss over all patches:
+\begin{equation}
+    \mathcal{L} = -\frac{1}{n^2} \sum_{i=1}^{n^2} \left[ \hat{y}_i \log \sigma(p_i) + (1 - \hat{y}_i) \log (1 - \sigma(p_i)) \right],
+    \label{eq:loss}
+\end{equation}
+where $\sigma$ denotes the sigmoid function.
+This objective forces the cross-attention layers to route task-relevant textual information into the corresponding visual patch tokens, producing steered representations as a byproduct.
 
-\subsection{Dataset}
+\subsection{Training Data}
+\label{sec:data}
 
+We train on a mixture of referential segmentation and grounding datasets to ensure diversity in both visual domains and textual expression styles:
 
-\subsection{Evaluatio}
+\textbf{RefCOCO, RefCOCO+, RefCOCOg}~\cite{kazemzadeh2014referitgame, yu2016refcocog} provide referring expressions grounded in COCO images.
+RefCOCO+ excludes spatial language (e.g., ``left of''), encouraging the model to rely on appearance cues, while RefCOCOg contains longer, more descriptive expressions that exercise the model's capacity for detailed textual understanding.
 
+\textbf{Visual Genome}~\cite{krishna2017visual} (preprocessed following MDeTr~\cite{kamath2021mdetr}) contributes region descriptions paired with bounding boxes across densely annotated scenes.
+These descriptions span a broader vocabulary and more complex spatial relationships than the RefCOCO family, increasing the diversity of text conditioning signals.
 
+\textbf{Mapillary Vistas}~\cite{neuhold2017mapillary} provides street-level imagery with fine-grained panoptic annotations.
+Including this dataset expands the visual domain beyond COCO's indoor and object-centric bias toward outdoor, driving, and urban scenes, improving out-of-distribution generalization.
 
-
-
+This combination exposes the model to varied scene complexities (from single objects to dense urban panoramas), expression lengths (from two-word labels to multi-sentence descriptions), and visual domains (indoor, outdoor, street-level), encouraging robust text-conditioned representations.
