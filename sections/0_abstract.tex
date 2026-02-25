@@ -1,0 +1,23 @@
+
+\begin{abstract}
+General purpose visual encoders have a \textit{saliency} bias, where they effectively encode the image 
+% through salient visual concepts
+through the loudest visual concepts in the scene.
+To address this, we introduce SteerViT, a method that equips any Vision Transformer with the ability to steer 
+% the semantics of
+its features with text. 
+Our approach dynamically routes attention to task-relevant 
+% visual concepts 
+objects,
+achieving a Pareto improvement in text steerability while preserving the visual representation quality.
+% (unlike SAM3/GroundingDino??).
+Through extensive experiments, we show that SteerViT can guide the semantics of its visual features with  text.
+It consistently outperforms query-agnostic ViT baselines across model families (DinoV2, SigLIP, MAE) on fine-grained dense prediction and retrieval tasks, exhibiting strong generalization to out-of-distribution domains.
+
+
+    
+
+
+  
+  \keywords{Visual Representation \and Semantic Steering \and Text-Conditioning  }
+\end{abstract}

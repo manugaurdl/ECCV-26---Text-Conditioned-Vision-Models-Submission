@@ -1,0 +1,55 @@
+
+
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\linewidth]{figures/teaser_3.pdf}
+    \caption{\textbf{Top:} Contrasting several vision-language representations with our text conditioned visual representations. \textbf{Bottom:} Comparing quality of visual features with how easily they can be steered with text. Standard visual encoders like DinoV2/SigLIP have rich features but exhibit poor steerability. While, multimodal models like SAM2/GroundingDino are steerable but demonstrate poor performance. Ours is both steerable and preserves the rich representation quality.}
+    \label{fig:tsne_semantic}
+\end{figure}
+
+
+% \begin{figure}[!ht]
+%   % --- Left Column (Placeholder for future image) ---
+%   \begin{minipage}[b]{0.4\textwidth}
+%     \hfill % Leaves this side empty for now
+%   \end{minipage}
+%   \hfill % Pushes the next minipage to the right edge
+%   % --- Right Column (Current Image) ---
+%   \begin{minipage}[b]{0.6\textwidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{figures/pareto_plot.png}
+%     \caption{Comparing quality of visual features with how easily they can be steered with text. Standard visual encoders like DinoV2/SigLIP have rich features but exhibit poor steerability. While, multimodal models like SAM2/GroundingDino are steerable but demonstrate poor performance. Ours is both steerable and preserves the rich representation quality.}
+%     \label{fig:pareto-plot}
+%   \end{minipage}
+  
+%   % Adjust this negative value to shrink the space below the figure
+%   \vspace{-20pt} 
+% \end{figure}
+
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.98\textwidth]{figures/conceptattention.png}
+  \caption{Figure taken from ConceptAttention paper; but we should do something like this as well (explore jacob's paper to get better attention maps)}
+  \label{fig:concept-attention}
+\end{figure}
+
+
+\section{Introduction}
+\label{sec:intro}
+
+Pretrained visual encoders exhibit a strong saliency bias, effectively processing images through their foreground objects. This behavior stems from data distribution, optimization shortcuts, and the transformer’s inductive bias. Datasets reflect a photographer’s bias where subjects are centered and in-focus, while paired text typically describes only primary objects. Consequently, focusing on these features offers an efficient optimization shortcut during training. Consequently, self-attention reinforces this bias by routing global information through tokens comprising high-frequency, coherent details of salient objects that offer larger norms.\\
+
+This results in query-agnostic general purpose visual representations to primarily focus on high level semantics. Real world scenes are cluttered with several concepts of varying granularity, however the Dino features for a image of a kitchen with various vegetables, utensils, appliances would collapse to the loudest concepts in the scene i.e kitchen.\\
+
+In this paper, we argue such query-agnostic representations are not ideal when interacting with the real world. For instance, in a kitchen comprising of big (such as fridge, oven, stovetop) and small (few mugs distributed in the background) objects, to answer questions, count or make dense predictions on the mugs, the model should attend to the tokens comprising the mugs instead of irrelevant concepts like fridge despite them being salient.\\
+
+To address this, we propose text informed/conditioned/contextualized representations. An image is a combination of multiple visual concepts. We define such query-dependent representations by two properties:
+(a) {\color{blue} constraining the visual feature to the same subspace} but steering it so it lies on intersection of manifolds corresponding to the high level image semantic and query visual concept.
+(b) self-attention routes significant information through the tokens comprising the query visual concept.
+
+So in the above example, this definition entails that the “mug” conditioned visual features enable us to retrieve images of kitchen with mugs, and the self-attention maps should reveal that <CLS> attends to “mug” tokens. 
+
+We test this, in section 2.1, how (tl;dr) and we find (results).....

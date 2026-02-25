@@ -1,0 +1,108 @@
+\documentclass[runningheads]{llncs}
+
+% ---------------------------------------------------------------
+% Include basic ECCV package
+ 
+% TODO REVIEW: Insert your submission number below by replacing '*****'
+% TODO FINAL: Comment out the following line for the camera-readxy version
+\usepackage[review,year=2026,ID=*****]{eccv}
+% TODO FINAL: Un-comment the following line for the camera-ready version
+%\usepackage{eccv}
+
+% OPTIONAL: Un-comment the following line for a version which is easier to read
+% on small portrait-orientation screens (e.g., mobile phones, or beside other windows)
+%\usepackage[mobile]{eccv}
+\input{preamble}
+\begin{document}
+
+% ---------------------------------------------------------------
+% TODO REVIEW: Replace with your title
+\title{SteerViT: Steering Visual Representations with Text} 
+
+% TODO REVIEW: If the paper title is too long for the running head, you can set
+% an abbreviated paper title here. If not, comment out.
+\titlerunning{Abbreviated paper title}
+
+% TODO FINAL: Replace with your author list. 
+% Include the authors' OCRID for the camera-ready version, if at all possible.
+\author{First Author\inst{1}\orcidlink{0000-1111-2222-3333} \and
+Second Author\inst{2,3}\orcidlink{1111-2222-3333-4444} \and
+Third Author\inst{3}\orcidlink{2222--3333-4444-5555}}
+
+% TODO FINAL: Replace with an abbreviated list of authors.
+\authorrunning{F.~Author et al.}
+% First names are abbreviated in the running head.
+% If there are more than two authors, 'et al.' is used.
+
+% TODO FINAL: Replace with your institution list.
+\institute{Princeton University, Princeton NJ 08544, USA \and
+Springer Heidelberg, Tiergartenstr.~17, 69121 Heidelberg, Germany
+\email{lncs@springer.com}\\
+\url{http://www.springer.com/gp/computer-science/lncs} \and
+ABC Institute, Rupert-Karls-University Heidelberg, Heidelberg, Germany\\
+\email{\{abc,lncs\}@uni-heidelberg.de}}
+
+\maketitle
+
+% intro
+% related work
+    % general directions for steering / influencing visual features
+    % elip, personalized | vlm
+    % flare (?) (late fusion)
+    % some weird "swan" image -- Manu
+% method text-conditioned visual
+    % architecture modifications
+    % datasets + training signals
+    % inference-time text conditioning
+% experiments (hypothesis validating) ## arxiv - before method
+    % conditional retrieval kNN
+        % baseline: late fusion
+    % without losing classification
+        % pareto explain
+    % attention does steer to text descriptions (results by segmentation)
+% analysis / applications
+    % personalized: how to condition (PODS)
+    % anomaly detection
+    % where are my keys (?)
+    % (???) hallucination detection, negation 
+    % (???) VQA
+% ablations / features of our approach -- justifying choices of method (a subset of task)
+    % architecture (sigmoid gating, FFN block, CA blocks)
+    % backbones (MAE, SigLIP) (?)
+    % scale the model (ViT-L)
+    % losses (?)
+    % resolution (?)
+    % token length [optional!]
+% conclusion
+
+
+\input{sections/0_abstract}
+\input{sections/1_intro}
+\input{sections/2_related_work}
+\input{sections/3_method}
+\input{sections/4_exp}
+\input{sections/5_ablation}
+\input{sections/6_conclusion}
+
+
+% \bibliography{bib/longstrings,bib/refs}
+% \bibliographystyle{tmlr}
+
+% \appendix
+% % \input{sections/X_appendix}
+
+
+
+
+
+
+
+
+% ---- Bibliography ----
+%
+% BibTeX users should specify bibliography style 'splncs04'.
+% References will then be sorted and formatted in the correct style.
+%
+\bibliographystyle{splncs04}
+\bibliography{main}
+\end{document}

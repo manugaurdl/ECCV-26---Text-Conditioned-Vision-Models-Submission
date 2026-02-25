@@ -1,0 +1,70 @@
+\section{Methodology}
+
+% method text-conditioned visual
+    % architecture modifications
+    % datasets + training signals
+    % inference-time text conditioning (jona)
+% experiments (hypothesis validating) ## arxiv - before method
+    % conditional retrieval kNN
+        % baseline: late fusion
+    % without losing classification
+        % pareto explain
+    % attention does steer to text descriptions (results by segmentation)
+% analysis / applications
+    % personalized: how to condition (PODS)
+    % anomaly detection
+    % where are my keys (?)
+    % (???) hallucination detection, negation 
+    % (???) VQA
+% ablations / features of our approach -- justifying choices of method (a subset of task)
+    % architecture (sigmoid gating, FFN block, CA blocks)
+    % backbones (MAE, SigLIP) (?)
+    % scale the model (ViT-L)
+    % losses (?)
+    % resolution (?)
+    % token length [optional!]
+% conclusion
+
+% This section describes SteerViT: a visual language model/text guided visual encoder that accepts text and image as input and outputs a latent representation. The key architectural components shown in Figure~\ref{fig:arch} are chosen to leverage pretrained vision and language encoders and bridge them effectively. First, the RoBERTa receives the text input and outputs a variable length text tokens. Second, these text tokens are used to condition the frozen visual encoder using cross-attention layers (Section 2.2) that are interleaved between the pretrained ViT layers. These new layers offer an expressive way for the visual encoder to gradually incorporate text information with its visual features. SteerViT is trained with a linear head to binary segment the object described by text at the ViT feature level. The model is trained on a diverse mixture of datasets as described in Section 2.4.
+
+% \subsubsection{Architecture}
+
+% \textbf{Visual Encoder}: Our method constrains the visual representation within the same embedding space as the frozen Vision Transformer (ViT). For an input image Xv, we turn the frozen ViT to produce rich, text contextualized visual features Zv with GATED XATTN-DENSE layers.
+
+% \textbf{Text Encoder}: For an input text Xt, we adopt a pretrained and frozen RoBERTa-Large as our text encoder. We extract the variable length output embeddings tokens Zt, normalize them, project them into the visual encoder’s embedding space using our multimodal adapter.
+
+% \textbf{Multimodal Adapter}: We use a trainable two layer MLP to convert Zt into image embedding tokens Ht. We add trainable positional embeddings to Ht, and incorporate the text information into the ViT’s residual stream using GATED XATTN-DENSE layers.
+
+% \textbf{Text Conditioning Visual Features}: We adopt Flamingo’s GATED XATTN-DENSE layers to incorporate text information into the ViT’s residual stream. Similar to Flamingo, we initialize the cross-attention and FFN blocks with zero-initialized tanh gating. Hence, the frozen ViT is kept intact at initialization, and the model learns to incorporate text information as training progresses.
+
+This section introduces SteerViT, a text-guided visual encoder designed to map paired image and text inputs into a unified latent representation. As illustrated in Figure~\ref{fig:arch}, our architecture integrates frozen, pretrained vision and language models through learned routing mechanisms. Specifically, a RoBERTa model processes the input prompt to extract a variable-length sequence of text tokens. These textual representations subsequently condition a frozen Vision Transformer (ViT) via cross-attention modules (detailed in Section 2.2) interleaved among the standard ViT layers. This integration mechanism enables the visual encoder to progressively fuse semantic text cues with spatial visual features. To optimize the network, we apply a linear classification head over the modulated ViT features to perform binary segmentation of the text-specified object. The model is trained on a diverse mixture of datasets, as detailed in Section 2.4.
+\subsection{Architecture}
+
+\textbf{Visual Encoder}: Our approach maintains the visual representations within the native embedding space of the frozen Vision Transformer (ViT). Given an input image $X_v$, we modulate the frozen ViT to yield text-contextualized visual features $Z_v$ by injecting dense, gated cross-attention layers.
+
+\textbf{Text Encoder}: We employ a frozen, pretrained RoBERTa-Large model to process the input text $X_t$. The network extracts a variable-length sequence of token embeddings $Z_t$, which are subsequently normalized and projected into the dimensional space of the visual encoder via a dedicated multimodal adapter.
+
+\textbf{Multimodal Adapter}: A trainable two-layer Multilayer Perceptron (MLP) transforms the text representations $Z_t$ into visual-aligned embedding tokens $H_t$. Following the addition of learnable positional encodings to $H_t$, these semantic signals are injected into the residual stream of the ViT using the gated cross-attention mechanism.
+
+\textbf{Text Conditioning of Visual Features}: To fuse textual guidance into the ViT's residual stream, we adapt the gated dense cross-attention formulation introduced in Flamingo. The cross-attention and FFN blocks are integrated utilizing a zero-initialized $\tanh$ gating mechanism. This initialization strategy ensures that the functional behavior of the frozen ViT is perfectly preserved at the start of training, allowing the model to smoothly and progressively learn to incorporate text conditioning during optimization.
+
+
+\subsection{Training}
+The model is trained with referential segmentation.
+Given a referential expression or caption, we segment the target object.
+its binary segmentation i.e only one object corresponds to the text. 
+we operate not in the pixel space, but do prediction at the ViT patch level. \
+We train with soft cross-entropy loss: we tokenize the image into NxN tokens, given binary ground truth masks that are also tokenized into NxN tokens 
+
+\textbf{Objective}
+
+
+\subsection{Dataset}
+
+
+\subsection{Evaluatio}
+
+
+
+
+
