@@ -1,0 +1,578 @@
+PWD /Users/manugaur/Downloads/ECCV-26---Text-Conditioned-Vision-Models-Submission
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/miktex/data/le/pdftex/pdflatex.fmt
+INPUT /Users/manugaur/Downloads/ECCV-26---Text-Conditioned-Vision-Models-Submission/main.tex
+OUTPUT main.log
+INPUT ./llncs.cls
+INPUT llncs.cls
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/article.cls
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/article.cls
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/size10.clo
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/size10.clo
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/size10.clo
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/multicol.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/multicol.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/oberdiek/aliascnt.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/oberdiek/aliascnt.sty
+INPUT ./eccv.sty
+INPUT eccv.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/silence/silence.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/silence/silence.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/etoolbox/etoolbox.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/etoolbox/etoolbox.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/fontenc.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/fontenc.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecrm1000.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/lineno/lineno.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/lineno/lineno.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/kvoptions/kvoptions.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/kvoptions/kvoptions.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/keyval.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/keyval.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/ltxcmds/ltxcmds.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/ltxcmds/ltxcmds.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/kvsetkeys/kvsetkeys.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/kvsetkeys/kvsetkeys.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xcolor/xcolor.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xcolor/xcolor.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics-cfg/color.cfg
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics-cfg/color.cfg
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics-cfg/color.cfg
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics-def/pdftex.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics-def/pdftex.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics-def/pdftex.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/mathcolor.ltx
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/mathcolor.ltx
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/mathcolor.ltx
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/dvipsnam.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/dvipsnam.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/dvipsnam.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsmath/amsmath.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsmath/amsmath.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsmath/amsopn.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsmath/amstext.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsmath/amstext.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsmath/amsgen.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsmath/amsgen.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsmath/amsbsy.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsmath/amsbsy.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsmath/amsopn.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsfonts/amssymb.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsfonts/amssymb.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsfonts/amsfonts.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsfonts/amsfonts.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/cite/cite.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/cite/cite.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/xspace.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/xspace.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url/url.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/url/url.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/caption/caption.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/caption/caption.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/caption/caption3.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/caption/caption3.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/caption/subcaption.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/caption/subcaption.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/geometry/geometry.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/geometry/geometry.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/iftex/ifvtex.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/iftex/ifvtex.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/iftex/iftex.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/iftex/iftex.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/geometry/geometry.cfg
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/geometry/geometry.cfg
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/geometry/geometry.cfg
+INPUT ./preamble.tex
+INPUT ./preamble.tex
+INPUT ./preamble.tex
+INPUT ./preamble.tex
+INPUT preamble.tex
+INPUT ./eccvabbrv.sty
+INPUT eccvabbrv.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/graphicx.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/graphicx.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/graphics.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/graphics.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/trig.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/trig.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics-cfg/graphics.cfg
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics-cfg/graphics.cfg
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics-cfg/graphics.cfg
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/nicematrix/nicematrix.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/nicematrix/nicematrix.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/basiclayer/pgfcore.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/basiclayer/pgfcore.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/systemlayer/pgfsys.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/systemlayer/pgfsys.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/utilities/pgfrcs.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/utilities/pgfrcs.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/utilities/pgfutil-common.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/utilities/pgfutil-latex.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/utilities/pgfrcs.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/utilities/pgfrcs.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/utilities/pgfrcs.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/pgf.revision.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/pgf.revision.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/systemlayer/pgfsys.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/systemlayer/pgfsys.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/systemlayer/pgfsys.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/utilities/pgfkeys.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/utilities/pgfkeyslibraryfiltered.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/systemlayer/pgf.cfg
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/systemlayer/pgfsys-pdftex.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/systemlayer/pgfsys-pdftex.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/systemlayer/pgfsys-common-pdf.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcore.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcore.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcore.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmath.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmathutil.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmathparser.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmathfunctions.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmathfunctions.random.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmathfunctions.base.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmathfunctions.round.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmathcalc.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmathfloat.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfint.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcorepathusage.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcoretransformations.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcoretransparency.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcorepatterns.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/basiclayer/pgfcorerdf.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/colortbl/colortbl.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/colortbl/colortbl.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/array.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/array.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/graphics/color.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/makecell/makecell.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/makecell/makecell.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/todonotes/todonotes.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/todonotes/todonotes.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/ifthen.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/ifthen.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xkeyval/xkeyval.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xkeyval/xkeyval.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/xkeyval/xkeyval.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/xkeyval/xkvutils.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/frontendlayer/tikz.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/frontendlayer/tikz.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/basiclayer/pgf.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/basiclayer/pgf.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/modules/pgfmoduleplot.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/utilities/pgffor.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/utilities/pgffor.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/utilities/pgfkeys.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/utilities/pgfkeys.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/utilities/pgfkeys.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/utilities/pgfkeys.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/utilities/pgfkeys.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/math/pgfmath.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/pgf/math/pgfmath.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmath.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmath.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/math/pgfmath.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/utilities/pgffor.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/utilities/pgffor.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/utilities/pgffor.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/modules/pgfmodulematrix.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/calc.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/calc.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/booktabs/booktabs.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/booktabs/booktabs.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/multirow/multirow.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/multirow/multirow.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/ulem/ulem.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/ulem/ulem.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/latex-fonts/lasy6.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tcolorbox/tcolorbox.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tcolorbox/tcolorbox.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/verbatim.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/tools/verbatim.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/environ/environ.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/environ/environ.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/trimspaces/trimspaces.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/trimspaces/trimspaces.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/siunitx/siunitx.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/siunitx/siunitx.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/translations/translations.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/translations/translations.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pdftexcmds/pdftexcmds.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pdftexcmds/pdftexcmds.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/infwarerr/infwarerr.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/infwarerr/infwarerr.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/threeparttable/threeparttable.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/threeparttable/threeparttable.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psnfss/pifont.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psnfss/pifont.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psnfss/upzd.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psnfss/upzd.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psnfss/upzd.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/adobe/zapfding/pzdr.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psnfss/upsy.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psnfss/upsy.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/psnfss/upsy.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/adobe/symbol/psyr.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/axessibility/axessibility.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/axessibility/axessibility.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xstring/xstring.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/xstring/xstring.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/xstring/xstring.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/accsupp/accsupp.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/accsupp/accsupp.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pdfescape/pdfescape.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pdfescape/pdfescape.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/accsupp/accsupp-pdftex.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/accsupp/accsupp-pdftex.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/accsupp/accsupp-pdftex.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pdftex/glyphtounicode.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pdftex/glyphtounicode.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pdftex/glyphtounicode.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pdftex/glyphtounicode.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pdftex/glyphtounicode.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyperref/hyperref.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyperref/hyperref.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/kvdefinekeys/kvdefinekeys.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/kvdefinekeys/kvdefinekeys.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hycolor/hycolor.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hycolor/hycolor.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyperref/nameref.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyperref/nameref.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/refcount/refcount.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/refcount/refcount.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/gettitlestring/gettitlestring.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/gettitlestring/gettitlestring.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/stringenc/stringenc.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/stringenc/stringenc.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyperref/pd1enc.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyperref/pd1enc.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyperref/pd1enc.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/intcalc/intcalc.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/intcalc/intcalc.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyperref/puenc.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyperref/puenc.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyperref/puenc.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/bitset/bitset.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/bitset/bitset.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/bigintcalc/bigintcalc.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/bigintcalc/bigintcalc.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/atbegshi/atbegshi.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/atbegshi-ltx.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/atbegshi-ltx.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyperref/hpdftex.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyperref/hpdftex.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/hyperref/hpdftex.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/atveryend/atveryend.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/atveryend-ltx.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/atveryend-ltx.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/rerunfilecheck/rerunfilecheck.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/rerunfilecheck/rerunfilecheck.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/uniquecounter/uniquecounter.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/uniquecounter/uniquecounter.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/orcidlink/orcidlink.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/orcidlink/orcidlink.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarysvg.path.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarysvg.path.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/libraries/pgflibrarysvg.path.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/libraries/pgflibrarysvg.path.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/generic/pgf/modules/pgfmoduleparser.code.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/cleveref/cleveref.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/cleveref/cleveref.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/l3backend/l3backend-pdftex.def
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/l3backend/l3backend-pdftex.def
+OUTPUT main.aux
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/context/base/mkii/supp-pdf.mkii
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/context/base/mkii/supp-pdf.mkii
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/context/base/mkii/supp-pdf.mkii
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/epstopdf-pkg/epstopdf-base.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/epstopdf-pkg/epstopdf-base.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/grfext/grfext.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/grfext/grfext.sty
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/00miktex/epstopdf-sys.cfg
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/00miktex/epstopdf-sys.cfg
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/00miktex/epstopdf-sys.cfg
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/translations/dicts/translations-basic-dictionary-english.trsl
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/translations/dicts/translations-basic-dictionary-english.trsl
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/translations/dicts/translations-basic-dictionary-english.trsl
+OUTPUT main.out
+OUTPUT main.pdf
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecrm1440.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecbx1440.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/t1cmss.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/t1cmss.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/t1cmss.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecss1440.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecss0800.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecrm0700.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsfonts/umsa.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsfonts/umsa.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsfonts/umsa.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/symbols/msam10.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/symbols/msam7.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/symbols/msam5.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsfonts/umsb.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsfonts/umsb.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/amsfonts/umsb.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/symbols/msbm5.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecss1000.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecrm0900.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecss0900.tfm
+INPUT ./sections/0_abstract.tex
+INPUT ./sections/0_abstract.tex
+INPUT ./sections/0_abstract.tex
+INPUT ./sections/0_abstract.tex
+INPUT sections/0_abstract.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecbx0900.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecti0900.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/tcrm0900.tfm
+INPUT ./sections/1_intro.tex
+INPUT ./sections/1_intro.tex
+INPUT ./sections/1_intro.tex
+INPUT ./sections/1_intro.tex
+INPUT sections/1_intro.tex
+INPUT ./figures/teaser_3.pdf
+INPUT ./figures/teaser_3.pdf
+INPUT ./figures/teaser_3.pdf
+INPUT ./figures/teaser_3.pdf
+INPUT ./figures/teaser_3.pdf
+INPUT ./figures/teaser_3.pdf
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecrm1200.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecbx1200.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecss1200.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecbx1000.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/map/pdftex/pdftex.map
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecti1000.tfm
+INPUT ./sections/2_related_work.tex
+INPUT ./sections/2_related_work.tex
+INPUT ./sections/2_related_work.tex
+INPUT ./sections/2_related_work.tex
+INPUT sections/2_related_work.tex
+INPUT ./sections/3_method.tex
+INPUT ./sections/3_method.tex
+INPUT ./sections/3_method.tex
+INPUT ./sections/3_method.tex
+INPUT sections/3_method.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/t1cmtt.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/t1cmtt.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/tex/latex/base/t1cmtt.fd
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ectt1000.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecrm0500.tfm
+INPUT ./sections/4_exp.tex
+INPUT ./sections/4_exp.tex
+INPUT ./sections/4_exp.tex
+INPUT ./sections/4_exp.tex
+INPUT sections/4_exp.tex
+INPUT ./figures/umap_neighbourhood.pdf
+INPUT ./figures/umap_neighbourhood.pdf
+INPUT ./figures/umap_neighbourhood.pdf
+INPUT ./figures/umap_neighbourhood.pdf
+INPUT ./figures/umap_neighbourhood.pdf
+INPUT ./figures/umap_neighbourhood.pdf
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecbx0700.tfm
+INPUT ./figures/cond_retrieval_baselines.png
+INPUT ./figures/cond_retrieval_baselines.png
+INPUT ./figures/cond_retrieval_baselines.png
+INPUT ./figures/cond_retrieval_baselines.png
+INPUT ./figures/cond_retrieval_baselines.png
+INPUT ./figures/cond_retrieval_baselines.png
+INPUT ./figures/cond_retrieval_baselines.png
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecbi1000.tfm
+INPUT ./figures/dinov2_attn_maps.pdf
+INPUT ./figures/dinov2_attn_maps.pdf
+INPUT ./figures/dinov2_attn_maps.pdf
+INPUT ./figures/dinov2_attn_maps.pdf
+INPUT ./figures/dinov2_attn_maps.pdf
+INPUT ./figures/dinov2_attn_maps.pdf
+INPUT ./figures/ca_gate_cos_sim.pdf
+INPUT ./figures/ca_gate_cos_sim.pdf
+INPUT ./figures/ca_gate_cos_sim.pdf
+INPUT ./figures/ca_gate_cos_sim.pdf
+INPUT ./figures/ca_gate_cos_sim.pdf
+INPUT ./figures/ca_gate_cos_sim.pdf
+INPUT ./figures/ca_gate_mosaic.png
+INPUT ./figures/ca_gate_mosaic.png
+INPUT ./figures/ca_gate_mosaic.png
+INPUT ./figures/ca_gate_mosaic.png
+INPUT ./figures/ca_gate_mosaic.png
+INPUT ./figures/ca_gate_mosaic.png
+INPUT ./figures/ca_gate_mosaic.png
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ectt0900.tfm
+INPUT ./figures/eccv_pods.png
+INPUT ./figures/eccv_pods.png
+INPUT ./figures/eccv_pods.png
+INPUT ./figures/eccv_pods.png
+INPUT ./figures/eccv_pods.png
+INPUT ./figures/eccv_pods.png
+INPUT ./figures/eccv_pods.png
+INPUT ./figures/token_len.png
+INPUT ./figures/token_len.png
+INPUT ./figures/token_len.png
+INPUT ./figures/token_len.png
+INPUT ./figures/token_len.png
+INPUT ./figures/token_len.png
+INPUT ./figures/token_len.png
+INPUT ./figures/tsne_semantic.pdf
+INPUT ./figures/tsne_semantic.pdf
+INPUT ./figures/tsne_semantic.pdf
+INPUT ./figures/tsne_semantic.pdf
+INPUT ./figures/tsne_semantic.pdf
+INPUT ./figures/tsne_semantic.pdf
+INPUT ./sections/5_applications.tex
+INPUT ./sections/5_applications.tex
+INPUT ./sections/5_applications.tex
+INPUT ./sections/5_applications.tex
+INPUT sections/5_applications.tex
+INPUT ./tables/anomaly_detection_table.tex
+INPUT ./tables/anomaly_detection_table.tex
+OUTPUT tables/anomaly_detection_table.aux
+INPUT ./tables/anomaly_detection_table.tex
+INPUT ./tables/anomaly_detection_table.tex
+INPUT tables/anomaly_detection_table.tex
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmr9.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmr6.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmmi9.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmmi6.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmsy9.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/cm/cmsy6.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/cmextra/cmex9.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/cmextra/cmex7.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/symbols/msam10.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/symbols/msam7.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecrm0600.tfm
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/adobe/zapfding/pzdr.tfm
+INPUT ./sections/6_ablations.tex
+INPUT ./sections/6_ablations.tex
+INPUT ./sections/6_ablations.tex
+INPUT ./sections/6_ablations.tex
+INPUT sections/6_ablations.tex
+INPUT ./sections/7_conclusion.tex
+INPUT ./sections/7_conclusion.tex
+INPUT ./sections/7_conclusion.tex
+INPUT ./sections/7_conclusion.tex
+INPUT sections/7_conclusion.tex
+INPUT ./sections/appendix.tex
+INPUT ./sections/appendix.tex
+INPUT ./sections/appendix.tex
+INPUT ./sections/appendix.tex
+INPUT sections/appendix.tex
+INPUT ./tables/knn_exp_indoor.tex
+INPUT ./tables/knn_exp_indoor.tex
+INPUT ./tables/knn_exp_indoor.tex
+INPUT ./tables/knn_exp_indoor.tex
+INPUT tables/knn_exp_indoor.tex
+INPUT ./tables/knn_exp_outdoor.tex
+INPUT ./tables/knn_exp_outdoor.tex
+INPUT ./tables/knn_exp_outdoor.tex
+INPUT ./tables/knn_exp_outdoor.tex
+INPUT tables/knn_exp_outdoor.tex
+INPUT ./main.bbl
+INPUT ./main.bbl
+INPUT main.bbl
+INPUT main.aux
+INPUT ./tables/anomaly_detection_table.aux
+INPUT ./tables/anomaly_detection_table.aux
+INPUT tables/anomaly_detection_table.aux
+INPUT ./main.out
+INPUT ./main.out
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ectt0900.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ectt0900.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbi1000.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbi1000.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecrm0700.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecrm0700.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx0700.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx0700.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ectt1000.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ectt1000.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecti1000.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecti1000.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1000.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1000.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1200.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1200.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm0900.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm0900.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecti0900.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecti0900.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx0900.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx0900.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecrm0900.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecrm0900.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecrm1000.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecrm1000.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi525/ecss0800.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi525/ecss0800.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1440.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1440.pk
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmex10.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmex10.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi10.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi10.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi5.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi5.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi6.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi6.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi7.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi7.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi9.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi9.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr5.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr5.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr6.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr6.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr7.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr7.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr9.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr9.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy7.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy7.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/symbols/msbm10.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/symbols/msbm10.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/urw/zapfding/uzdr.pfb
+INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/urw/zapfding/uzdr.pfb
