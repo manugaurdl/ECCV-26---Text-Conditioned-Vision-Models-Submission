@@ -2,7 +2,7 @@
     \centering
     \includegraphics[width=\linewidth]{figures/teaser_3.pdf}
     \caption{\textbf{Top:} Contrasting vision-language representations with our text-conditioned visual representations.
-    \textbf{Bottom:} Comparing feature quality with text steerability.
+    \textbf{Bottom:} We compare visual features along two axes - quality (global and patch level features on classification and segmentation probes) and text-steerability.
     Standard encoders (DINOv2, SigLIP) produce rich features but cannot be steered.
     Multimodal models (SAM2, GroundingDINO) are steerable but produce task-specific representations that lack generality for downstream transfer.
     SHIFT achieves both high steerability and high feature quality.}
@@ -13,24 +13,24 @@
 \label{sec:intro}
 
 Pretrained visual encoders exhibit a strong saliency bias: they effectively process images through the most prominent visual concept in the scene.
-This behavior stems from photographer bias in training data, where subjects are centered and in-focus, and paired captions typically describe only primary objects.
+This behavior stems from photographer bias in training data, where subjects are centered and in-focus, and paired caption caption used for vision-language modelling typically describe only primary objects.
 Self-attention reinforces this tendency by routing global information through high-norm tokens that correspond to salient foreground objects~\cite{caron2021dino, oquab2024dinov2}.
 The result is query-agnostic representations that collapse to coarse, scene-level semantics.
-Consider a kitchen image containing appliances, utensils, and a few mugs in the background: DINOv2~\cite{oquab2024dinov2} features encode ``kitchen,'' discarding the fine-grained concepts needed to retrieve, count, or localize specific objects like the mugs.
+Consider a kitchen image containing appliances, utensils, and a few mugs in the background: DINOv2~\cite{oquab2024dinov2} features encode the global ``kitchen,'' scene while discarding the fine-grained concepts needed to retrieve, count, or localize specific objects like the mugs.
 
 This limitation leaves current models trapped between two extremes (Figure~\ref{fig:teaser}).
 Standard visual encoders such as DINOv2~\cite{oquab2024dinov2} and SigLIP~\cite{zhai2023_siglip} produce rich, general-purpose features but offer no mechanism to focus on a particular visual concept.
-Multimodal grounding models such as SAM2~\cite{ravi2024sam2} and GroundingDINO~\cite{liu2023groundingdino} accept text queries but produce task-specific representations that lack the generality for downstream transfer.
-No existing approach achieves both high-quality visual features and text-based steerability.
+Open-vocabulary localization models such as SAM3~\cite{ravi2024sam2} and GroundingDINO~\cite{liu2023groundingdino} accept text queries but produce task-specific representations that lack the generality and fidelity for downstream transfer.
+No existing approach achieves both high-quality visual features and prompt-based steerability.
 
 In this context, we explore the question: \textit{can text conditioning steer the semantics of visual representations without degrading their quality?}
 We present SHIFT, a method that equips any frozen Vision Transformer with the ability to steer its features via natural language.
-SHIFT interleaves tanh-gated cross-attention layers~\cite{alayrac2022flamingo} within a frozen ViT and trains them on referential segmentation, using the segmentation objective as a proxy signal to learn steered representations.
-We find that this leads to three desirable properties:
+SHIFT interleaves tanh-gated cross-attention layers~\cite{alayrac2022flamingo} within a frozen ViT and trains them on referential segmentation, using the segmentation objective as a proxy signal to learn steerable representations.
+We find that this leads to three desirable properties/desiderata:
 \begin{itemize}
-    \item \textbf{Global steerability:} The text query steers the global feature vector, enabling conditional retrieval of specific visual concepts in cluttered scenes (Section~\ref{subsec:cond_ret_exp}).
+    \item \textbf{Global steerability:} The text query steers the semantics of the global feature vector, enabling conditional retrieval of non-salient visual concepts (\MG{vague}) in cluttered scenes (Section~\ref{subsec:cond_ret_exp}).
     \item \textbf{Dense attention routing:} Self-attention routes information through tokens corresponding to the text-described visual concept, improving localization for non-salient objects (Section~\ref{subsec:mosaic_exp}).
-    \item \textbf{Feature quality preservation:} The steered representations remain in the base ViT's embedding space, maintaining performance on standard vision benchmarks (Section~\ref{subsec:pareto}).
+    \item \textbf{Feature quality preservation:} The steered representations preserve the base ViT's downstream transfer, maintaining \sout{classification and segmentation} performance on standard vision benchmarks (Section~\ref{subsec:pareto}).
 \end{itemize}
 
 In summary, we make the following contributions:
