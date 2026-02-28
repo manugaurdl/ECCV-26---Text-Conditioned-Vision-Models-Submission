@@ -1,0 +1,44 @@
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.15}
+
+\begin{threeparttable}
+\caption{Zero-shot segmentation performance on industrial AD data.}
+\label{tab:mvtec_visa}
+
+\begin{tabular}{l l c
+                S[table-format=2.1] S[table-format=2.1] S[table-format=2.1]
+                S[table-format=2.1] S[table-format=2.1] S[table-format=2.1]}
+\toprule
+\multicolumn{3}{c}{\textbf{Method}} &
+\multicolumn{3}{c}{\textbf{MVTec AD}} &
+\multicolumn{3}{c}{\textbf{VisA}} \\
+\cmidrule(lr){1-3}\cmidrule(lr){4-6}\cmidrule(lr){7-9}
+Name & Ref. & AD &
+{$\text{ROC}_P$} & {PRO} & {$F_1^{\max}$} &
+{$\text{ROC}_P$} & {PRO} & {$F_1^{\max}$} \\
+\midrule
+% TransMM  & \cite{Chefer_2021_transmm} & \xmark & 57.5    & 21.9    & 12.1   & 49.4   & 10.2   & 3.1    \\
+MaskCLIP & \cite{zhou2022_maskclip} & \xmark & 63.7    & 40.5    & 18.5   & 60.9   & 27.3   & 7.3    \\
+CLIPseg  & \cite{lueddecke22_clipseg} & \xmark & 69.0    & 34.6    & 12.5   & 89.5   & 62.4   & 13.9   \\
+SAM3     & \cite{carion2025_sam3} & \xmark & 79.9    & 54.5    & 24.1   & 89.8   & 65.9   & 15.5   \\
+\addlinespace
+\color{gray}WinCLIP  & \color{gray}\cite{WinCLIP_Jeong23CVPR} & \color{gray}\cmark & \color{gray}85.1    & \color{gray}64.6    & \color{gray}31.7   & \color{gray}79.6   & \color{gray}59.8   & \color{gray}14.8   \\
+% AnoCLIP  & \cite{deng2024_anoclip} & \cmark & 86.6    & 70.4    & 30.1   & 85.9   & 65.1   & 14.7   \\
+% SDP      & \cite{chen2023_clipad} & \cmark & 87.5    & 75.3    & 35.9   & 88.1   & 68.5   & 17.0   \\
+% SAA+     & \cite{cao_2023_saa} & \cmark & 73.2    & 42.8    & \underline{37.8}   & 74.0   & 36.8   & \textbf{27.1}   \\
+\color{gray} DIVAD    & \color{gray}\cite{hicsonmez2026training}& \color{gray} \cmark & \color{gray}88.0    & \color{gray}72.5    & \color{gray}\underline{35.5}   & \color{gray}\textbf{93.4}   & \color{gray}\underline{78.2}   & \color{gray}\textbf{24.0}   \\
+\color{gray}FADE     & \color{gray}\cite{li2024_fade} & \color{gray}\cmark & \color{gray}\textbf{89.6}    & \color{gray}\textbf{84.5}    & \color{gray}\textbf{39.8}   & \color{gray}\underline{91.5}   & \color{gray}\textbf{79.3}   & \color{gray}16.7   \\
+\addlinespace
+\rowcolor{\methodcolor}\textbf{SHIFT} & \textbf{Ours} & \xmark & \underline{88.1} & \underline{79.4} & 32.6 & \underline{91.5} & 77.5 & \underline{16.9} \\
+\bottomrule
+\end{tabular}
+
+\begin{tablenotes}[flushleft]\footnotesize
+\item AD indicates dedicated anomaly detection methods.
+% \item \textdagger{} indicates results reported in one of \cite{WinCLIP_Jeong23CVPR, hicsonmez2026training,chen2023_clipad, deng2024_anoclip}. %mark with \textsuperscript{\textdagger}
+\end{tablenotes}
+\end{threeparttable}
+\end{table*}

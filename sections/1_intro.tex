@@ -26,17 +26,21 @@ No existing approach achieves both high-quality visual features and text-based s
 In this context, we explore the question: \textit{can text conditioning steer the semantics of visual representations without degrading their quality?}
 We present SHIFT, a method that equips any frozen Vision Transformer with the ability to steer its features via natural language.
 SHIFT interleaves tanh-gated cross-attention layers~\cite{alayrac2022flamingo} within a frozen ViT and trains them on referential segmentation, using the segmentation objective as a proxy signal to learn steered representations.
-We find that this leads to three desirable properties:
+We find that this leads to three desiderata:
 \begin{itemize}
-    \item \textbf{Global steerability:} The text query steers the global feature vector, enabling conditional retrieval of specific visual concepts in cluttered scenes.
-    \item \textbf{Dense attention routing:} Self-attention routes information through tokens corresponding to the text-described object, improving dense predictions for non-salient concepts.
-    \item \textbf{Feature quality preservation:} The steered features remain in the base ViT's embedding space, maintaining performance on standard vision benchmarks.
+    \item \textbf{Global steerability:} The text query steers the semantic class of the global feature vector, enabling  conditional retrieval of specific visual concepts in cluttered scenes {\color{red} (vague)}.
+    \item \textbf{Dense attention routing:} Self-attention routes information through tokens corresponding to the text-described visual concept, improving localization for non-salient objects.
+    \item \textbf{Feature quality preservation:} The steered representation remain in the base ViT's embedding space, maintaining performance on standard vision benchmarks (both global and local).
 \end{itemize}
 
 In summary, we make the following contributions:
 \begin{enumerate}
-    \item We introduce SHIFT, a text-conditioned visual encoder that injects text into frozen ViTs via sparse, tanh-gated cross-attention layers trained on referential segmentation.
-    \item We demonstrate a Pareto improvement over existing models: SHIFT achieves high text steerability while preserving the feature quality of the underlying ViT, bridging the gap between unsteerable encoders and quality-degraded multimodal models.
-    \item We conduct extensive experiments on conditional retrieval, dense prediction, and personalized object discrimination (PODS), demonstrating generalization across ViT families (DINOv2~\cite{oquab2024dinov2}, SigLIP~\cite{zhai2023_siglip}, MAE~\cite{he2022mae}).
-    \item We apply SHIFT to zero-shot anomaly detection, achieving 64.2 AuPRO on MVTec (outperforming CLIPSeg at 34.0 and SAM2 at 48.2) and to personalized object discrimination, where detailed text prompts enable the model to surpass fine-tuned baselines without any task-specific training.
+    \item We introduce SHIFT, a text-conditioned visual encoder that instills text understanding into frozen ViTs via sparse, gated cross attention layers trained on grounding.
+    % sparse, tanh-gated cross-attention layers trained on referential segmentation.
+    % \item We demonstrate a Pareto improvement over existing models: SHIFT achieves high text steerability while preserving the feature quality of the underlying ViT, bridging the gap between unsteerable encoders and quality-degraded multimodal models.
+    \item We demonstrate a Pareto improvement over existing models:
+    % \item Our approach dynamically routes attention to task-relevant visual concepts, 
+    SHIFT can guide the semantics of the visual representation with text while preserving their downstream transfer, bridging the gap between unsteerable encoders and quality-degraded multimodal models.
+    \item We conduct extensive zero-shot evaluation on fine-grained multimodal retrieval, referential segmentation, personalized object discrimination, and anomaly detection,  demonstrating generalization to out-of-distribution domains across ViT families (DINOv2~\cite{oquab2024dinov2}, SigLIP~\cite{zhai2023_siglip}, MAE~\cite{he2022mae}) without task-specific training.
+    % \item We apply SHIFT to , achieving 64.2 AuPRO on MVTec (outperforming CLIPSeg at 34.0 and SAM2 at 48.2) and to personalized object discrimination, where detailed text prompts enable the model to surpass fine-tuned baselines without any task-specific training.
 \end{enumerate}

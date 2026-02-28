@@ -1,0 +1,13 @@
+\section{Applications}
+
+\subsection{Anomaly Detection}
+
+We further evaluate SHIFT's robustness and dense localization capabilities by performing zero-shot anomaly segmentation (AS) on the MVTech AD \cite{bergmann_mvtech} and VisA \cite{zou2022_visa_dataset} datasets for industrial anomaly detection (AD).
+
+For SHIFT, we derive the anomaly map by upsampling the continuous heatmap produced by the learned linear segmentation head. As for all text-steerable methods, we use an ensemble of ten anomaly prompts (e.g., \texttt{``the anomaly in the <object>.''}) and average the resulting heatmaps across prompts.
+% For text-steerable segmentation method such as SHIFT, we apply an ensemble of ten anomaly-related prompts (e.g., \texttt{``the anomaly in the <object>.''}) and average the resulting continuous heatmaps across prompts. 
+Following standard practice in the AD literature \cite{WinCLIP_Jeong23CVPR}, we measure the pixel-wise \textit{Area under the Receiver Operating Characteristics} ($\text{ROC}_P$), the \textit{Per-Region-Overlap} (PRO), and threshold-optimal $F_1$ score ($F_1^{\max}$). Performance of existing training- and adaptation-free AS baselines is stated as reported in the original publication. 
+
+Despite its general-purpose nature, SHIFT is competitive with dedicated AS approaches. As shown in Table~\ref{tab:mvtec_visa}, it reaches 79.4 PRO on MVTech AD, substantially improving over prompt-based non-AD baselines (e.g., SAM3 at 54.5) and closing much of the gap to specialist methods (e.g., FADE at 84.5). Similar trends appear on VisA, indicating robust transfer to a harder, more diverse inspection setting. Overall, these results suggest that SHIFT’s text-driven post-training unlocks dense visual capabilities already present in the frozen ViT, yields strong out-of-domain generalization to industrial AD tasks without any task-specific training.\todo{use final numbers}
+
+\include{tables/anomaly_detection_table}

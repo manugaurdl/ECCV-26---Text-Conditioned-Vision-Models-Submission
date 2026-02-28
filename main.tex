@@ -17,7 +17,9 @@
 
 % ---------------------------------------------------------------
 % TODO REVIEW: Replace with your title
-\title{SHIFT: Steering High-level Image Features with Text} 
+% \title{SHIFT: Steering High-level Image Features with Text} 
+% \title{SteerViT: Steering Visual Representations with Text} 
+\title{Steerable Vision Transformers} 
 
 % TODO REVIEW: If the paper title is too long for the running head, you can set
 % an abbreviated paper title here. If not, comment out.
@@ -44,52 +46,20 @@ ABC Institute, Rupert-Karls-University Heidelberg, Heidelberg, Germany\\
 
 \maketitle
 
-% intro
-% related work
-    % general directions for steering / influencing visual features
-    % elip, personalized | vlm
-    % flare (?) (late fusion)
-    % some weird "swan" image -- Manu
-% method text-conditioned visual
-    % architecture modifications
-    % datasets + training signals
-    % inference-time text conditioning
-% experiments (hypothesis validating) ## arxiv - before method
-    % conditional retrieval kNN
-        % baseline: late fusion
-    % without losing classification
-        % pareto explain
-    % attention does steer to text descriptions (results by segmentation)
-% analysis / applications
-    % personalized: how to condition (PODS)
-    % anomaly detection
-    % where are my keys (?)
-    % (???) hallucination detection, negation 
-    % (???) VQA
-% ablations / features of our approach -- justifying choices of method (a subset of task)
-    % architecture (sigmoid gating, FFN block, CA blocks)
-    % backbones (MAE, SigLIP) (?)
-    % scale the model (ViT-L)
-    % losses (?)
-    % resolution (?)
-    % token length [optional!]
-% conclusion
-
-
 \input{sections/0_abstract}
 \input{sections/1_intro}
 \input{sections/2_related_work}
 \input{sections/3_method}
 \input{sections/4_exp}
-\input{sections/5_ablation}
-\input{sections/6_conclusion}
-
+\input{sections/5_applications}
+\input{sections/6_ablations}
+\input{sections/7_conclusion}
 
 % \bibliography{bib/longstrings,bib/refs}
 % \bibliographystyle{tmlr}
 
 % \appendix
-% % \input{sections/X_appendix}
+\input{sections/appendix}
 
 
 

@@ -1,8 +1,39 @@
 
+
 \begin{abstract}
-Pretrained Vision Transformers exhibit a \textit{saliency bias}: their features collapse toward the most prominent objects in a scene, ignoring task-relevant details.
-Existing approaches either produce rich but unsteerable representations (e.g., DINOv2) or achieve text-guided attention at the cost of degraded feature quality (e.g., SAM2, GroundingDINO).
-We introduce SHIFT, a method that inserts sparse, tanh-gated cross-attention layers into any frozen ViT trained on referential segmentation, steering both global and dense visual features with natural language while preserving the quality of the underlying representation.
-SHIFT achieves a Pareto improvement over prior work: across three ViT families (DINOv2, SigLIP, MAE), it consistently outperforms query-agnostic baselines on conditional retrieval, dense prediction, and personalized object discrimination, and generalizes zero-shot to out-of-distribution domains, reaching 64.2 AuPRO on MVTec anomaly detection (vs.\ 34.0 for CLIPSeg and 48.2 for SAM2).
+Pretrained Vision Transformers exhibit a \textit{saliency bias}: their global representation collapse toward the most prominent objects in a scene, ignoring task-relevant details.
+Existing approaches either produce rich but query-agnostic representations (e.g., DINOv2) or accept text queries but produce task-specific representations that lack the generality for downstream transfer (e.g., SAM3, GroundingDINO).
+To address this, we introduce SteerViT, a method that equips any Vision Transformer with the ability to steer both its global and dense visual features with natural language.
+Our approach dynamically routes attention to task-relevant visual concepts, enabling us to guide the semantics of the visual representation with text while preserving their downstream transfer.
+We demonstrate that our steerable visual representations enable a wide range of applications that are difficult to address with prior state-of-the-art models, such as fine-grained multimodal retrieval and referential segmentation.
+SteerViT also matches or outperforms state-of-the-art baselines on zero-shot anomaly detection and personalized object discrimination, generalizing to out-of-distribution domains without task-specific training.
   \keywords{Visual Representation \and Semantic Steering \and Text-Conditioning}
 \end{abstract}
+
+% Pretrained Vision Transformers exhibit a \textit{saliency bias}: their representation collapse toward the most prominent objects in a scene, ignoring task-relevant details.
+% Existing approaches either produce rich but query-agnostic representations (e.g., DINOv2) or achieve text-relevant steering but at the cost of degraded feature quality (e.g., SAM2, GroundingDINO).
+% To address this, we introduce SteerViT, a method that equips any Vision Transformer with the ability to steer both its global and dense visual features with natural language.
+% % SHIFT achieves a Pareto improvement over prior work: across three ViT families (DINOv2, SigLIP, MAE), it consistently outperforms query-agnostic baselines on conditional retrieval, dense prediction, and personalized object discrimination, and generalizes zero-shot to out-of-distribution domains, reaching 64.2 AuPRO on MVTec anomaly detection (vs.\ 34.0 for state-of-the-art baselines and 48.2 for SAM2).\\
+% % General purpose visual encoders have a \textit{saliency} bias, where they effectively encode the image 
+% % % through salient visual concepts
+% % through the loudest visual concepts in the scene.
+% % To address this, we introduce SteerViT, a method that equips any Vision Transformer with the ability to steer 
+% % the semantics of
+% % its features with text. 
+% Our approach dynamically routes attention to task-relevant 
+% % visual concepts 
+% visual concepts,
+% % achieving a Pareto improvement in text steerability
+% enabling us to guide the semantics of the visual representation with text
+% while preserving their 
+% % quality of the underlying representation.
+% downstream transfer.
+% % (unlike SAM3/GroundingDino??).
+% % Through extensive experiments, we show that SteerViT can guide the semantics of its visual features with  text.
+% % It consistently outperforms query-agnostic ViT baselines across model families (DinoV2, SigLIP, MAE) on fine-grained dense prediction and retrieval tasks, exhibiting strong generalization to out-of-distribution domains. 
+% We demonstrate that our steerable visual representations enable a wide class of applications that are difficult to address with prior state-of-the-art models, such as fine-grained multimodal retrieval and dense prediction.
+% Our method also outperforms state-of-the-art baselines on anomaly detection and personalized object discrimination, demonstrating the effectiveness of natural language in steering features that generalize to out-of-distribution domains.
+
+% % “Our work learns a joint representation of images and text, which we call a steerable vision transformer.  Prior work in this space such as cross-modal embeddings (e.g., CLIP)  and autoregressive vision-language models (e.g., LAVA) tend to be language-centric, often making use of vision embeddings that are frozen or only slightly updated during joint learning. 
+% % Instead, inspired by neuroscience evidence that suggests that humans fundamentally parse images differently based on the textual prompt [1], we use text to steer patch transformations in early layers of a visual encoder,
+% % We demonstrate that our steerable visual representations enable a wide class of applications that are difficult to address with prior state-of-the-art models, such as multimodal retrieval, fine-grained classification, and XX.” (edited)

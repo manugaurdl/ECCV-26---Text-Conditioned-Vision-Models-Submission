@@ -3,10 +3,34 @@
 
 % Include other packages here, before hyperref.
 \usepackage{graphicx}
+\usepackage{nicematrix}
+\usepackage[table]{xcolor}
+\usepackage{xcolor}
+\usepackage{makecell} % gives \rowfont
 \usepackage{todonotes}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage{ulem}
+
+\usepackage{tcolorbox}
+\definecolor{lightyellow}{rgb}{1, 0.95, 0.85}
+
+\usepackage{siunitx}
+\usepackage{threeparttable}
+\usepackage{pifont} % if you use \cmark \xmark
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+\sisetup{
+  detect-weight=true,
+  detect-inline-weight=math,
+  table-number-alignment=center
+}
+
+\newcommand{\grayrow}{\rowfont{\color{gray!70}}}
+\newcommand{\blackrow}{\rowfont{}} % reset
+\newcommand{\methodcolor}[0]{green!20}
+
 
 % The "axessiblity" package can be found at: https://ctan.org/pkg/axessibility?lang=en
 \usepackage[accsupp]{axessibility}  % Improves PDF readability for those with disabilities.
