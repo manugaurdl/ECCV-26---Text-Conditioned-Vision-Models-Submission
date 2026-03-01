@@ -1,9 +1,0 @@
-\section{Conclusion}
-
-We introduced SteerViT, a method that equips frozen Vision Transformers with the ability to steer their visual representations via natural language.
-By interleaving tanh-gated cross-attention layers within a frozen ViT and training them on referential segmentation, our approach achieves three desirable properties: it steers global semantics with text, routes dense attention to queried concepts, and preserves the representation quality of the underlying encoder.
-These properties combine to enable a fourth finding: text-conditioned steering generalizes to out-of-distribution domains more effectively than supervised fine-tuning, outperforming fine-tuned DINOv2 on personalized object discrimination and matching dedicated methods on industrial anomaly detection, all without target-domain training.
-
-Our results suggest a promising paradigm for multimodal representation learning: rather than training joint vision-language encoders from scratch on paired data, inject language conditioning into strong unimodal vision encoders.
-Unpaired vision-only and language-only data vastly exceed paired multimodal data; our approach leverages this asymmetry by preserving the representational depth learned from each modality independently.
-Text then serves not as a training signal but as a steering mechanism that extends generalization to domains where labeled data is scarce.

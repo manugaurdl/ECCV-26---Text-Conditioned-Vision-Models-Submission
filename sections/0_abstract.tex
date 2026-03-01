@@ -6,7 +6,7 @@ Existing approaches either produce rich but query-agnostic representations (e.g.
 To address this, we introduce SteerViT, a method that equips any Vision Transformer with the ability to steer both its global and dense visual features with natural language.
 Our approach dynamically routes attention to task-relevant visual concepts, enabling us to guide the semantics of the visual representation with text while preserving their downstream transfer.
 We demonstrate that our steerable visual representations enable a wide range of applications that are difficult to address with prior state-of-the-art models, such as fine-grained multimodal retrieval and referential segmentation.
-Because SteerViT preserves the rich visual structure of the frozen encoder, natural language can steer these features to out-of-distribution domains more effectively than supervised fine-tuning: on personalized object discrimination, zero-shot text-conditioned features outperform a fine-tuned DINOv2 baseline (54.4 vs.\ 48.0 PR-AUC), and on industrial anomaly detection our general-purpose model matches dedicated methods without any target-domain training.
+SteerViT also matches or outperforms state-of-the-art baselines on zero-shot anomaly detection and personalized object discrimination, generalizing to out-of-distribution domains without task-specific training.
   \keywords{Visual Representation \and Semantic Steering \and Text-Conditioning}
 \end{abstract}
 

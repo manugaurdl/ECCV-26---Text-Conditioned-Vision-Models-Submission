@@ -246,37 +246,31 @@ Figure~\ref{fig:gate_factor} (right) further shows that increasing the gate fact
   \label{fig:gate_factor}
 \end{figure}
 
-\subsection{Text Enables Zero-Shot Domain Transfer}
-\label{subsec:ood_generalization}
-Sections~\ref{subsec:cond_ret_exp}--\ref{subsec:pareto} established that SteerViT steers global features, routes dense attention, and preserves representation quality.
-We now ask: does this combination enable generalization to domains unseen during training?
-We evaluate on two progressively harder out-of-distribution settings: personalized object discrimination (natural images of novel object instances) and industrial anomaly detection (factory inspection imagery absent from any training set).
-
-\subsubsection{PODS: OOD Personalized Object Discrimination}
+\subsection{Text Specificity Guides Semantic Granularity}
+\label{subsec:text_density_exp}
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.98\textwidth]{figures/eccv_pods.png}
-  \caption{\textbf{Text enables zero-shot domain transfer on PODS.} Coarse prompts (supercategory) degrade performance relative to DINOv2 by discarding instance-level cues. Class-level prompts improve over the baseline. Fine-grained descriptive prompts outperform even a supervised fine-tuned DINOv2 (54.4 vs.\ 48.0 PR-AUC), demonstrating that natural language is a more data-efficient generalization mechanism than fine-tuning.}
+  \caption{\textbf{Text specificity controls feature granularity.} On the PODS benchmark, coarse prompts (supercategory) degrade performance relative to DINOv2 by discarding instance-level cues. Class-level prompts improve over the baseline. Fine-grained descriptive prompts surpass even a supervised fine-tuned DINOv2, confirming that detailed text acts as a precise steering mechanism.}
   \label{fig:pods}
 \end{figure}
 
+In Section~\ref{subsec:cond_ret_exp}, we observed that the text you condition on has a profound impact on the resultant features with conditioning on a random object class halves retrieval performance.
+In this section, we explore systematically explore how text shapes our visual representation.
+
+The semantics of the steered representation are highly sensitive to the specificity of the text prompt.
 We evaluate on the Personal Object Discrimination Suite (PODS), which tests encoding of personalized objects under distribution shifts.
-PODS is out-of-distribution for our model: neither the object instances nor the visual domains appear in training.
 The model does not simply ``add'' information to the DINOv2 baseline; rather, it steers the feature space to match the resolution of the prompt.
 
-\paragraph{Text granularity controls feature resolution.}
+\subsubsection{From Coarse to Fine-Grained Steering}
 We analyze performance across three levels of textual detail (Figure~\ref{fig:pods}):
 \begin{itemize}
   \item \textbf{Coarse (Supercategory):} Conditioning on high-level supercategories discards lower-level texture and shape cues that are irrelevant to the superclass but crucial for instance identity. This explains the performance drop relative to vanilla DINOv2, which retains these features by default.
   \item \textbf{Intermediate (Class):} Conditioning on class names, which capture category-level attributes, significantly improves performance over the baseline.
-  \item \textbf{Fine-grained (Descriptive):} The largest gains occur with highly descriptive text queries (generated manually or synthetically). The model performs instance-level discrimination in a zero-shot manner, surpassing a supervised fine-tuned DINOv2 (54.4 vs.\ 48.0 PR-AUC). Detailed prompts act as a precise steering mechanism.
+  \item \textbf{Fine-grained (Descriptive):} The largest gains occur with highly descriptive text queries (generated manually or synthetically). The model performs instance-level discrimination in a zero-shot manner, surpassing a supervised fine-tuned DINOv2. Detailed prompts act as a precise steering mechanism.
 \end{itemize}
 
-\paragraph{Text outperforms supervised fine-tuning.}
-Frozen DINOv2 scores 28.0 PR-AUC on PODS.
-Supervised fine-tuning on labeled target data more than doubles this to 48.0, yet our method with descriptive prompts reaches 54.4, all without seeing a single labeled example from the target domain.
-CLIP and SigLIP with late text fusion also fail on this task, confirming that OOD generalization requires both a rich frozen vision encoder and early text conditioning: CLIP's contrastive objective provides text alignment but at the cost of the fine-grained instance-level structure that DINOv2's self-supervised pretraining preserves.
-Text conditioning succeeds precisely because it steers the frozen encoder's rich representations without catastrophic forgetting; fine-tuning, by contrast, overwrites general features with task-specific ones.
+This demonstrates that natural language can steer features effectively in out-of-distribution domains where labeled data for fine-tuning is scarce. \MG{can drive a strong point in conjuction with anomaly detection results}
 
 \begin{figure}[h!]
   \centering
@@ -286,37 +280,10 @@ Text conditioning succeeds precisely because it steers the frozen encoder's rich
 \end{figure}
 
 
-\subsubsection{Anomaly Detection: Extreme OOD Domain Transfer}
-
-PODS tests OOD generalization on natural images of novel object instances.
-We now escalate the domain gap: industrial anomaly detection requires localizing subtle manufacturing defects in factory inspection imagery, a domain entirely absent from our training data (RefCOCO, Visual Genome, Mapillary Vistas).
-
-We perform zero-shot anomaly segmentation (AS) on the MVTec~AD~\cite{bergmann_mvtech} and VisA~\cite{zou2022_visa_dataset} datasets.
-We derive the anomaly map by upsampling the continuous heatmap produced by the learned linear segmentation head.
-As for all text-steerable methods, we use an ensemble of ten anomaly prompts (e.g., \texttt{``the anomaly in the <object>.''}) and average the resulting heatmaps across prompts.
-Following standard practice in the AD literature~\cite{WinCLIP_Jeong23CVPR}, we measure the pixel-wise \textit{Area under the Receiver Operating Characteristics} ($\text{ROC}_P$), the \textit{Per-Region-Overlap} (PRO), and threshold-optimal $F_1$ score ($F_1^{\max}$).
-Performance of existing training- and adaptation-free AS baselines is stated as reported in the original publication.
-
-Despite its general-purpose nature, SHIFT matches dedicated anomaly detection methods on this extreme OOD setting.
-As shown in Table~\ref{tab:mvtec_visa}, SHIFT reaches 79.4 PRO on MVTec~AD, substantially outperforming CLIP-based approaches (SAM3 at 54.5, CLIPseg at 34.6) and closing much of the gap to specialist methods such as FADE (84.5).
-On VisA, SHIFT ties FADE on $\text{ROC}_P$ (91.5) and reaches 77.5 PRO, indicating robust transfer to a harder, more diverse inspection setting.
-These results reinforce the pattern observed on PODS: text-driven steering unlocks capabilities already present in the frozen ViT and transfers them to domains far beyond the training distribution.
-
-\iffindingbox
-\begin{tcolorbox}[colback=lightyellow,
-colframe=black, arc=4pt, boxsep=1pt]
-\paragraph{\textbf{\textit{Finding} 4.}}
-Natural language steering enables zero-shot domain transfer that outperforms supervised fine-tuning on personalized objects (54.4 vs.\ 48.0 PR-AUC) and matches dedicated methods on industrial anomaly detection, without target-domain training.
-Preserving the rich representations of unimodal vision encoders while steering with text is a more data-efficient generalization strategy than fine-tuning on scarce labeled data.
-\end{tcolorbox}
-\fi
-
-\include{tables/anomaly_detection_table}
-
 \subsection{Visualizing and Analyzing Steered Embedding Space}
 \label{sec:tsne_viz}
 
-Having demonstrated that our method can successfully steer global ViT features (Section \ref{subsec:cond_ret_exp}), preserve visual quality (Section \ref{subsec:mosaic_exp}), and that query specificity dictates the level of semantic abstraction (Section \ref{subsec:ood_generalization}).
+Having demonstrated that our method can successfully steer global ViT features (Section \ref{subsec:cond_ret_exp}), preserve visual quality (Section \ref{subsec:mosaic_exp}), and that query specificity dictates the level of semantic abstraction (Section \ref{subsec:text_density_exp}).
 In this section, we use t-SNE visualizations to analyze the embedding space topology to better understand the dynamic steering of visual representations in SteerViT.
 t-SNE visualizations reveal how text conditioning reshapes the embedding space topology.
 Standard pretrained encoders like DINOv2 exhibit a fixed topology dictated by saliency bias, clustering images by the dominant foreground object.
@@ -373,3 +340,17 @@ This confirms that text conditioning can route attention to specific composition
 
 % TODO: Impact of varying text density
 % TODO: Impact of turning down the Cross Attention knob
+
+% \section{Applications}
+\MG{Merge Applications section into Exp}
+\subsection{Anomaly Detection}
+
+We further evaluate SHIFT's robustness and dense localization capabilities by performing zero-shot anomaly segmentation (AS) on the MVTech AD \cite{bergmann_mvtech} and VisA \cite{zou2022_visa_dataset} datasets for industrial anomaly detection (AD).
+
+For SHIFT, we derive the anomaly map by upsampling the continuous heatmap produced by the learned linear segmentation head. As for all text-steerable methods, we use an ensemble of ten anomaly prompts (e.g., \texttt{``the anomaly in the <object>.''}) and average the resulting heatmaps across prompts.
+% For text-steerable segmentation method such as SHIFT, we apply an ensemble of ten anomaly-related prompts (e.g., \texttt{``the anomaly in the <object>.''}) and average the resulting continuous heatmaps across prompts. 
+Following standard practice in the AD literature \cite{WinCLIP_Jeong23CVPR}, we measure the pixel-wise \textit{Area under the Receiver Operating Characteristics} ($\text{ROC}_P$), the \textit{Per-Region-Overlap} (PRO), and threshold-optimal $F_1$ score ($F_1^{\max}$). Performance of existing training- and adaptation-free AS baselines is stated as reported in the original publication. 
+
+Despite its general-purpose nature, SHIFT is competitive with dedicated AS approaches. As shown in Table~\ref{tab:mvtec_visa}, it reaches 79.4 PRO on MVTech AD, substantially improving over prompt-based non-AD baselines (e.g., SAM3 at 54.5) and closing much of the gap to specialist methods (e.g., FADE at 84.5). Similar trends appear on VisA, indicating robust transfer to a harder, more diverse inspection setting. Overall, these results suggest that SHIFT’s text-driven post-training unlocks dense visual capabilities already present in the frozen ViT, yields strong out-of-domain generalization to industrial AD tasks without any task-specific training.\todo{use final numbers}
+
+\include{tables/anomaly_detection_table}

@@ -402,20 +402,20 @@ INPUT ./sections/4_exp.tex
 INPUT ./sections/4_exp.tex
 INPUT ./sections/4_exp.tex
 INPUT sections/4_exp.tex
-INPUT ./figures/umap.pdf
-INPUT ./figures/umap.pdf
-INPUT ./figures/umap.pdf
-INPUT ./figures/umap.pdf
-INPUT ./figures/umap.pdf
-INPUT ./figures/umap.pdf
+INPUT ./figures/umap_neighbourhood.pdf
+INPUT ./figures/umap_neighbourhood.pdf
+INPUT ./figures/umap_neighbourhood.pdf
+INPUT ./figures/umap_neighbourhood.pdf
+INPUT ./figures/umap_neighbourhood.pdf
+INPUT ./figures/umap_neighbourhood.pdf
 INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecbx0700.tfm
-INPUT ./figures/core_baselines.png
-INPUT ./figures/core_baselines.png
-INPUT ./figures/core_baselines.png
-INPUT ./figures/core_baselines.png
-INPUT ./figures/core_baselines.png
-INPUT ./figures/core_baselines.png
-INPUT ./figures/core_baselines.png
+INPUT ./figures/cond_retrieval_baselines.png
+INPUT ./figures/cond_retrieval_baselines.png
+INPUT ./figures/cond_retrieval_baselines.png
+INPUT ./figures/cond_retrieval_baselines.png
+INPUT ./figures/cond_retrieval_baselines.png
+INPUT ./figures/cond_retrieval_baselines.png
+INPUT ./figures/cond_retrieval_baselines.png
 INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecbi1000.tfm
 INPUT ./figures/dinov2_attn_maps.pdf
 INPUT ./figures/dinov2_attn_maps.pdf
@@ -423,6 +423,12 @@ INPUT ./figures/dinov2_attn_maps.pdf
 INPUT ./figures/dinov2_attn_maps.pdf
 INPUT ./figures/dinov2_attn_maps.pdf
 INPUT ./figures/dinov2_attn_maps.pdf
+INPUT ./figures/ca_gate_cos_sim.pdf
+INPUT ./figures/ca_gate_cos_sim.pdf
+INPUT ./figures/ca_gate_cos_sim.pdf
+INPUT ./figures/ca_gate_cos_sim.pdf
+INPUT ./figures/ca_gate_cos_sim.pdf
+INPUT ./figures/ca_gate_cos_sim.pdf
 INPUT ./figures/ca_gate_mosaic.png
 INPUT ./figures/ca_gate_mosaic.png
 INPUT ./figures/ca_gate_mosaic.png
@@ -451,6 +457,11 @@ INPUT ./figures/tsne_semantic.pdf
 INPUT ./figures/tsne_semantic.pdf
 INPUT ./figures/tsne_semantic.pdf
 INPUT ./figures/tsne_semantic.pdf
+INPUT ./sections/5_applications.tex
+INPUT ./sections/5_applications.tex
+INPUT ./sections/5_applications.tex
+INPUT ./sections/5_applications.tex
+INPUT sections/5_applications.tex
 INPUT ./tables/anomaly_detection_table.tex
 INPUT ./tables/anomaly_detection_table.tex
 OUTPUT tables/anomaly_detection_table.aux
@@ -471,11 +482,6 @@ INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tf
 INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/public/amsfonts/symbols/msbm7.tfm
 INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/jknappen/ec/ecrm0600.tfm
 INPUT /Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/tfm/adobe/zapfding/pzdr.tfm
-INPUT ./sections/5_applications.tex
-INPUT ./sections/5_applications.tex
-INPUT ./sections/5_applications.tex
-INPUT ./sections/5_applications.tex
-INPUT sections/5_applications.tex
 INPUT ./sections/6_ablations.tex
 INPUT ./sections/6_ablations.tex
 INPUT ./sections/6_ablations.tex
