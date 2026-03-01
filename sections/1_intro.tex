@@ -20,8 +20,9 @@ Consider a kitchen image containing appliances, utensils, and a few mugs in the 
 
 This limitation leaves current models trapped between two extremes (Figure~\ref{fig:teaser}).
 Standard visual encoders such as DINOv2~\cite{oquab2024dinov2} and SigLIP~\cite{zhai2023_siglip} produce rich, general-purpose features but offer no mechanism to focus on a particular visual concept.
-Open-vocabulary localization models such as SAM3~\cite{ravi2024sam2} and GroundingDINO~\cite{liu2023groundingdino} accept text queries but produce task-specific representations that lack the generality and fidelity for downstream transfer.
+Open-vocabulary localization models such as SAM3 and GroundingDINO~\cite{liu2023groundingdino} accept text queries but produce task-specific representations that lack the generality and fidelity for downstream transfer.
 No existing approach achieves both high-quality visual features and prompt-based steerability.
+
 
 In this context, we explore the question: \textit{can text conditioning steer the semantics of visual representations without degrading their quality?}
 We present SHIFT, a method that equips any frozen Vision Transformer with the ability to steer its features via natural language.
@@ -33,6 +34,12 @@ We find that this leads to three desirable properties/desiderata:
     \item \textbf{Feature quality preservation:} The steered representations preserve the base ViT's downstream transfer, maintaining \sout{classification and segmentation} performance on standard vision benchmarks (Section~\ref{subsec:pareto}).
 \end{itemize}
 
+Our method is able to embody these properties while existing methods fail. \MG{need to add TL;DR of Section 4.1, 4.2, 4.4, and then flow into OOD finding}
+Together, these properties yield a surprising consequence: natural language can steer frozen vision encoders to generalizes to out-of-distribution domains \sout{more effectively than supervised fine-tuning.}
+Because our method preserves the rich visual representations learned from unimodal visual pretraining, with the right representation alignment, natural language can lift these features to novel tasks without the catastrophic forgetting that accompanies fine-tuning on limited target data.
+On personalized object discrimination, descriptive text prompts outperform a fine-tuned DINOv2 baseline in a zero-shot manner (Section~\ref{subsec:ood_generalization}).
+On industrial anomaly detection, a domain entirely absent from our training, SteerViT matches dedicated methods without any adaptation.
+
 In summary, we make the following contributions:
 \begin{enumerate}
     \item We introduce SHIFT, a text-conditioned visual encoder that instills text understanding into frozen ViTs via sparse, gated cross attention layers trained on grounding.
@@ -41,6 +48,8 @@ In summary, we make the following contributions:
     \item We demonstrate a Pareto improvement over existing models:
     % \item Our approach dynamically routes attention to task-relevant visual concepts, 
     SHIFT can guide the semantics of the visual representation with text while preserving their downstream transfer, bridging the gap between unsteerable encoders and quality-degraded multimodal models.
-    \item We conduct extensive zero-shot evaluation on fine-grained multimodal retrieval, referential segmentation, personalized object discrimination, and anomaly detection,  demonstrating generalization to out-of-distribution domains across ViT families (DINOv2~\cite{oquab2024dinov2}, SigLIP~\cite{zhai2023_siglip}, MAE~\cite{he2022mae}) without task-specific training.
-    % \item We apply SHIFT to , achieving 64.2 AuPRO on MVTec (outperforming CLIPSeg at 34.0 and SAM2 at 48.2) and to personalized object discrimination, where detailed text prompts enable the model to surpass fine-tuned baselines without any task-specific training.
+    \item We demonstrate that text conditioning enables zero-shot domain transfer that outperforms supervised fine-tuning: on personalized object discrimination (PODS), descriptive prompts surpass a fine-tuned DINOv2 baseline (54.4 vs.\ 48.0 PR-AUC), and on industrial anomaly detection (MVTec~AD, VisA), our general-purpose model matches dedicated methods, all without task-specific training and across ViT families (DINOv2~\cite{oquab2024dinov2}, SigLIP~\cite{zhai2023_siglip}, MAE~\cite{he2022mae}).
+    \MG{better - demonstrating generalization to out-of-distribution domains across ViT families (DINOv2~\cite{oquab2024dinov2}, SigLIP~\cite{zhai2023_siglip}, MAE~\cite{he2022mae}) without task-specific training.}
+    % \item We conduct extensive zero-shot evaluation on fine-grained multimodal retrieval, referential segmentation, personalized object discrimination, and anomaly detection,  demonstrating generalization to out-of-distribution domains across ViT families (DINOv2~\cite{oquab2024dinov2}, SigLIP~\cite{zhai2023_siglip}, MAE~\cite{he2022mae}) without task-specific training.
+    
 \end{enumerate}
