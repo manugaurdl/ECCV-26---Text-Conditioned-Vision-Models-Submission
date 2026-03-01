@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2024.10.6)  27 FEB 2026 22:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.1) (preloaded format=pdflatex 2024.10.6)  28 FEB 2026 18:12
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1039,6 +1039,15 @@ LaTeX Warning: Citation `liu2023groundingdino' on page 1 undefined on input line
 LaTeX Warning: Citation `alayrac2022flamingo' on page 2 undefined on input line 28.
 
 
+LaTeX Warning: Reference `subsec:cond_ret_exp' on page 2 undefined on input line 31.
+
+
+LaTeX Warning: Reference `subsec:mosaic_exp' on page 2 undefined on input line 32.
+
+
+LaTeX Warning: Reference `subsec:pareto' on page 2 undefined on input line 33.
+
+
 
 [2 <./figures/teaser_3.pdf>]
 
@@ -1092,14 +1101,14 @@ Overfull \hbox (25.05229pt too wide) detected at line 58
  []
 
 
-LaTeX Warning: Citation `kazemzadeh2014referitgame' on page 4 undefined on input line 92.
-
-
-LaTeX Warning: Citation `yu2016refcocog' on page 4 undefined on input line 92.
-
-
 
 [4]
+
+LaTeX Warning: Citation `kazemzadeh2014referitgame' on page 5 undefined on input line 92.
+
+
+LaTeX Warning: Citation `yu2016refcocog' on page 5 undefined on input line 92.
+
 
 LaTeX Warning: Citation `krishna2017visual' on page 5 undefined on input line 95.
 
@@ -1122,238 +1131,258 @@ LaTeX Warning: Citation `radford2021_clip' on page 5 undefined on input line 32.
 LaTeX Warning: Citation `zhai2023_siglip' on page 5 undefined on input line 32.
 
 
-LaTeX Warning: Citation `xiao2025flair' on page 5 undefined on input line 33.
+LaTeX Warning: Citation `xiao2025flair' on page 5 undefined on input line 34.
 
 
-LaTeX Warning: Citation `Jiang2024E5VUE' on page 5 undefined on input line 34.
+LaTeX Warning: Citation `Jiang2024E5VUE' on page 5 undefined on input line 38.
 
 
-LaTeX Warning: Citation `ravi2024sam2' on page 5 undefined on input line 36.
+LaTeX Warning: Citation `carion2025_sam3' on page 5 undefined on input line 40.
 
 
-LaTeX Warning: Citation `liu2023groundingdino' on page 5 undefined on input line 37.
+LaTeX Warning: Citation `liu2023groundingdino' on page 5 undefined on input line 41.
 
 
 
 [5]
-<figures/umap_neighbourhood.pdf, id=96, 205.22772pt x 296.73311pt>
-File: figures/umap_neighbourhood.pdf Graphic file (type pdf)
-<use figures/umap_neighbourhood.pdf>
-Package pdftex.def Info: figures/umap_neighbourhood.pdf  used on input line 48.
-(pdftex.def)             Requested size: 138.84732pt x 200.76161pt.
-<figures/cond_retrieval_baselines.png, id=97, 983.675pt x 534.99875pt>
-File: figures/cond_retrieval_baselines.png Graphic file (type png)
-<use figures/cond_retrieval_baselines.png>
-Package pdftex.def Info: figures/cond_retrieval_baselines.png  used on input line 56.
-(pdftex.def)             Requested size: 190.91904pt x 103.83044pt.
+<figures/umap.pdf, id=96, 227.89873pt x 216.86491pt>
+File: figures/umap.pdf Graphic file (type pdf)
+<use figures/umap.pdf>
+Package pdftex.def Info: figures/umap.pdf  used on input line 52.
+(pdftex.def)             Requested size: 138.84732pt x 132.12856pt.
+
+Underfull \hbox (badness 5908) in paragraph at lines 53--53
+[]\T1/cmr/bx/n/7 (a) |\T1/cmr/m/n/7 DI-NOv2 em-bed-dings show no
+ []
 
 
-[6 <./figures/umap_neighbourhood.pdf> <./figures/cond_retrieval_baselines.png>]
+Underfull \hbox (badness 1527) in paragraph at lines 53--53
+\T1/cmr/m/n/7 sep-a-ra-bil-ity across in-painted ob-jects,
+ []
 
-LaTeX Warning: Reference `fig:cond_ret_baselines' on page 7 undefined on input line 86.
+
+Underfull \hbox (badness 1442) in paragraph at lines 53--53
+\T1/cmr/m/n/7 whereas our text-conditioned em-bed-
+ []
+
+<figures/core_baselines.png, id=97, 979.66pt x 625.33624pt>
+File: figures/core_baselines.png Graphic file (type png)
+<use figures/core_baselines.png>
+Package pdftex.def Info: figures/core_baselines.png  used on input line 60.
+(pdftex.def)             Requested size: 190.91904pt x 121.85896pt.
 
 
-LaTeX Warning: Reference `fig:cond_ret_baselines' on page 7 undefined on input line 94.
+[6 <./figures/umap.pdf> <./figures/core_baselines.png>]
+
+LaTeX Warning: Reference `fig:cond_ret_baselines' on page 7 undefined on input line 93.
+
+
+LaTeX Warning: Reference `fig:umap-neighbourhood' on page 7 undefined on input line 101.
+
+
+LaTeX Warning: Citation `chen2025vlm_benchmark' on page 7 undefined on input line 132.
 
 
 
 [7]
-Underfull \hbox (badness 10000) in paragraph at lines 142--142
-[]\T1/cmr/bx/n/7 (a) |\T1/cmr/m/n/7 Com-par-ing
+
+LaTeX Warning: Reference `subsec:pareto' on page 8 undefined on input line 141.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 159--159
+[]\T1/cmr/bx/n/7 (a) |\T1/cmr/m/n/7 Our method
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 142--142
-\T1/cmr/m/n/7 SteerViT with
+Underfull \hbox (badness 10000) in paragraph at lines 159--159
+\T1/cmr/m/n/7 out-per-forms the
  []
 
-<figures/dinov2_attn_maps.pdf, id=122, 306.70264pt x 310.40727pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 159--159
+\T1/cmr/m/n/7 frozen ViT base-
+ []
+
+
+Underfull \hbox (badness 1509) in paragraph at lines 159--159
+\T1/cmr/m/n/7 lines across model
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 159--159
+\T1/cmr/m/n/7 fam-i-lies (CLIP,
+ []
+
+<figures/dinov2_attn_maps.pdf, id=123, 306.70264pt x 310.40727pt>
 File: figures/dinov2_attn_maps.pdf Graphic file (type pdf)
 <use figures/dinov2_attn_maps.pdf>
-Package pdftex.def Info: figures/dinov2_attn_maps.pdf  used on input line 149.
+Package pdftex.def Info: figures/dinov2_attn_maps.pdf  used on input line 166.
 (pdftex.def)             Requested size: 190.91904pt x 193.23203pt.
+
+
+[8 <./figures/dinov2_attn_maps.pdf>]
+
+LaTeX Warning: Reference `sec:intro' on page 9 undefined on input line 179.
+
+
+LaTeX Warning: Reference `fig:steer_attn' on page 9 undefined on input line 180.
+
+
+LaTeX Warning: Reference `fig:steer_attn' on page 9 undefined on input line 187.
+
+
+LaTeX Warning: Reference `fig:mosaic_baselines' on page 9 undefined on input line 189.
+
+
+LaTeX Warning: Reference `fig:teaser' on page 9 undefined on input line 190.
+
+
+LaTeX Warning: Reference `fig:teaser' on page 9 undefined on input line 203.
+
+
+
+[9]
+
+LaTeX Warning: Reference `eq:gated_ca' on page 10 undefined on input line 215.
+
+
+LaTeX Warning: Reference `fig:teaser' on page 10 undefined on input line 220.
+
+
+LaTeX Warning: Reference `fig:gate_factor' on page 10 undefined on input line 225.
+
+<figures/ca_gate_mosaic.png, id=145, 701.62125pt x 549.05125pt>
+File: figures/ca_gate_mosaic.png Graphic file (type png)
+<use figures/ca_gate_mosaic.png>
+Package pdftex.def Info: figures/ca_gate_mosaic.png  used on input line 240.
+(pdftex.def)             Requested size: 295.05717pt x 230.90155pt.
 
 LaTeX Warning: `!h' float specifier changed to `!ht'.
 
+<figures/eccv_pods.png, id=146, 498.663pt x 157.7895pt>
+File: figures/eccv_pods.png Graphic file (type png)
+<use figures/eccv_pods.png>
+Package pdftex.def Info: figures/eccv_pods.png  used on input line 253.
+(pdftex.def)             Requested size: 340.17964pt x 107.64214pt.
+
+LaTeX Warning: Reference `subsec:cond_ret_exp' on page 10 undefined on input line 258.
 
 
-[8]
-
-LaTeX Warning: Reference `fig:steer_attn' on page 9 undefined on input line 167.
+LaTeX Warning: Reference `fig:pods' on page 10 undefined on input line 266.
 
 
-LaTeX Warning: Reference `fig:mosaic_baselines' on page 9 undefined on input line 169.
-
-
-LaTeX Warning: Reference `fig:teaser' on page 9 undefined on input line 170.
-
-
-Underfull \vbox (badness 2418) has occurred while \output is active []
-
-
-
-[9 <./figures/dinov2_attn_maps.pdf>]
-
-LaTeX Warning: Reference `' on page 10 undefined on input line 177.
-
-
-LaTeX Warning: Reference `teaser' on page 10 undefined on input line 177.
-
-
-LaTeX Warning: Reference `fig:teaser' on page 10 undefined on input line 187.
-
-
-LaTeX Warning: Reference `eq:gated_ca' on page 10 undefined on input line 193.
-
-
-Overfull \hbox (7.56755pt too wide) in paragraph at lines 193--200
-\T1/cmr/m/n/10 blocks that are tanh-gated (Eq. []). Be-cause these gated blocks are zero-initialized,
+Overfull \hbox (6.66498pt too wide) in paragraph at lines 269--270
+[]\T1/cmr/bx/n/10 Intermediate (Class): \T1/cmr/m/n/10 Con-di-tion-ing on class names, which cap-ture category-
  []
-
-
-LaTeX Warning: Reference `fig:tsne_semantic' on page 10 undefined on input line 201.
 
 
 
 [10]
-
-LaTeX Warning: Reference `fig:mosaic_gate_factor' on page 11 undefined on input line 203.
-
-<figures/ca_gate_cos_sim.pdf, id=150, 352.62279pt x 152.82706pt>
-File: figures/ca_gate_cos_sim.pdf Graphic file (type pdf)
-<use figures/ca_gate_cos_sim.pdf>
-Package pdftex.def Info: figures/ca_gate_cos_sim.pdf  used on input line 210.
-(pdftex.def)             Requested size: 218.68956pt x 94.7821pt.
-<figures/ca_gate_mosaic.png, id=151, 701.62125pt x 549.05125pt>
-File: figures/ca_gate_mosaic.png Graphic file (type png)
-<use figures/ca_gate_mosaic.png>
-Package pdftex.def Info: figures/ca_gate_mosaic.png  used on input line 218.
-(pdftex.def)             Requested size: 121.49538pt x 95.07169pt.
-<figures/eccv_pods.png, id=152, 498.663pt x 157.7895pt>
-File: figures/eccv_pods.png Graphic file (type png)
-<use figures/eccv_pods.png>
-Package pdftex.def Info: figures/eccv_pods.png  used on input line 230.
-(pdftex.def)             Requested size: 340.17964pt x 107.64214pt.
-
-LaTeX Warning: Reference `sec:exp' on page 11 undefined on input line 237.
-
-
-Overfull \hbox (3.31024pt too wide) in paragraph at lines 244--245
-[]\T1/cmr/bx/n/10 Coarse (Su-per-cat-e-gory): \T1/cmr/m/n/10 When con-di-tion-ing on high-level su-per-cat-e-gories,
- []
-
-
-Overfull \hbox (1.22186pt too wide) in paragraph at lines 245--246
-[]\T1/cmr/bx/n/10 Intermediate (Class): \T1/cmr/m/n/10 Con-versely, con-di-tion-ing on ill de-scribed class names
- []
-
-
-
-[11 <./figures/ca_gate_cos_sim.pdf> <./figures/ca_gate_mosaic.png>]
-<figures/token_len.png, id=167, 1160.335pt x 911.405pt>
+<figures/token_len.png, id=154, 1160.335pt x 911.405pt>
 File: figures/token_len.png Graphic file (type png)
 <use figures/token_len.png>
-Package pdftex.def Info: figures/token_len.png  used on input line 253.
-(pdftex.def)             Requested size: 104.13814pt x 81.78648pt.
+Package pdftex.def Info: figures/token_len.png  used on input line 277.
+(pdftex.def)             Requested size: 173.5618pt x 136.31544pt.
 
 
-LaTeX Warning: Reference `subsec:cond_ret_exp' on page 12 undefined on input line 266.
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
 
-LaTeX Warning: Reference `subsec:mosaic_exp' on page 12 undefined on input line 266.
+LaTeX Warning: Reference `subsec:cond_ret_exp' on page 11 undefined on input line 286.
 
 
-LaTeX Warning: Reference `subsec:text_density_exp' on page 12 undefined on input line 266.
+LaTeX Warning: Reference `subsec:mosaic_exp' on page 11 undefined on input line 286.
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+LaTeX Warning: Reference `subsec:text_density_exp' on page 11 undefined on input line 286.
+
+
+
+[11 <./figures/ca_gate_mosaic.png>]
+
+LaTeX Warning: Reference `fig:tsne_semantic' on page 12 undefined on input line 302.
+
+
+LaTeX Warning: Reference `fig:tsne_semantic' on page 12 undefined on input line 305.
+
+
+Overfull \hbox (0.35075pt too wide) in paragraph at lines 304--306
+[]\T1/cmr/m/n/10 Conditioning our model on \T1/cmtt/m/n/10 ``Animal'' \T1/cmr/m/n/10 (right) trans-forms the em-bed-ding space:
+ []
 
 
 
 [12 <./figures/eccv_pods.png> <./figures/token_len.png>]
-
-LaTeX Warning: Reference `fig:tsne_semantic' on page 13 undefined on input line 282.
-
-
-LaTeX Warning: Reference `fig:tsne_semantic' on page 13 undefined on input line 289.
-
-<figures/tsne_semantic.pdf, id=176, 614.32594pt x 273.8357pt>
+<figures/tsne_semantic.pdf, id=174, 614.32594pt x 273.8357pt>
 File: figures/tsne_semantic.pdf Graphic file (type pdf)
 <use figures/tsne_semantic.pdf>
-Package pdftex.def Info: figures/tsne_semantic.pdf  used on input line 301.
+Package pdftex.def Info: figures/tsne_semantic.pdf  used on input line 313.
 (pdftex.def)             Requested size: 347.12361pt x 154.72998pt.
 
 
-[13]
-
-LaTeX Warning: Reference `fig:tsne_compositional' on page 14 undefined on input line 317.
+LaTeX Warning: Reference `fig:tsne_compositional' on page 13 undefined on input line 329.
 
 
-LaTeX Warning: Reference `fig:tsne_compositional' on page 14 undefined on input line 319.
+LaTeX Warning: Reference `fig:tsne_compositional' on page 13 undefined on input line 331.
 
 
-Overfull \hbox (7.8767pt too wide) in paragraph at lines 319--320
-[]\T1/cmr/m/n/10 Upon con-di-tion-ing with the text \T1/cmtt/m/n/10 ``Wheel''\T1/cmr/m/n/10 , our rep-re-sen-ta-tion ef-fec-tively ``steers''
- []
 
-) (sections/5_applications.tex
+[13 <./figures/tsne_semantic.pdf>]
 
-[14 <./figures/tsne_semantic.pdf>]
-
-LaTeX Warning: Citation `bergmann_mvtech' on page 15 undefined on input line 5.
+LaTeX Warning: Citation `bergmann_mvtech' on page 14 undefined on input line 348.
 
 
-LaTeX Warning: Citation `zou2022_visa_dataset' on page 15 undefined on input line 5.
+LaTeX Warning: Citation `zou2022_visa_dataset' on page 14 undefined on input line 348.
 
 
-LaTeX Warning: Citation `WinCLIP_Jeong23CVPR' on page 15 undefined on input line 9.
+LaTeX Warning: Citation `WinCLIP_Jeong23CVPR' on page 14 undefined on input line 352.
 
 
-Overfull \hbox (6.29375pt too wide) in paragraph at lines 7--10
+Overfull \hbox (6.29375pt too wide) in paragraph at lines 350--353
 []\T1/cmr/m/n/10 For SHIFT, we de-rive the anomaly map by up-sam-pling the con-tin-u-ous heatmap
  []
 
 
-LaTeX Warning: Reference `tab:mvtec_visa' on page 15 undefined on input line 11.
+LaTeX Warning: Reference `tab:mvtec_visa' on page 14 undefined on input line 354.
 
-Package hyperref Info: bookmark level for unknown todo defaults to 0 on input line 11.
+Package hyperref Info: bookmark level for unknown todo defaults to 0 on input line 354.
 
 
-[15]
+[14]
 \openout2 = `tables/anomaly_detection_table.aux'.
 
  (tables/anomaly_detection_table.tex
 
-LaTeX Warning: Citation `zhou2022_maskclip' on page 16 undefined on input line 24.
+LaTeX Warning: Citation `zhou2022_maskclip' on page 15 undefined on input line 24.
 
 
-LaTeX Warning: Citation `lueddecke22_clipseg' on page 16 undefined on input line 25.
+LaTeX Warning: Citation `lueddecke22_clipseg' on page 15 undefined on input line 25.
 
 
-LaTeX Warning: Citation `carion2025_sam3' on page 16 undefined on input line 26.
+LaTeX Warning: Citation `carion2025_sam3' on page 15 undefined on input line 26.
 
 
-LaTeX Warning: Citation `WinCLIP_Jeong23CVPR' on page 16 undefined on input line 28.
+LaTeX Warning: Citation `WinCLIP_Jeong23CVPR' on page 15 undefined on input line 28.
 
 
-LaTeX Warning: Citation `hicsonmez2026training' on page 16 undefined on input line 32.
+LaTeX Warning: Citation `hicsonmez2026training' on page 15 undefined on input line 32.
 
 
-LaTeX Warning: Citation `li2024_fade' on page 16 undefined on input line 33.
+LaTeX Warning: Citation `li2024_fade' on page 15 undefined on input line 33.
 
 )
 
-[16]) (sections/6_ablations.tex) (sections/7_conclusion.tex) (sections/appendix.tex (tables/knn_exp_indoor.tex) (tables/knn_exp_outdoor.tex)) (main.bbl
+[15]) (sections/5_applications.tex) (sections/6_ablations.tex) (sections/7_conclusion.tex) (sections/appendix.tex (tables/knn_exp_indoor.tex) (tables/knn_exp_outdoor.tex)) (main.bbl
 
-[17
+[16
 
 
 
 ]
 
-[18])
+[17])
 
-[19] (main.aux (tables/anomaly_detection_table.aux))
+[18] (main.aux (tables/anomaly_detection_table.aux))
  ***********
 LaTeX2e <2024-06-01> patch level 2
 L3 programming layer <2024-08-30>
@@ -1375,17 +1404,17 @@ Package rerunfilecheck Info: Checksums for `main.out':
 (rerunfilecheck)             After:  A601353C005FB1D17C45B1540CFB0F66;194.
  ) 
 Here is how much of TeX's memory you used:
- 33607 strings out of 473899
- 711702 string characters out of 5716622
- 1078690 words of memory out of 5000000
- 55808 multiletter control sequences out of 15000+600000
+ 33600 strings out of 473899
+ 711386 string characters out of 5716622
+ 1077711 words of memory out of 5000000
+ 55809 multiletter control sequences out of 15000+600000
  580134 words of font info for 83 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 88i,15n,96p,889b,1209s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 88i,15n,96p,839b,1209s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ectt0900.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbi1000.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecrm0700.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx0700.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ectt1000.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecti1000.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1000.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1200.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/tcrm0900.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecti0900.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx0900.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecrm0900.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecrm1000.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi525/ecss0800.pk> </Users/manugaur/Library/Application Support/MiKTeX/texmfs/data/fonts/pk/ljfour/jknappen/ec/dpi600/ecbx1440.pk></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmex10.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi10.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi5.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi6.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi7.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmmi9.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr5.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr6.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr7.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmr9.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy10.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/cm/cmsy7.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/public/amsfonts/symbols/msbm10.pfb></Users/manugaur/Library/Application Support/MiKTeX/texmfs/install/fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on main.pdf (19 pages, 14823323 bytes).
+Output written on main.pdf (18 pages, 15046289 bytes).
 PDF statistics:
- 936 PDF objects out of 1000 (max. 8388607)
- 104 named destinations out of 1000 (max. 500000)
- 58 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 927 PDF objects out of 1000 (max. 8388607)
+ 96 named destinations out of 1000 (max. 500000)
+ 53 words of extra memory for PDF output out of 10000 (max. 10000000)
 
