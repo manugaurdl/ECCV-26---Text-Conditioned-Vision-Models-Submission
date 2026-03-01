@@ -35,9 +35,14 @@ We find that this leads to three desirable properties/desiderata:
 \end{itemize}
 
 Our method is able to embody these properties while existing methods fail. \MG{need to add TL;DR of Section 4.1, 4.2, 4.4, and then flow into OOD finding}
-Together, these properties yield a surprising consequence: natural language can steer frozen vision encoders to generalizes to out-of-distribution domains \sout{more effectively than supervised fine-tuning.}
-Because our method preserves the rich visual representations learned from unimodal visual pretraining, with the right representation alignment, natural language can lift these features to novel tasks without the catastrophic forgetting that accompanies fine-tuning on limited target data.
+
+Together, these properties yield a surprising consequence: natural language can steer frozen vision encoders to generalize to out-of-distribution domains.
+Cross-modal encoders such as CLIP also leverage language for generalization, but contrastive training on noisy web-scraped pairs sacrifices the fine-grained visual structure that self-supervised encoders learn from curated vision-only data; MLLMs, conversely, condition language on vision but introduce language shortcuts that degrade vision-centric performance~\cite{chen2025vlm_benchmark}.
+Because SteerViT conditions the visual encoder on text rather than the reverse, it retains the representational depth of unimodal pretraining and uses language purely as a steering signal, enabling generalization to novel concepts without catastrophic forgetting.
 On personalized object discrimination, descriptive text prompts outperform a fine-tuned DINOv2 baseline in a zero-shot manner (Section~\ref{subsec:ood_generalization}).
+% Together, these properties yield a surprising consequence: natural language can steer frozen vision encoders to generalizes to out-of-distribution domains \sout{more effectively than supervised fine-tuning.}
+% % Because our method preserves the rich visual representations learned from unimodal visual pretraining, with the right representation alignment, natural language can lift these features to novel tasks without the catastrophic forgetting that accompanies fine-tuning on limited target data.
+% On personalized object discrimination, descriptive text prompts outperform a fine-tuned DINOv2 baseline in a zero-shot manner (Section~\ref{subsec:ood_generalization}).
 On industrial anomaly detection, a domain entirely absent from our training, SteerViT matches dedicated methods without any adaptation.
 
 In summary, we make the following contributions:
