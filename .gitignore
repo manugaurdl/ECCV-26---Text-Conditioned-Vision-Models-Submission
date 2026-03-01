@@ -3,3 +3,10 @@ context/
 %OUTDIR%/
 main.pdf
 main.synctex.gz
+main.aux
+main.blg
+main.fdb_latexmk
+main.log
+main.synctex.gz
+main.fls
+main.out

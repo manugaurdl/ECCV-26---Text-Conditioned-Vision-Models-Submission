@@ -401,95 +401,44 @@ This confirms that text conditioning can route attention to specific composition
 % ------------------------------------------------------------
 
 \subsection{Text Enables Zero-Shot Domain Transfer}
-\MG{polishing}
-- Section~\ref{subsec:text_density_exp} shows that our method can use text to adapt to out-of-distribution tasks images of personal object instances in the wild.
-
-- Surprisingly, when conditioned with descriptive text queries, the visual features are fine-grained, outperforming DinoV2 supervise fine-tuned on the task (or PODs data).
-{\color{gray} Frozen DINOv2 scores 28.0 PR-AUC on PODS.
-Supervised fine-tuning on labeled target data more than doubles this to 48.0, yet our method with descriptive prompts reaches 54.4, all without seeing a single labeled example from the target domain.
-}
-
-- This demonstrates that natural language can steer features effectively in out-of-distribution domains more robustly than task-specific fine-tuning
-
-- Similar to in-context learning in LLMs, this paves a new path for using natural language to extend generalization using natural language.
-
-- MLLMs motivated by this condition language on vision, and although it improves generalization it introduces language shortcuts that that degrade vision-centric performance~\cite{chen2025vlm_benchmark} (also cite chicken with 3 leg VQA benchmark)
-Wins of early fusion (adding text conditioning within ViT layers):
-
-- Because our method conditions the visual encoder on text rather than the reverse, it retains the representational depth of unimodal pretraining and uses language purely as a steering signal, enabling generalization to novel concepts without succumbing to language shortcuts.
-
-- Although CLIP also leverages a multimodal space, since the visual encoder remains to be query-agnostic, steering the visual features with text is not possible. 
-
-- CLIP and SigLIP with late text fusion fail on this task, confirming that OOD generalization requires both a rich frozen vision encoder and early text conditioning.
-
-\MG{Not sure the following is a good route to take (i.e saying that unimodal encoders >> multimodal modelling and our representaion alignment method gets best of both)}
-Cross-modal encoders such as CLIP also leverage language to extend generalization, but contrastive training on noisy web-scraped pairs sacrifices the fine-grained visual structure that self-supervised encoders learn from curated vision-only data;
-
-- Text prompting (similar to in-context learning) is robust to catastrophic forgetting): Text conditioning succeeds precisely because it steers the frozen encoder's rich representations without catastrophic forgetting; fine-tuning, by contrast, overwrites general features with task-specific ones. 
-
-
-% ------------------------------------------------------------
-
-% Together, these properties yield a surprising consequence: natural language can steer frozen vision encoders to generalize to out-of-distribution domains.
-% Cross-modal encoders such as CLIP also leverage language to extend generalization, but contrastive training on noisy web-scraped pairs sacrifices the fine-grained visual structure that self-supervised encoders learn from curated vision-only data; MLLMs, conversely, condition language on vision but introduce language shortcuts that degrade vision-centric performance~\cite{chen2025vlm_benchmark}.
-% Because SteerViT conditions the visual encoder on text rather than the reverse, it retains the representational depth of unimodal pretraining and uses language purely as a steering signal, enabling generalization to novel concepts without catastrophic forgetting.
-% On personalized object discrimination, descriptive text prompts outperform a fine-tuned DINOv2 baseline in a zero-shot manner 
-
-in anomaly detection, we again see that (a) we generalize to OOD (b) outperform task-specific sota model
-
 \label{subsec:ood_generalization}
 
-% Sections~\ref{subsec:cond_ret_exp}--\ref{subsec:pareto} established that SteerViT steers global features, routes dense attention, and preserves representation quality.
-% We now ask: what does this combination enable generalization to domains unseen during training?
-% We evaluate on two progressively harder out-of-distribution settings: personalized object discrimination (images of novel object instances in the wild) and industrial anomaly detection (factory inspection imagery absent from our training).
+The previous sections established that SHIFT steers global features with text, routes dense attention to queried concepts, and preserves representation quality.
+We now ask: does this combination enable generalization to domains unseen during training?
+We evaluate on two progressively harder out-of-distribution settings: personalized object discrimination (natural images of novel object instances) and industrial anomaly detection (factory inspection imagery absent from all training data).
 
-% can solve personalization by just describing your object
-% An surprising finding in Section~{\ref{subsec:text_density_exp}} is that our method when conditioned on descriptive text-queries outperforms its underlying DinoV2 encoder that is supervised fine-tuned to the the task.
-% PODS is out-of-distribution for our model as it contains images of personal object instances in the wild.
-% neither the object instances nor the visual domains appear in training.
+\subsubsection{Personalized Object Discrimination}
 
+Section~\ref{subsec:text_density_exp} showed that text specificity controls feature granularity on the PODS benchmark, an out-of-distribution task involving personalized object instances in the wild.
+A surprising result emerges from that analysis: with descriptive text prompts, SHIFT not only adapts to this OOD domain zero-shot but outperforms DINOv2 supervised fine-tuned on labeled target data.
+Frozen DINOv2 scores 28.0 PR-AUC on PODS; supervised fine-tuning more than doubles this to 48.0; yet our method reaches 54.4 without seeing a single labeled example from the target domain (Figure~\ref{fig:pods}).
+CLIP and SigLIP with late text fusion also fail on this task, confirming that OOD generalization requires both a rich frozen vision encoder and early text conditioning.
 
+Text conditioning succeeds here because it steers the frozen encoder's rich representations without catastrophic forgetting; fine-tuning, by contrast, overwrites general features with task-specific ones.
+Analogous to how prompting adapts large language models to novel tasks without retraining, descriptive text adapts visual representations to novel domains without fine-tuning, leveraging the representational depth that unimodal pretraining already provides.
 
 \subsubsection{Anomaly Detection: Extreme OOD Domain Transfer}
-PODS tests OOD generalization on natural images of novel object instances.
-We now escalate the domain gap: industrial anomaly detection requires localizing subtle manufacturing defects in factory inspection imagery, a domain entirely absent from our training data (RefCOCO, Visual Genome, Mapillary Vistas).
+
+Having established OOD generalization on natural images, we escalate the domain gap: industrial anomaly detection requires localizing subtle manufacturing defects in factory inspection imagery, a domain entirely absent from our training data (RefCOCO, Visual Genome, Mapillary Vistas).
 
 We perform zero-shot anomaly segmentation (AS) on the MVTec~AD~\cite{bergmann_mvtech} and VisA~\cite{zou2022_visa_dataset} datasets.
 We derive the anomaly map by upsampling the continuous heatmap produced by the learned linear segmentation head.
 As for all text-steerable methods, we use an ensemble of ten anomaly prompts (e.g., \texttt{``the anomaly in the <object>.''}) and average the resulting heatmaps across prompts.
-Following standard practice in the AD literature~\cite{WinCLIP_Jeong23CVPR}, we measure the pixel-wise \textit{Area under the Receiver Operating Characteristics} ($\text{ROC}_P$), the \textit{Per-Region-Overlap} (PRO), and threshold-optimal $F_1$ score ($F_1^{\max}$). \MG{shall we move feature extraction and eval details into appendix, just have a plot reporting "performance" across methods - enough to drive the story but not get into technical details of anomaly detection; also have qualitative figures}
+Following standard practice in the AD literature~\cite{WinCLIP_Jeong23CVPR}, we measure the pixel-wise \textit{Area under the Receiver Operating Characteristics} ($\text{ROC}_P$), the \textit{Per-Region-Overlap} (PRO), and threshold-optimal $F_1$ score ($F_1^{\max}$).
 Performance of existing training- and adaptation-free AS baselines is stated as reported in the original publication.
 
-Similar to PODs, SHIFT matches dedicated anomaly detection methods on this extreme OOD setting.
+SHIFT again matches dedicated methods on this extreme OOD setting.
 As shown in Table~\ref{tab:mvtec_visa}, SHIFT reaches 79.4 PRO on MVTec~AD, substantially outperforming CLIP-based approaches (SAM3 at 54.5, CLIPseg at 34.6) and closing much of the gap to specialist methods such as FADE (84.5).
 On VisA, SHIFT ties FADE on $\text{ROC}_P$ (91.5) and reaches 77.5 PRO, indicating robust transfer to a harder, more diverse inspection setting.
-
 These results reinforce the pattern observed on PODS: text-driven steering unlocks capabilities already present in the frozen ViT and transfers them to domains far beyond the training distribution.
 
 \iffindingbox
 \begin{tcolorbox}[colback=lightyellow,
 colframe=black, arc=4pt, boxsep=1pt]
 \paragraph{\textbf{\textit{Finding} 4.}}
-Natural language steering enables zero-shot domain transfer that outperforms supervised fine-tuning 
-% on personalized objects (54.4 vs.\ 48.0 PR-AUC) and matches dedicated methods on industrial anomaly detection, 
-without target-domain training.
-Preserving the rich representations of unimodal vision encoders while steering with text is a more data-efficient generalization strategy than fine-tuning on scarce labeled data. \MG{should be about using language as a tool generalization; similar to in-context learning}
+Natural language serves as a data-efficient generalization mechanism: descriptive text prompts adapt frozen visual representations to out-of-distribution domains without task-specific training, outperforming supervised fine-tuning on personalized object discrimination and matching dedicated methods on industrial anomaly detection.
 \end{tcolorbox}
 \fi
 
 \include{tables/anomaly_detection_table}
-
-% \section{Applications}
-% \subsection{Anomaly Detection}
-
-% We further evaluate SHIFT's robustness and dense localization capabilities by performing zero-shot anomaly segmentation (AS) on the MVTech AD \cite{bergmann_mvtech} and VisA \cite{zou2022_visa_dataset} datasets for industrial anomaly detection (AD).
-
-% For SHIFT, we derive the anomaly map by upsampling the continuous heatmap produced by the learned linear segmentation head. As for all text-steerable methods, we use an ensemble of ten anomaly prompts (e.g., \texttt{``the anomaly in the <object>.''}) and average the resulting heatmaps across prompts.
-% % For text-steerable segmentation method such as SHIFT, we apply an ensemble of ten anomaly-related prompts (e.g., \texttt{``the anomaly in the <object>.''}) and average the resulting continuous heatmaps across prompts. 
-% Following standard practice in the AD literature \cite{WinCLIP_Jeong23CVPR}, we measure the pixel-wise \textit{Area under the Receiver Operating Characteristics} ($\text{ROC}_P$), the \textit{Per-Region-Overlap} (PRO), and threshold-optimal $F_1$ score ($F_1^{\max}$). Performance of existing training- and adaptation-free AS baselines is stated as reported in the original publication. 
-
-% Despite its general-purpose nature, SHIFT is competitive with dedicated AS approaches. As shown in Table~\ref{tab:mvtec_visa}, it reaches 79.4 PRO on MVTech AD, substantially improving over prompt-based non-AD baselines (e.g., SAM3 at 54.5) and closing much of the gap to specialist methods (e.g., FADE at 84.5). Similar trends appear on VisA, indicating robust transfer to a harder, more diverse inspection setting. Overall, these results suggest that SHIFT’s text-driven post-training unlocks dense visual capabilities already present in the frozen ViT, yields strong out-of-domain generalization to industrial AD tasks without any task-specific training.\todo{use final numbers}
-
-% \include{tables/anomaly_detection_table}
-
 
