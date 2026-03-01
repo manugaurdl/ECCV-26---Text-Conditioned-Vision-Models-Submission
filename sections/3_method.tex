@@ -1,4 +1,5 @@
 \section{Methodology}
+\label{sec:method}
 
 % method text-conditioned visual
     % architecture modifications
@@ -25,8 +26,7 @@
     % token length [optional!]
 % conclusion
 
-\label{sec:method}
-
+\MT{skipping for now as discussed with MG}
 SHIFT injects text conditioning into a frozen Vision Transformer through sparse, gated cross-attention layers that steer visual features without degrading them.
 As illustrated in Figure~\ref{fig:arch}, our architecture consists of three components: (1) a frozen RoBERTa-Large text encoder that produces token-level embeddings from the input prompt, (2) a lightweight multimodal adapter that projects these text embeddings into the visual embedding space, and (3) tanh-gated cross-attention layers interleaved within a frozen ViT that progressively fuse textual cues into the visual representation.
 Given an image and a text prompt, SHIFT produces text-contextualized patch-level visual features that remain in the base ViT's embedding space.
