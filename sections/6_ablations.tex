@@ -49,7 +49,7 @@ To understand which layers benefit most from text conditioning, we compare four 
 % ------------------------------------------------------------------
 \subsection{Training Signal}
 \label{subsec:training_signal}
-
+\MG{motivate with two ways to do localization, pointing and segmentation}
 The training objective (\cref{sec:objective}) supervises each token with a soft probability distribution derived from the ground-truth segmentation mask, distributing probability uniformly over all tokens that overlap the referent.
 We compare this against a natural alternative: a Gaussian heatmap centered on the bounding-box midpoint ($\sigma{=}1.1$), which concentrates all probability mass around a single spatial location regardless of object extent.
 
