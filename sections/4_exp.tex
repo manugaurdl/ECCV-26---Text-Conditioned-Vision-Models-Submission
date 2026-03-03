@@ -162,7 +162,15 @@ GroundingDINO and SAM3 are highly steerable, with SAM3 nearly matching \model{}'
 % However, although features extracted from them are steerable with text, these features are task-specific i.e localization. As illustrated in Figure~\ref{fig:teaser}, these features are transferrable for downstream reuse, scoring poorly on standard vision benchmarks. Unlike our method,     preserves the representation quality of the visual encoder. We discuss this further in Section~\ref{}. #dont delete comment
 However, their intermediate representations are optimized for localization and lack the generality needed for downstream transfer, as we analyze in Section~\ref{subsec:pareto}.
 
-\subsubsection{Conditioning on Random Object Class}.Notably, conditioning on a random object class instead of the correct one causes retrieval performance to degrade catastrophically, demonstrating that the steerability is indeed driven by the text query rather than by fine-tuning data or objective.
+\subsubsection{Conditioning on Random Object Class}.
+
+CLIP,SigLIP post hoc late fusion - no performance degradation when conditioning on random object class. multimodal feature not steerable with text. feature is unconditional visual
+
+FLAIR - random conditioning doesn't decrease performance as much ours (-36.1\% v/s -50.8\% for ours), early fusion remains more steerable.
+
+OV methods see big dip, very steerable. MLLMs not as much, very slight dip for MLLMs, especially if small i.e internvl3-1b sees only -16.1\% decrease
+
+our method - conditioning on a random object class instead of the correct one causes retrieval performance to degrade catastrophically, demonstrating that the steerability is indeed driven by the text query rather than by fine-tuning data or objective.
 
 
 
@@ -200,32 +208,32 @@ MLLMs exhibit moderate steerability but remain parameter-inefficient.
 \end{figure}
 
 \MT{do we want to highlight task or takeaway in subsec headers? benchmarks are new, so ok to focus on takeaways here}
+\MG{Not sure}
 
 In the previous section, we validated that text conditioning steers global semantics. In this section we examine whether text-conditioning can route self-attention to tokens corresponding to the queried object, improving dense predictions for non-salient concepts.
 \MT{add clarity about CLS's attention to visual tokens?}
-We construct a benchmark by stitching together four object-centric images
-\MT{something special being done for picking object-centric images?!}
-from PASCAL-VOC into a single mosaic image, reducing the saliency of each individual object.
+We construct a benchmark by stitching together four images from PASCAL-VOC into a single mosaic image, reducing the saliency of each individual object.
 This setup lets us quantify the foreground bias of self-attention and measure how effectively text can be used by our method to redirect it.
 
 \subsubsection{Qualitative Analysis}
 DINOv2's \texttt{[CLS]} attention maps concentrate on salient foreground objects, confirming the saliency bias hypothesized in Section~\ref{sec:intro}.
 Figure~\ref{fig:steer_attn} (right) illustrates this: DINOv2 allocates attention toward the house and bathtub but ignores the tree along the road.
-\MT{I'm not sure if we can say what DINOv2 should do on montages no?}
+\MT{I'm not sure if we can say what DINOv2 should do on montages no?} 
+\MG{why not? the images is still a composition of objects, just smaller objects now}
 When conditioned on ``tree,'' our method routes attention to the full extent of the tree and partly to a potted plant in an adjacent quadrant due to its semantic association.
 Additional qualitative examples appear in the Appendix.
 
 \subsubsection{Quantitative Evaluation}
-We quantify each \MT{which ones?} encoder's ability to localize distinct objects by using \texttt{[CLS]} attention maps as a proxy for spatial focus.
+We quantify DinoV2 ability to localize distinct objects by using \texttt{[CLS]} attention maps as a proxy for spatial focus.
 We compute the area under the ROC curve (AUC) between attention maps and ground-truth segmentation masks from PASCAL-VOC for each queried object.
 \MT{not sure which models, but querying objects for dino is not possible in this way?}
 As shown in Figure~\ref{fig:steer_attn} (left), text-conditioned features outperform query-agnostic features by 33.7\% AUC on this dense prediction task.
 \MT{why not report AP which is more standard for segmentation?}
 \MT{outperform by 34 points or achieve 34 points?? later in text we say achieve 34}
 
-\sout{GroundingDINO and SAM3 also route attention toward queried objects (Figure~\ref{fig:mosaic_baselines}), which is expected given that they are optimized for localization.}
-However, while these models satisfy the first two desirable properties (global steerability and dense attention routing), they fail to preserve representation quality of the frozen visual features as illustrated by Figure~\ref{fig:teaser}.
-We analyze this tradeoff in the next section.
+% \sout{GroundingDINO and SAM3 also route attention toward queried objects (Figure~\ref{fig:mosaic_baselines}), which is expected given that they are optimized for localization.}
+% However, while these models satisfy the first two desirable properties (global steerability and dense attention routing), they fail to preserve representation quality of the frozen visual features as illustrated by Figure~\ref{fig:teaser}.
+% We analyze this tradeoff in the next section.
 
 
 
@@ -263,7 +271,7 @@ At inference, we can scale the gate magnitude to smoothly interpolate between th
 \MT{why is 0 gate not overlapping with dino base model in fig1}
 
 Plotting this trajectory (the green curve in Figure~\ref{fig:teaser}) reveals a clear Pareto frontier.
-We observe an optimal operating point at a scaling factor of 0.6: the model preserves the foundational feature quality of DINOv2 while unlocking high text steerability, outperforming both standard encoders and models like SAM3 and GroundingDINO.
+We observe an optimal operating point at a scaling factor of 0.6: the model preserves the foundational feature quality of DINOv2 while unlocking high text steerability, outperforming both standard encoders and models like SAM3 and GroundingDINO. \MLLM{knob helps with siglip specifically}
 
 % This is also illustrated by Figure~\ref{fig:tsne_semantic}: although the clusters are guided by the text query, within those clusters the object-level semantics of DINOv2 are preserved (e.g., cat is closer to dog than to birds).
 
