@@ -27,22 +27,34 @@
 % conclusion
 
 \subsection{Baselines}
+\label{subsec:baselines}
 
 We benchmark \model{} against a number of existing methods that allow for prompt-based steering of their internal visual representations as well as unimodal vision encoders.
 
-For \textbf{cross-modal encoders} (e.g., CLIP~\cite{radford2021_clip}, SigLIP~\cite{zhai2023_siglip}, dino.txt), images and prompts are embedded independently using their respective encoders, limiting multimodal interaction to a simple post-hoc late-fusion, where the resulting visual and text features are combined via element-wise addition. 
-As with the considered \textbf{vision-only baselines}, global feature aggregation is conducted as intended by the base method (e.g., CLS or mean pooling). 
-FLAIR~\cite{xiao2025flair} is a CLIP-style model that is trained to produce text informed visual features by applying text-conditioned attention pooling on top frozen visual features.
-% FLAIR~\cite{xiao2025flair} is a CLIP-style model that is specifically trained to produce text informed visual features by applying text-conditioned attention pooling on top frozen visual features tokens.
-We extract text contextualized visual features from \textbf{MLLMs} by concatenating the user prompt $t$ followed by the image $I$ into a multimodal input sequence and selecting the last-language-block states at image-token positions. 
-For global features, we adapt the last-token pooling approach of E5-V~\cite{Jiang2024E5VUE} and append a postfix instructing the model to summarize the image contents in one word while focusing on the aspect specified by $t$.
+We compare \model{} against baselines spanning five model families that differ in how---and whether---they incorporate text into visual features (see \cref{sec:related_work} for an extended discussion and \cref{app:baseline_extraction} for feature-extraction details):
+\begin{enumerate}[label=(\roman*),nosep]
+\item \textbf{Unimodal vision encoders}: DINOv2~\cite{oquab2024dinov2} and MAE~\cite{he2022mae}, which produce query-agnostic features with no text conditioning.
+\item \textbf{Cross-modal encoders}: CLIP~\cite{radford2021_clip} and SigLIP~\cite{zhai2023_siglip}, where we fuse visual and text embeddings via post-hoc element-wise addition (late fusion).
+\item \textbf{Text-conditioned visual encoder}: FLAIR~\cite{xiao2025flair}, which applies learned text-conditioned attention pooling over frozen CLIP features.
+\item \textbf{MLLMs}: InternVL3-1B and InternVL3-2B, from which we extract text-contextualized visual features via last-language-block image-token states.
+\item \textbf{Open-vocabulary localization}: SAM3~\cite{carion2025_sam3} and GroundingDINO~\cite{liu2023groundingdino}, whose modality-fused encoder states serve as text-steered visual representations.
+\end{enumerate}
+Where supported, all models process images at $336\times336$ resolution; for models with fixed input dimensions, we resize to this resolution to ensure comparable visual information.
 
-Text-conditioned representations are obtained from \textbf{open-vocabulary localization methods} via the modality-fused encoder states, ignoring decoder components responsible for generating bounding boxes or segmentation mask. 
-Specifically, with SAM3~\cite{carion2025_sam3}, we take the patch-level outputs of the \textit{Fusion Encoder} and apply mean-pooling to get image-level features. 
-Similarly, we use the outputs of the cross-modal \textit{Feature Enhancer} layer of GroundingDINO~\cite{liu2023groundingdino}. However, as features are available across multiple spatial scales, we first interpolate them to a common intermediate feature scale before being averaged to get dense pseudo-patch-level features. 
-% \todo{ensure consistency with Methodology Section}
 
-Where supported by the underlying architecture, we process images at a resolution of $336\times336$. For models with non-configurable input dimensions, we still resize to this resolution prior to processing to ensure comparable levels of visual information.
+% For \textbf{cross-modal encoders} (e.g., CLIP~\cite{radford2021_clip}, SigLIP~\cite{zhai2023_siglip}, dino.txt), images and prompts are embedded independently using their respective encoders, limiting multimodal interaction to a simple post-hoc late-fusion, where the resulting visual and text features are combined via element-wise addition. 
+% As with the considered \textbf{vision-only baselines}, global feature aggregation is conducted as intended by the base method (e.g., CLS or mean pooling). 
+% FLAIR~\cite{xiao2025flair} is a CLIP-style model that is trained to produce text informed visual features by applying text-conditioned attention pooling on top frozen visual features.
+% % FLAIR~\cite{xiao2025flair} is a CLIP-style model that is specifically trained to produce text informed visual features by applying text-conditioned attention pooling on top frozen visual features tokens.
+% We extract text contextualized visual features from \textbf{MLLMs} by concatenating the user prompt $t$ followed by the image $I$ into a multimodal input sequence and selecting the last-language-block states at image-token positions. 
+% For global features, we adapt the last-token pooling approach of E5-V~\cite{Jiang2024E5VUE} and append a postfix instructing the model to summarize the image contents in one word while focusing on the aspect specified by $t$.
+
+% Text-conditioned representations are obtained from \textbf{open-vocabulary localization methods} via the modality-fused encoder states, ignoring decoder components responsible for generating bounding boxes or segmentation mask. 
+% Specifically, with SAM3~\cite{carion2025_sam3}, we take the patch-level outputs of the \textit{Fusion Encoder} and apply mean-pooling to get image-level features. 
+% Similarly, we use the outputs of the cross-modal \textit{Feature Enhancer} layer of GroundingDINO~\cite{liu2023groundingdino}. However, as features are available across multiple spatial scales, we first interpolate them to a common intermediate feature scale before being averaged to get dense pseudo-patch-level features. 
+% % \todo{ensure consistency with Methodology Section}
+
+% Where supported by the underlying architecture, we process images at a resolution of $336\times336$. For models with non-configurable input dimensions, we still resize to this resolution prior to processing to ensure comparable levels of visual information.
 
 \subsection{COnditional REtrieval (CORE): Steering Global Semantics with Text}
 \label{subsec:cond_ret_exp}

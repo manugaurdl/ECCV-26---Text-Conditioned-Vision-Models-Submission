@@ -24,6 +24,26 @@ The Gaussian-trained model lacks this capability: its unimodal supervision expli
 % \label{fig:multi_instance}
 % \end{figure}
 
+\subsection{Baseline Feature Extraction}
+\label{app:baseline_extraction}
+
+This section details how we extract text-conditioned (or text-fused) visual features from each baseline family evaluated in \cref{subsec:baselines}.
+For all baselines, global feature aggregation follows the convention of the base method (e.g., \texttt{[CLS]} token or mean pooling) unless stated otherwise.
+
+\paragraph{Cross-Modal Encoders (CLIP, SigLIP).}
+Images and prompts are embedded independently by their respective encoders.
+We combine the resulting visual and text feature vectors via element-wise addition (late fusion), the simplest form of post-hoc multimodal interaction.
+
+\paragraph{MLLMs (InternVL3).}
+We concatenate the user prompt $t$ followed by the image $I$ into a single multimodal input sequence and extract the last-language-block hidden states at image-token positions as dense, text-contextualized visual features.
+For global features, we adapt the last-token pooling approach of E5-V~\cite{Jiang2024E5VUE}: a postfix is appended instructing the model to summarize the image contents in one word while focusing on the aspect specified by~$t$.
+
+\paragraph{Open-Vocabulary Localization (SAM3, GroundingDINO).}
+We use the modality-fused encoder states, ignoring decoder components responsible for bounding-box or mask generation.
+For SAM3~\cite{carion2025_sam3}, we take the patch-level outputs of the \textit{Fusion Encoder} and apply mean pooling to obtain image-level features.
+For GroundingDINO~\cite{liu2023groundingdino}, we use the outputs of the cross-modal \textit{Feature Enhancer} layer.
+Because features are available at multiple spatial scales, we first interpolate them to a common intermediate resolution before averaging to obtain dense pseudo-patch-level features.
+
 \subsection{Conditional Retrieval}
 
 \input{tables/knn_exp_indoor}
