@@ -79,7 +79,7 @@ Where supported, all models process images at $336\times336$ resolution; for mod
 \centering
 \includegraphics[width=\textwidth]{figures/steerability_bar_chart.pdf}
 \caption{Query-agnostic encoders collapse to scene-level semantics and fail conditional retrieval.
-Our method steers global features with text, achieving 93.6\% and 91.3\% on indoor and outdoor scenes.
+Our method steers global features with text, achieving 93.4\% retrieval accuracy.
 }
 \label{fig:cond_ret_bar}
 \end{subfigure}
@@ -184,24 +184,12 @@ MLLMs exhibit moderate steerability but remain parameter-inefficient.
 % \subsection{Steering Attention}
 \begin{figure}[h!]
 \centering
-% Left Figure: UMAP (Empty placeholder)
-\begin{subfigure}[b]{0.2\textwidth}
+
 \centering
-% Add your image here later:
-% \includegraphics[width=\textwidth]{...}
-% \vspace{4cm} % Temporary vertical space to keep the layout intact
-\caption{Our method outperforms the frozen ViT baselines across model families (CLIP, DinoV2, MAE}
-\label{fig:mosaic_baselines}
-\end{subfigure}
-\hfill
-% Right Figure: DinoV2
-\begin{subfigure}[b]{0.55\textwidth}
-\centering
-\includegraphics[width=\textwidth]{old_figures/dinov2_attn_maps.pdf}
-\caption{DINOv2 attends to salient foreground objects (house, bathtub); our method, conditioned on ``tree,'' routes attention to the queried concept.}
-\label{fig:attn_maps}
-\end{subfigure}
-\caption{\textbf{Text routes dense attention.} \textbf{Left:} Mosaic localization AUC on PASCAL-VOC; our method achieves 33.7\% higher AUC than DINOv2. \textbf{Right:} Attention maps on a four-image mosaic; text conditioning redirects self-attention from salient objects to the queried concept.
+\includegraphics[width=\textwidth]{figures/mosaic_attention_maps.pdf}
+% \caption{DINOv2 attends to salient foreground objects (house, bathtub); our method, conditioned on ``tree,'' routes attention to the queried concept.}
+
+\caption{\textbf{Text routes dense attention.} Attention maps on a four-image mosaic; text conditioning redirects self-attention from salient objects to the queried concept whereas DINOv2 attends to the most salient objects ().
 \MT{retouch figures}
 }
 \label{fig:steer_attn}
