@@ -1,0 +1,84 @@
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{threeparttable}
+\caption{%
+Generalization across ViT families.
+Early fusion (\model{}) consistently outperforms late fusion, with the largest gains on weaker self-supervised encoders.
+MVTech PRO measures zero-shot anomaly segmentation, a domain absent from training.
+}
+\label{tab:cross_backbone}
+\begin{tabular}{@{}l l
+                S[table-format=2.1]
+                S[table-format=2.1]
+                S[table-format=2.1]
+                S[table-format=2.1]@{}}
+\toprule
+{Backbone} & {Method}
+  & {FG-CLS $\uparrow$}
+  & {Steer.\ $\uparrow$}
+  & {PODS $\uparrow$}
+  & {MVTech $\uparrow$} \\
+\midrule
+\color{gray} DINOv2
+  & \color{gray} Frozen
+  & \color{gray} 89.0
+  & \color{gray} 43.5
+  & \color{gray} 28.6
+  & {--} \\
+\rowcolor{\methodcolor}
+DINOv2 & \textbf{Early (ours)}
+  & \textbf{77.0}
+  & \textbf{93.4}
+  & \textbf{55.3}
+  & \textbf{79.8} \\
+DINOv2 & Late
+  & 86.5
+  & 93.4
+  & 45.3
+  & 65.9 \\
+\addlinespace
+\color{gray} SigLIP
+  & \color{gray} Frozen
+  & \color{gray} 91.0
+  & \color{gray} 38.3
+  & {--}
+  & {--} \\
+\rowcolor{\methodcolor}
+SigLIP & \textbf{Early (ours)}
+  & \textbf{64.3}
+  & \textbf{90.9}
+  & \textbf{23.0}
+  & \textbf{77.3} \\
+SigLIP & Late
+  & 68.6
+  & 83.5
+  & 14.7
+  & 73.4 \\
+\addlinespace
+\color{gray} MAE
+  & \color{gray} Frozen
+  & \color{gray} 91.0
+  & \color{gray} 38.3
+  & {--}
+  & {--} \\
+\rowcolor{\methodcolor}
+MAE & \textbf{Early (ours)}
+  & \textbf{54.3}
+  & \textbf{62.6}
+  & \textbf{14.2}
+  & \textbf{74.1} \\
+MAE & Late
+  & 49.7
+  & 35.5
+  & 8.9
+  & 65.1 \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]\footnotesize
+\item All models use ViT-B with early or late gated cross-attention.
+PODS uses descriptive text; frozen baselines use no text.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

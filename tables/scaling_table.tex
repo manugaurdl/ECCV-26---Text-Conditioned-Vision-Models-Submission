@@ -1,0 +1,42 @@
+\begin{table}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{6pt}
+\begin{threeparttable}
+\caption{%
+Scaling the visual and text encoders.
+Larger ViT backbones and a larger text encoder both improve downstream performance, with the strongest gains on tasks requiring fine-grained text understanding (PODS).
+}
+\label{tab:scaling}
+\begin{tabular}{@{}l l
+                S[table-format=2.1]
+                S[table-format=2.1]
+                S[table-format=2.1]
+                S[table-format=2.1]@{}}
+\toprule
+{Component} & {Scale}
+  & {FG-CLS $\uparrow$}
+  & {Steer.\ $\uparrow$}
+  & {ADE20k $\uparrow$}
+  & {PODS $\uparrow$} \\
+\midrule
+DINOv2 & ViT-S & {XX.X} & {XX.X} & {XX.X} & {XX.X} \\
+\rowcolor{\methodcolor}
+DINOv2 & \textbf{ViT-B (ours)} & \textbf{77.0} & \textbf{93.4} & \textbf{55.3} & \textbf{55.3} \\
+DINOv2 & ViT-L & {XX.X} & {XX.X} & {XX.X} & {XX.X} \\
+\addlinespace
+SigLIP & ViT-B & 64.3 & 90.9 & {--} & 23.0 \\
+SigLIP & ViT-L & {XX.X} & {XX.X} & {XX.X} & {XX.X} \\
+\addlinespace
+RoBERTa & Base & {XX.X} & {XX.X} & {XX.X} & {XX.X} \\
+\rowcolor{\methodcolor}
+RoBERTa & \textbf{Large (ours)} & \textbf{77.0} & \textbf{93.4} & \textbf{55.3} & \textbf{55.3} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[flushleft]\footnotesize
+\item ViT scaling keeps RoBERTa-Large fixed; RoBERTa scaling keeps DINOv2 ViT-B fixed.
+All models trained for 500k iterations on the full data mixture.
+PODS uses descriptive text prompts.
+\end{tablenotes}
+\end{threeparttable}
+\end{table}

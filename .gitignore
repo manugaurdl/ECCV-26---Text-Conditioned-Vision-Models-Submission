@@ -8,5 +8,6 @@ main.blg
 main.fdb_latexmk
 main.log
 main.synctex.gz
+main.synctex(busy)
 main.fls
 main.out
