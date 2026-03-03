@@ -49,21 +49,14 @@ To understand which layers benefit most from text conditioning, we compare four 
 % ------------------------------------------------------------------
 \subsection{Training Signal}
 \label{subsec:training_signal}
-\MG{motivate with two ways to do localization, pointing and segmentation}
-The training objective (\cref{sec:objective}) supervises each token with a soft probability distribution derived from the ground-truth segmentation mask, distributing probability uniformly over all tokens that overlap the referent.
-We compare this against a natural alternative: a Gaussian heatmap centered on the bounding-box midpoint ($\sigma{=}1.1$), which concentrates all probability mass around a single spatial location regardless of object extent.
 
-The two signals encode fundamentally different inductive biases.
-The Gaussian target trains the model to \emph{point}: it rewards collapsing attention to a unimodal peak, discouraging distributed activations across the object.
-The segmentation-mask target trains the model to \emph{cover}: it rewards activating every token that overlaps the referent, teaching token-level region matching rather than centre prediction.
+Patch-level localization admits two natural supervision strategies: \emph{pointing}, via a Gaussian heatmap centered on the bounding-box midpoint ($\sigma{=}1.1$), and \emph{segmenting}, via the tokenized object mask used in our objective (\cref{sec:objective}).
 % TODO: add quantitative comparison once numbers are ready (e.g., PODS, steerability, or a pmass metric).
 % Placeholder: ``Switching from Gaussian to mask supervision improves PODS by X points and steerability by Y points.''
-
-This difference produces a striking emergent behavior at inference.
-When multiple instances of the queried class appear in an image (e.g., four apples), the Gaussian-trained model activates around a single instance, consistent with its unimodal supervision.
-The mask-trained model, by contrast, activates on \emph{all} semantically matching regions simultaneously, despite never seeing multi-instance annotations during training.
-This generalization arises because the mask signal teaches the cross-attention layers to identify \emph{which tokens match the text description} rather than \emph{where the most likely centre is}; at inference, any token whose content matches the query receives high activation, regardless of how many such tokens exist.
-This region-matching inductive bias directly supports \model{}'s goal of producing steerable representations rather than task-specific localization outputs.
+The mask signal produces a notable emergent behavior: when multiple instances of the queried class appear in an image, the model activates on \emph{all} matching regions simultaneously, despite training annotations labeling only one referent per sample.
+This arises because the mask target teaches the cross-attention layers to identify \emph{which tokens match the text} rather than \emph{where the most likely centre is}---any token whose content matches the query receives high activation regardless of instance count.
+The Gaussian-trained model, by contrast, collapses to a single peak, consistent with its unimodal supervision.
+We provide further discussion and qualitative examples of this emergence in \cref{app:training_signal}.
 
 % ------------------------------------------------------------------
 \subsection{Training Duration}

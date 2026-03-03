@@ -1,5 +1,29 @@
 \section{Appendix}
 
+\subsection{Training Signal: Pointing vs.\ Segmenting}
+\label{app:training_signal}
+
+As discussed in \cref{subsec:training_signal}, the choice of patch-level supervision signal---a Gaussian point heatmap versus a tokenized segmentation mask---encodes fundamentally different inductive biases that shape what the model learns about localization.
+
+\paragraph{Inductive Bias Analysis.}
+The Gaussian heatmap places a single peak at the bounding-box centre and applies a fixed-width blur ($\sigma{=}1.1$), producing a unimodal target that is invariant to object size and shape.
+This trains the model to collapse attention to a single spatial location, rewarding centre prediction over region understanding.
+The segmentation-mask target, by contrast, distributes probability uniformly across all tokens that overlap the referent.
+This teaches token-level region matching: the model must determine \emph{which} tokens belong to the object rather than simply \emph{where} its centre lies.
+
+\paragraph{Emergent Multi-Instance Localization.}
+Because the mask signal rewards activating every overlapping token, the cross-attention layers learn a content-matching function: given a text query, each visual token independently receives high activation if its content matches the description.
+At inference, this generalizes to multiple instances---when four apples appear in a scene and the query is ``apple,'' all four regions activate simultaneously, even though training annotations label only a single referent per sample.
+The Gaussian-trained model lacks this capability: its unimodal supervision explicitly discourages distributed activations, so it consistently highlights only one instance.
+
+% TODO: add qualitative figure showing multi-instance activation maps for mask vs. Gaussian models.
+% \begin{figure}[t]
+% \centering
+% \includegraphics[width=\linewidth]{figures/multi_instance_qual.pdf}
+% \caption{Multi-instance localization. Given the query ``apple,'' the mask-trained model (right) activates on all instances, while the Gaussian-trained model (left) collapses to a single peak.}
+% \label{fig:multi_instance}
+% \end{figure}
+
 \subsection{Conditional Retrieval}
 
 \input{tables/knn_exp_indoor}
