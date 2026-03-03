@@ -57,29 +57,29 @@ Where supported, all models process images at $336\times336$ resolution; for mod
 
 % Where supported by the underlying architecture, we process images at a resolution of $336\times336$. For models with non-configurable input dimensions, we still resize to this resolution prior to processing to ensure comparable levels of visual information.
 
+
 \subsection{COnditional REtrieval (CORE): Steering Global Semantics with Text}
+
+
 \label{subsec:cond_ret_exp}
 \begin{figure}[h!]
 \centering
 % Left Figure: UMAP
-\begin{subfigure}[b]{0.44\textwidth}
+\begin{subfigure}[b]{0.4\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figures/umap.png}
+\includegraphics[width=\textwidth]{figures/core_qualitative_objects_scatter.pdf}
 \caption{DINOv2 embeddings show no separability across inpainted objects, whereas our text-conditioned embeddings form distinct clusters for each queried concept.
-\MT{I'm wondering whether it would make sense to show some visual examples along with this scatter plot? current bar plot on the right can be a separate figure perhaps} \JR{on it ...} \MG{write about subclustering}
+\MG{write about subclustering}
 }
 \label{fig:umap-neighbourhood}
 \end{subfigure}
 \hfill
 % Right Figure: DinoV2
-\begin{subfigure}[b]{0.55\textwidth}
+\begin{subfigure}[b]{0.59\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figures/core_baselines.png}
+\includegraphics[width=\textwidth]{figures/steerability_bar_chart.pdf}
 \caption{Query-agnostic encoders collapse to scene-level semantics and fail conditional retrieval.
-\MT{make figure text readable. use standard nomenclature for models}
-Our method steers global features with text, achieving 96.6\% and 91.3\% on indoor and outdoor scenes.
-\MT{is the bar plot average of indoor / outdoor scenes? why is our model bar at 94.3 not matching above numbers - clarify this if sharing both numbers}
-\MT{is this plot better as a table? numbers are easier to see. if not, use lighter colours please .. too dark right now}
+Our method steers global features with text, achieving 93.6\% and 91.3\% on indoor and outdoor scenes.
 }
 \label{fig:cond_ret_bar}
 \end{subfigure}
@@ -90,7 +90,7 @@ Our method steers global features with text, achieving 96.6\% and 91.3\% on indo
 
 % \begin{figure}[h!]
 %   \centering
-%   \includegraphics[width=0.98\textwidth]{figures/cond_retrieval_baselines.png}
+%   \includegraphics[width=0.98\textwidth]{old_figures/cond_retrieval_baselines.png}
 %   \caption{
 %   \textbf{Evaluating Vision Steerability of different model families}. Comparison of our method against 
 %   }
@@ -218,7 +218,7 @@ In summary, only \model{} and OV localization models are text-steerable, standar
 % Right Figure: DinoV2
 \begin{subfigure}[b]{0.55\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figures/dinov2_attn_maps.pdf}
+\includegraphics[width=\textwidth]{old_figures/dinov2_attn_maps.pdf}
 \caption{DINOv2 attends to salient foreground objects (house, bathtub); our method, conditioned on ``tree,'' routes attention to the queried concept.}
 \label{fig:attn_maps}
 \end{subfigure}
@@ -296,7 +296,7 @@ At inference, we can scale the gate magnitude to smoothly interpolate between th
 \MT{why is 0 gate not overlapping with dino base model in fig1}
 
 Plotting this trajectory (the green curve in Figure~\ref{fig:teaser}) reveals a clear Pareto frontier.
-We observe an optimal operating point at a scaling factor of 0.6: the model preserves the foundational feature quality of DINOv2 while unlocking high text steerability, outperforming both standard encoders and models like SAM3 and GroundingDINO.
+We observe an optimal operating point at a scaling factor of 0.6: the model preserves the foundational feature quality of DINOv2 while unlocking high text steerability, outperforming both standard encoders and models like SAM3 and GroundingDINO. \MG{knob helps with siglip specifically}
 
 % This is also illustrated by Figure~\ref{fig:tsne_semantic}: although the clusters are guided by the text query, within those clusters the object-level semantics of DINOv2 are preserved (e.g., cat is closer to dog than to birds).
 
@@ -307,7 +307,7 @@ Figure~\ref{fig:gate_factor} (right) further shows that increasing the gate fact
 % Left Figure: cosine similarity
 \begin{subfigure}[b]{0.05\textwidth}
 \centering
-% \includegraphics[width=\textwidth]{figures/ca_gate_cos_sim.pdf}
+% \includegraphics[width=\textwidth]{old_figures/ca_gate_cos_sim.pdf}
 % \caption{UMAP Neighbourhood}
 % \label{fig:umap-neighbourhood}
 \end{subfigure}
@@ -315,7 +315,7 @@ Figure~\ref{fig:gate_factor} (right) further shows that increasing the gate fact
 % Right Figure: mosaic gate factor
 \begin{subfigure}[b]{0.85\textwidth}
 \centering
-\includegraphics[width=\textwidth]{figures/ca_gate_mosaic.png}
+\includegraphics[width=\textwidth]{old_figures/ca_gate_mosaic.png}
 \label{fig:mosaic_gate_factor}
 \end{subfigure}
 \caption{
@@ -331,7 +331,7 @@ Figure~\ref{fig:gate_factor} (right) further shows that increasing the gate fact
 \label{subsec:text_density_exp}
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.98\textwidth]{figures/eccv_pods.png}
+\includegraphics[width=0.98\textwidth]{old_figures/eccv_pods.png}
 \caption{\textbf{Text specificity controls feature granularity.} On the PODS benchmark, coarse prompts (supercategory) degrade performance relative to DINOv2 by discarding instance-level cues. Class-level prompts improve over the baseline.
 Fine-grained descriptive prompts surpass even a supervised fine-tuned DINOv2, confirming that detailed text acts as a precise steering mechanism.
 \MT{we should use a different color to highlight our approach, also call it SHIFT. all text can be bigger and more readable, bars can be thinner} \JR{on it ...}
@@ -360,7 +360,7 @@ We analyze performance across three levels of textual detail (Figure~\ref{fig:po
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.5\textwidth]{figures/token_len.png}
+\includegraphics[width=0.5\textwidth]{old_figures/token_len.png}
 \caption{\textbf{Denser captions improve localization.} On the Ref4 benchmark, referential segmentation performance increases with caption length, confirming that richer text conditioning yields more precise spatial steering.}
 \label{fig:ref4_token_len}
 \end{figure}
@@ -400,7 +400,7 @@ Crucially, object-level semantics are preserved within the animal cluster: dogs 
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/tsne_semantic.pdf}
+\includegraphics[width=\linewidth]{old_figures/tsne_semantic.pdf}
 \caption{\textbf{Hierarchical semantic steering.} \textbf{Left:} DINOv2 clusters images by object identity (separate clusters for dogs, cats, birds). \textbf{Right:} Conditioned on \texttt{``Animal''}, our method merges all animal classes into a single macro-cluster while preserving within-cluster object-level semantics (dogs closer to cats than to birds).}
 \label{fig:tsne_semantic}
 \end{figure}
@@ -423,7 +423,7 @@ This confirms that text conditioning can route attention to specific composition
 
 \begin{figure}[t]
 \centering
-% \includegraphics[width=\linewidth]{figures/tsne_compositional_steering.png}
+% \includegraphics[width=\linewidth]{old_figures/tsne_compositional_steering.png}
 \caption{\textbf{Compositional attribute steering.} \textbf{Left:} DINOv2 separates objects by class (wheelchair far from car). \textbf{Right:} Conditioned on \texttt{``Wheel''}, our method clusters diverse wheeled objects together (cart, wheelchair, car), distinct from objects without wheels (apple, house).}
 \label{fig:tsne_compositional}
 \end{figure}
