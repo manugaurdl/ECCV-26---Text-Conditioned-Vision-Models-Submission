@@ -22,7 +22,7 @@ Pretrained visual encoders exhibit a strong saliency bias: they effectively proc
 This behavior stems from photographer bias in training data, where subjects are centered and in-focus, and paired caption used for vision-language modelling typically describe only primary objects.
 Self-attention reinforces this tendency by routing global information through high-norm tokens that correspond to salient foreground objects~\cite{caron2021dino, oquab2024dinov2}.
 The result is \MT{non-steerable \st{query-agnostic}} representations that collapse to coarse, scene-level semantics.
-Consider a kitchen image containing appliances, utensils, and a few mugs in the background: DINOv2~\cite{oquab2024dinov2} features encode the global ``kitchen,'' scene while discarding the fine-grained concepts needed to retrieve, count, or localize specific objects like the mugs.
+Consider a kitchen image containing appliances, utensils, and a few mugs in the background: DINOv2~\cite{oquab2024dinov2} features emphasize the global ``kitchen'' scene, \sout{discarding} attenuating the fine-grained cues needed to reliably retrieve, count, or localize specific objects like the mugs.
 \MT{this is a strong claim; I don't think it is fair to say models don't see objects beyond prominent one. They are just muted. Otherwise performance for KNN would be 0, but it is not}
 
 This limitation leaves current models trapped between two extremes (Figure~\ref{fig:teaser}).
@@ -40,10 +40,15 @@ SHIFT interleaves tanh-gated cross-attention layers~\cite{alayrac2022flamingo} w
 We find that this leads to three desirable properties/desiderata:
 \begin{itemize}[nosep]
 \item \textbf{Global steerability:} The text query steers the semantics of the global feature vector, enabling conditional retrieval of non-salient visual concepts (\MG{vague} \MT{yep, focus on ability to extract non-central obj reps}) in cluttered scenes (\cref{subsec:cond_ret_exp}).
-\MT{use cref instead of ref; can ignore adding Fig, Table, Sec, etc.}
+% \MT{use cref instead of ref; can ignore adding Fig, Table, Sec, etc.}
+\MG{alt: Text query enables the global feature vector to represent specific, non-central objects in cluttered scenes rather than collapsing to the dominant scene-level concept}
+
+% \item \textbf{Global steerability:} Text conditioning shifts the global feature vector from the dominant scene concept toward the queried object, enabling retrieval by specific, non-central objects in cluttered scenes (\cref{subsec:cond_ret_exp}).
+
 \item \textbf{Dense attention routing:} Self-attention routes information through tokens corresponding to the text-described visual concept, improving localization for non-salient objects (Section~\ref{subsec:mosaic_exp}).
 \item \textbf{Feature quality preservation:} The steered representations preserve the base ViT's downstream transfer, maintaining \sout{classification and segmentation} performance on standard vision benchmarks (Section~\ref{subsec:pareto}).
 \MT{do you want to say trained steering enabled model does not lose quality on standard benchmarks? or are they actually the steered representations? in which case, are you steering for standard vision tasks?}
+\MG{I want to say that this steerability (as defined by first two points) doesn't come with degraded performance on standard vision benchmarks i.e preserves their downstream transfer - which is the point of representation learning}
 \end{itemize}
 
 Our method is able to embody these properties while existing methods fail. \MG{need to add TL;DR of Section 4.1, 4.2, 4.4, and then flow into OOD finding}
@@ -51,19 +56,63 @@ Our method is able to embody these properties while existing methods fail. \MG{n
 
 Together, these properties yield a surprising consequence: natural language can steer frozen vision encoders to generalize to out-of-distribution domains.
 \MT{above claim needs support?}
-Cross-modal encoders such as CLIP also leverage language to extend generalization, but contrastive training on noisy web-scraped pairs sacrifices the fine-grained visual structure that self-supervised encoders learn from curated vision-only data; MLLMs, conversely, condition language on vision but introduce language shortcuts that degrade vision-centric performance~\cite{chen2025vlm_benchmark}.
-\MT{let's use \textbackslash{}model\{\} given the confusion between SteerViT and SHIFT or other things!}
-Because SteerViT conditions the visual encoder on text rather than the reverse, it retains the representational depth of unimodal pretraining and uses language purely as a steering signal, enabling generalization to novel concepts without catastrophic forgetting.
+SHIFT represents a new class of vision transformers that use text to extend generalization at inference time.
+Just as in-context learning adapts language models to novel tasks without retraining, text prompts adapt visual representations to novel domains without fine-tuning.
+MLLMs condition LLMs with visual inputs for the same reason.
+Although this improves their generalization, it introduces language shortcuts that degrade vision-centric performance~\cite{chen2025vlm_benchmark}.
+In contrast, SHIFT conditions the visual encoder on text rather than the reverse.
+Since we preserve the representation quality of the underlying ViT, language is used purely as a steering signal without succumbing to language shortcuts.
+
+Early fusion of language with visual features is a deliberate design choice.
+Cross-modal encoders such as CLIP~\cite{radford2021_clip} and SigLIP~\cite{zhai2023_siglip} share a multimodal space, but their visual encoders remain query-agnostic: text and vision interact only after feature extraction, so text cannot steer the visual representation itself.
+SHIFT bridges this gap by 
+% injecting text conditioning within the ViT layers of a frozen unimodal encoder,
+preserving the representational depth of vision-only pretraining while gaining the generalization provided by language without the catastrophic forgetting that accompanies task-specific fine-tuning.
+% SHIFT takes a complementary approach from the visual representation learning perspective: it preserves the representational depth of vision-only pretraining while gaining the generalization that language provides, without the catastrophic forgetting that accompanies task-specific fine-tuning.
+
+\MG{Can we purpose the following representation alignment argument in somehow? Late fusion sucks; thats estabilished. I guess MLLM and ours is both good options depending upon what your priority is (knowledge vs vision)
+}
+Unpaired vision-only and language-only data vastly exceed paired multimodal data; consequently, unimodal encoders trained on abundant modality-specific data learn richer representations than joint encoders trained from scratch on limited pairs.
+The central challenge is therefore how to merge strong unimodal experts into an multimodal encoder.
+MLLMs address this by conditioning a pretrained language model on visual inputs via paired VQA data, but as noted above, this introduces language shortcuts.
+
+
+% Cross-modal encoders (CLIP~\cite{radford2021_clip}, SigLIP~\cite{zhai2023_siglip} )
+% also 
+% % leverage language for generalization,\MG{idk about this}
+% share a multimodal space but due to query-agnostic visual encoders, text and vision-language interaction is limited to after feature extraction, hence text cannot steer the visual representation itself.
+
+% Moreover, self-supervised unimodal encoders learn richer visual structure from curated vision-only data than contrastive encoders trained on noisy web-scraped pairs.\MG{idk if we can say this}
+
+% SHIFT bridges this gap by 
+% % injecting text conditioning within the ViT layers of a frozen unimodal encoder,
+% preserving the representational depth of vision-only pretraining while gaining the generalization provided by language.
+
+% without the catastrophic forgetting that accompanies task-specific fine-tuning .
+% This enables generalization to OOD
 \MT{we show the goodness of our approach across widely varying applications:}
-On personalized object discrimination, descriptive text prompts outperform a fine-tuned DINOv2 baseline in a zero-shot manner (Section~\ref{subsec:ood_generalization}).
-% Together, these properties yield a surprising consequence: natural language can steer frozen vision encoders to generalizes to out-of-distribution domains \sout{more effectively than supervised fine-tuning.}
-% % Because our method preserves the rich visual representations learned from unimodal visual pretraining, with the right representation alignment, natural language can lift these features to novel tasks without the catastrophic forgetting that accompanies fine-tuning on limited target data.
+In fact , we find that on personalized object discrimination and industrial anomaly detection (a domain entirely absent from our training data), SHIFT matches dedicated sate-of-the-art methods.
+
 % On personalized object discrimination, descriptive text prompts outperform a fine-tuned DINOv2 baseline in a zero-shot manner (Section~\ref{subsec:ood_generalization}).
-On industrial anomaly detection, a domain entirely absent from our training, SteerViT matches dedicated methods without any adaptation.
+% On industrial anomaly detection, a domain entirely absent from our training data, SHIFT matches dedicated methods without any task-specific training and the consequent catastrophic forgetting.
+\MT{let's use \textbackslash{}model\{\} given the confusion between SteerViT and SHIFT or other things!}
+
+% OLD:
+% Together, these properties yield a surprising consequence: natural language can steer frozen vision encoders to generalize to out-of-distribution domains.
+% \MT{above claim needs support?}
+% Cross-modal encoders such as CLIP also leverage language to extend generalization, but contrastive training on noisy web-scraped pairs sacrifices the fine-grained visual structure that self-supervised encoders learn from curated vision-only data; MLLMs, conversely, condition language on vision but introduce language shortcuts that degrade vision-centric performance~\cite{chen2025vlm_benchmark}.
+% \MT{let's use \textbackslash{}model\{\} given the confusion between SteerViT and SHIFT or other things!}
+% Because SteerViT conditions the visual encoder on text rather than the reverse, it retains the representational depth of unimodal pretraining and uses language purely as a steering signal, enabling generalization to novel concepts without catastrophic forgetting.
+% \MT{we show the goodness of our approach across widely varying applications:}
+% On personalized object discrimination, descriptive text prompts outperform a fine-tuned DINOv2 baseline in a zero-shot manner (Section~\ref{subsec:ood_generalization}).
+% % Together, these properties yield a surprising consequence: natural language can steer frozen vision encoders to generalizes to out-of-distribution domains \sout{more effectively than supervised fine-tuning.}
+% % % Because our method preserves the rich visual representations learned from unimodal visual pretraining, with the right representation alignment, natural language can lift these features to novel tasks without the catastrophic forgetting that accompanies fine-tuning on limited target data.
+% % On personalized object discrimination, descriptive text prompts outperform a fine-tuned DINOv2 baseline in a zero-shot manner (Section~\ref{subsec:ood_generalization}).
+% On industrial anomaly detection, a domain entirely absent from our training, SteerViT matches dedicated methods without any adaptation.
 
 In summary, we make the following contributions:
 \begin{enumerate}
-\item We introduce SHIFT, a text-conditioned visual encoder that instills text understanding into frozen ViTs via sparse, gated cross attention layers trained on grounding.
+\item We introduce SHIFT, a text-conditioned visual encoder that instills text understanding into frozen ViTs via \sout{sparse} sparsely interspersed, gated cross attention layers trained on grounding.
 \MT{sparse because of every 3rd layer? could be confused with sparse attention}
 % sparse, tanh-gated cross-attention layers trained on referential segmentation.
 % \item We demonstrate a Pareto improvement over existing models: SHIFT achieves high text steerability while preserving the feature quality of the underlying ViT, bridging the gap between unsteerable encoders and quality-degraded multimodal models.
@@ -78,3 +127,5 @@ SHIFT can guide the semantics of the visual representation with text while prese
 % \item We conduct extensive zero-shot evaluation on fine-grained multimodal retrieval, referential segmentation, personalized object discrimination, and anomaly detection,  demonstrating generalization to out-of-distribution domains across ViT families (DINOv2~\cite{oquab2024dinov2}, SigLIP~\cite{zhai2023_siglip}, MAE~\cite{he2022mae}) without task-specific training.
 
 \end{enumerate}
+
+

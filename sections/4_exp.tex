@@ -58,7 +58,7 @@ Where supported by the underlying architecture, we process images at a resolutio
 \includegraphics[width=\textwidth]{figures/umap.pdf}
 \caption{DINOv2 embeddings show no separability across inpainted objects, whereas our text-conditioned embeddings form distinct clusters for each queried concept.
 \MT{not readable at 200\% zoom; increase font size, make legend clear, use different marker types instead of only color}
-\MT{I'm wondering whether it would make sense to show some visual examples along with this scatter plot? current bar plot on the right can be a separate figure perhaps}
+\MT{I'm wondering whether it would make sense to show some visual examples along with this scatter plot? current bar plot on the right can be a separate figure perhaps} \JR{on it ...}
 }
 \label{fig:umap-neighbourhood}
 \end{subfigure}
@@ -89,35 +89,24 @@ Our method steers global features with text, achieving 96.6\% and 91.3\% on indo
 %   \label{fig:cond_ret_baselines}
 % \end{figure}
 
+To measure the degree to which task prompts can actively steer the global image representations, we propose a text-conditional retrieval benchmark, dubbed CORE (COnditional REtrieval).
 
-To validate that text conditioning steers the global feature vector, we introduce a conditional retrieval benchmark called CORE built on the SUN scene dataset (cite).
-We select six scene classes split into two categories: indoor (bathroom, kitchen, living room) and outdoor (park, residential area, street), each containing 100 images.
-Using the FLUX.2 image editing model (TODO: cite), we inpaint five scene-relevant objects into 100 images per class (e.g., a fruit bowl in a kitchen, a vase in a living room).
-The task is one-vs-all retrieval: given a query image (e.g., ``kitchen'') containing inpainted object A (e.g., ``fruit basket''), retrieve a same-class image that also contains object A (e.g., ``mug in kitchen'') from the remaining 499 images.
-\MT{I think we should illustrate this setup; worst case supplementary, but if we are proposing this as a new task, then important to include here}
-The random chance is approximately 20\%, since 99 out of 499 candidates share the query object.
-For text-steerable models, all images are conditioned on the same inpainted object class (e.g., ``mug'') during feature extraction.
-\MG{to do JR: write exp setup}
-Successful retrieval under text conditioning implies that the model shifts the global representation from the scene-level concept (``kitchen'') and prominent objects within to a text-contextualized one (``mug in kitchen'').
-\MT{what is text steering -- mug in kitchen or just mug; please be clear about setup}
-
+We select 100 images for each of six indoor and outdoor scenes from the SUN397 dataset \cite{Herranz2016_SUNdataset} and inpaint five scene-relevant peripheral objects into every image using the FLUX.2 image editing model \cite{flux-2-2025} (e.g., a fruit bowl in a kitchen; a backpack in the park)\footnote{See Appendix \ref{} \JR{TODO} for details and qualitative examples.}.
+By framing the problem as one-vs-all retrieval where, given a query image with inpainted object $\text{O}$, the objective is to retrieve other instances containing $\text{O}$ within a scene $\text{S}$ (e.g., ``fruit bowl'' in ``kitchen''), we can quantify how well models prioritize specified non-salient background objects over scene-level visual similarities in their global representations.
+Here, both the query as well as the gallery images are extracted by conditioning on the name of the query object $\text{O}$ (e.g., ``the fruit bowl'').% to prevent ground-truth leakage through the text embeddings. 
+We measure the top-1 retrieval accuracy over the remaining 495 non-identical instances in $\text{S}$ and average over objects.
+% The random chance is 20\%, since 99 out of 495 candidates share the query object.
 
 \subsubsection{Query-Agnostic Encoders Collapse to Salient Concepts.}
 
 % Query-agnostic encoders collapse to the dominant scene concept, making conditional retrieval nearly impossible.
 Among unimodal encoders, MAE barely exceeds random chance while DINOv2 roughly doubles MAE's accuracy owing to its more object-centric representations but only achieves 43\%.
 Even multimodal encoders (CLIP, SigLIP) fail: post-hoc late fusion with text cannot rescue features that were never conditioned on the query.
-Our method breaks this pattern, achieving 93.9\% retrieval accuracy
-\MT{number does not match figure!}
-% 96.6\% and 91.3\% accuracy on indoor and outdoor scenes respectively 
-(Figure~\ref{fig:cond_ret_baselines}), confirming that text conditioning shifts the global representation from the scene level (``kitchen'') to a representation contextualized with the queried concept (``mug in kitchen'').
-\MT{yeah please clarify what is text prompt/query}
-\MT{say something about random vs correct class}
+Our method breaks this pattern, achieving 94.3\% retrieval accuracy (cf., Figure~\ref{fig:cond_ret_baselines}), confirming that text conditioning shifts the global representation from the scene level (``kitchen'') to a object-of-interest-specific representation (``fruit bowl'').
 % Query-agnostic encoders fail at conditional retrieval because their features collapse to the dominant scene concept (Figure~\ref{fig:cond_ret_baselines}).
 % MAE barely exceeds random chance, and DINOv2 roughly doubles MAE's accuracy owing to its more object-centric representations.
 % CLIP and SigLIP, despite operating in a multimodal embedding space, are unable to contextualize their visual features through post-hoc late fusion with text.
 % In contrast, our method achieves 96.6\% and 91.3\% accuracy on indoor and outdoor scenes respectively, confirming that text conditioning shifts the global representation from the scene level (``kitchen'') to the queried concept (``mug in kitchen'').
-
 Notably, conditioning on a random object class instead of the correct one causes retrieval performance to degrade catastrophically, demonstrating that the steerability is indeed driven by the text query rather than by an unconditional feature improvement.
 
 Figure~\ref{fig:umap-neighbourhood} illustrates this in ``residential neighbourhood'' scenes via UMAP: DINOv2 embeddings show no separability across inpainted object types, whereas our text-conditioned embeddings form distinct clusters for each queried concept.
@@ -165,7 +154,7 @@ GroundingDINO and SAM3 are highly steerable, with SAM3 nearly matching SteerViT'
 % However, although features extracted from them are steerable with text, these features are task-specific i.e localization. As illustrated in Figure~\ref{fig:teaser}, these features are transferrable for downstream reuse, scoring poorly on standard vision benchmarks. Unlike our method,     preserves the representation quality of the visual encoder. We discuss this further in Section~\ref{}. #dont delete comment
 However, their intermediate representations are optimized for localization and lack the generality needed for downstream transfer, as we analyze in Section~\ref{subsec:pareto}.
 
-In summary, our method and open-vocabulary localization models (SAM2, GroundingDINO) can steer global semantics with natural language, whereas standard vision encoders collapse to salient objects.
+In summary, our method and open-vocabulary localization models (SAM3, GroundingDINO) can steer global semantics with natural language, whereas standard vision encoders collapse to salient objects.
 MLLMs exhibit moderate steerability but remain parameter-inefficient.
 
 % Table: kNN experiments
@@ -240,7 +229,7 @@ We quantify the representation quality of the visual features by their downstrea
 
 Existing models fall into three regimes (Figure~\ref{fig:teaser}):
 
-\textbf{SAM2} and \textbf{GroundingDINO} achieve high steerability but produce task-specific representations that score poorly on standard vision probes;
+\textbf{SAM3} and \textbf{GroundingDINO} achieve high steerability but produce task-specific representations that score poorly on standard vision probes;
 
 \textbf{MLLMs} perform reasonably on classification probes but falter on dense tasks and require billions of parameters for moderate steerability;
 
@@ -262,7 +251,7 @@ At inference, we can scale the gate magnitude to smoothly interpolate between th
 \MT{why is 0 gate not overlapping with dino base model in fig1}
 
 Plotting this trajectory (the green curve in Figure~\ref{fig:teaser}) reveals a clear Pareto frontier.
-We observe an optimal operating point at a scaling factor of 0.6: the model preserves the foundational feature quality of DINOv2 while unlocking high text steerability, outperforming both standard encoders and models like SAM2 and GroundingDINO.
+We observe an optimal operating point at a scaling factor of 0.6: the model preserves the foundational feature quality of DINOv2 while unlocking high text steerability, outperforming both standard encoders and models like SAM3 and GroundingDINO.
 
 % This is also illustrated by Figure~\ref{fig:tsne_semantic}: although the clusters are guided by the text query, within those clusters the object-level semantics of DINOv2 are preserved (e.g., cat is closer to dog than to birds).
 
@@ -300,12 +289,12 @@ Figure~\ref{fig:gate_factor} (right) further shows that increasing the gate fact
 \includegraphics[width=0.98\textwidth]{figures/eccv_pods.png}
 \caption{\textbf{Text specificity controls feature granularity.} On the PODS benchmark, coarse prompts (supercategory) degrade performance relative to DINOv2 by discarding instance-level cues. Class-level prompts improve over the baseline.
 Fine-grained descriptive prompts surpass even a supervised fine-tuned DINOv2, confirming that detailed text acts as a precise steering mechanism.
-\MT{we should use a different color to highlight our approach, also call it SHIFT. all text can be bigger and more readable, bars can be thinner}
+\MT{we should use a different color to highlight our approach, also call it SHIFT. all text can be bigger and more readable, bars can be thinner} \JR{on it ...}
 }
 \label{fig:pods}
 \end{figure}
 
-In Section~\ref{subsec:cond_ret_exp}, we observed that the text you condition on has a profound impact on the resultant features with conditioning on a random object class halves retrieval performance.
+In Section~\ref{subsec:cond_ret_exp}, we observed that the text you condition on has a profound impact on the resultant features with conditioning on a random object class halving retrieval performance.
 In this section, we systematically explore how text conditions our visual representation.
 
 The semantics of the steered representation are highly sensitive to the specificity of the text prompt.
@@ -414,8 +403,9 @@ A surprising result emerges from that analysis: with descriptive text prompts, S
 Frozen DINOv2 scores 28.0 PR-AUC on PODS; supervised fine-tuning more than doubles this to 48.0; yet our method reaches 54.4 without seeing a single labeled example from the target domain (Figure~\ref{fig:pods}).
 CLIP and SigLIP with late text fusion also fail on this task, confirming that OOD generalization requires both a rich frozen vision encoder and early text conditioning.
 
-Text conditioning succeeds here because it steers the frozen encoder's rich representations without catastrophic forgetting; fine-tuning, by contrast, overwrites general features with task-specific ones.
-Analogous to how prompting adapts large language models to novel tasks without retraining, descriptive text adapts visual representations to novel domains without fine-tuning, leveraging the representational depth that unimodal pretraining already provides.
+Text conditioning in our method succeeds here because it steers the frozen encoder's rich representations without catastrophic forgetting; fine-tuning, by contrast, overwrites general features with task-specific ones.
+% Just as in-context learning adapts language models to novel tasks at inference time, text prompts adapt visual representations to novel domains without retraining. 
+Analogous to how prompting/in-context learning adapts large language models to novel tasks without retraining, descriptive text adapts visual representations to novel domains without fine-tuning, leveraging the representational depth that unimodal pretraining already provides.
 
 \subsubsection{Anomaly Detection: Extreme OOD Domain Transfer}
 
@@ -436,7 +426,13 @@ These results reinforce the pattern observed on PODS: text-driven steering unloc
 \begin{tcolorbox}[colback=lightyellow,
 colframe=black, arc=4pt, boxsep=1pt]
 \paragraph{\textbf{\textit{Finding} 4.}}
-Natural language serves as a data-efficient generalization mechanism: descriptive text prompts adapt frozen visual representations to out-of-distribution domains without task-specific training, outperforming supervised fine-tuning on personalized object discrimination and matching dedicated methods on industrial anomaly detection.
+Natural language serves as a data-efficient generalization mechanism
+% : descriptive text prompts 
+adapting 
+% frozen visual representations 
+the visual encoder
+to out-of-distribution domains without task-specific training, outperforming supervised fine-tuning.
+% on personalized object discrimination and matching dedicated methods on industrial anomaly detection.
 \end{tcolorbox}
 \fi
 
@@ -454,6 +450,3 @@ Natural language serves as a data-efficient generalization mechanism: descriptiv
 % Despite its general-purpose nature, SHIFT is competitive with dedicated AS approaches. As shown in Table~\ref{tab:mvtec_visa}, it reaches 79.4 PRO on MVTech AD, substantially improving over prompt-based non-AD baselines (e.g., SAM3 at 54.5) and closing much of the gap to specialist methods (e.g., FADE at 84.5). Similar trends appear on VisA, indicating robust transfer to a harder, more diverse inspection setting. Overall, these results suggest that SHIFT’s text-driven post-training unlocks dense visual capabilities already present in the frozen ViT, yields strong out-of-domain generalization to industrial AD tasks without any task-specific training.\todo{use final numbers}
 
 % \include{tables/anomaly_detection_table}
-
-
-\section{delete}
