@@ -107,31 +107,46 @@ We measure the top-1 retrieval accuracy over the remaining 495 non-identical ins
 
 \subsubsection{Query-Agnostic Encoders Collapse to Salient Concepts.}
 
-% Query-agnostic encoders collapse to the dominant scene concept, making conditional retrieval nearly impossible.
-Among unimodal encoders, MAE barely exceeds random chance while DINOv2 roughly doubles MAE's accuracy owing to its more object-centric representations but only achieves 43\%.
-Even multimodal encoders (CLIP, SigLIP) fail: post-hoc late fusion with text cannot rescue features that were never conditioned on the query.
-Our method on the other hand achieves 93.4\% retrieval accuracy (cf., Figure~\ref{fig:cond_ret_baselines}), confirming that text conditioning shifts the global representation from the scene level (``kitchen'') to an object-of-interest-specific/prompt-steerable representation \MG{consistent with Fig2a} (``fruit bowl'').
+Query-agnostic encoders fail at conditional retrieval because their features collapse to the dominant scene concept (Figure~\ref{fig:cond_ret_baselines}).
+MAE barely exceeds random chance; DINOv2, despite its object-centric representations, achieves only 43\%.
+Cross-modal encoders (CLIP, SigLIP) fare no better despite operating in a shared vision-language space.
+In contrast, \model{} achieves 94.3\% retrieval accuracy, confirming that text conditioning shifts the global representation from the scene level (``kitchen'') to the queried concept (``fruit bowl''). \MG{consistent with Fig2a}
+% Among unimodal encoders, MAE barely exceeds random chance while DINOv2 roughly doubles MAE's accuracy owing to its more object-centric representations but only achieves 43\%.
+% Even multimodal encoders (CLIP, SigLIP) fail: post-hoc late fusion with text cannot rescue features that were never conditioned on the query.
+% Our method on the other hand achieves 94.3\% retrieval accuracy (cf., Figure~\ref{fig:cond_ret_baselines}), confirming that text conditioning shifts the global representation from the scene level (``kitchen'') to an object-of-interest-specific/prompt-steerable representation \MG{consistent with Fig2a} (``fruit bowl'').
 % Query-agnostic encoders fail at conditional retrieval because their features collapse to the dominant scene concept (Figure~\ref{fig:cond_ret_baselines}).
 % MAE barely exceeds random chance, and DINOv2 roughly doubles MAE's accuracy owing to its more object-centric representations.
 % CLIP and SigLIP, despite operating in a multimodal embedding space, are unable to contextualize their visual features through post-hoc late fusion with text.
 % In contrast, our method achieves 96.6\% and 91.3\% accuracy on indoor and outdoor scenes respectively, confirming that text conditioning shifts the global representation from the scene level (``kitchen'') to the queried concept (``mug in kitchen'').
 % an unconditional feature improvement.
 
-Figure~\ref{fig:umap-neighbourhood} illustrates this in ``kitchen '' scenes via UMAP: DINOv2 embeddings show no separability across inpainted object types, whereas our text-conditioned embeddings form distinct clusters for each queried concept.
+Figure~\ref{fig:umap-neighbourhood} illustrates this on ``kitchen'' scenes via UMAP.
+DINOv2 embeddings (left) show no separability across inpainted object types,
+% DINOv2 embeddings show no separability across inpainted object types, 
+whereas our text-conditioned embeddings form distinct clusters for different text prompt. This confirms that \model{} can reorganize its embedding space around the queried concept.
+% When conditioned on ``fruit bowl'' (right), our method produces three distinct groups: a tight cluster of fruit-bowl instances, a secondary group of semantically related kitchen objects, and remaining unrelated objects pushed to the periphery, confirming that text conditioning reorganizes the embedding space around the queried concept.
+% Figure~\ref{fig:umap-neighbourhood} illustrates this in ``kitchen '' scenes via UMAP: DINOv2 embeddings show no separability across inpainted object types, whereas our text-conditioned embeddings form distinct clusters for each queried concept.
 % \MT{please describe how to interpret fig 2a better; describe how fire hydrant also pulls basketball?}
 
 
 % \subsubsection{CLIP/SigLIP's Text Encoder Do Not Enable Steerability}
 \subsubsection{Post-hoc Late Fusion Does Not Enable Steerability}
-A natural follow-up is whether post-hoc fusion with text can rescue query-agnostic representations.
-For CLIP and SigLIP,which already share a multimodal embedding space, we fuse visual features with text embeddings via element-wise addition.
-This yields a negligible boost of 0.02\%, confirming that late fusion cannot steer query-agnostic frozen representations. 
-Learning query-aware features within the ViT layers (early fusion) is essential.
+A natural follow-up is whether post-hoc fusion with text can rescue query-agnostic ViTs?
+We explore this for CLIP and SigLIP, which share a multimodal embedding space by fusing visual features with text embeddings via element-wise addition.
+This yields a negligible 0.02\% boost, confirming that post-hoc late fusion cannot steer frozen representations.
+Early fusion within the ViT layers is essential: \model{}, which conditions intermediate representations on text via cross-attention, improves retrieval accuracy from below 43\% to 94.3\%.
+% A natural follow-up is whether post-hoc fusion with text can rescue query-agnostic representations.
+% For CLIP and SigLIP,which already share a multimodal embedding space, we fuse visual features with text embeddings via element-wise addition.
+% This yields a negligible boost of 0.02\%, confirming that late fusion cannot steer query-agnostic frozen representations. 
+% Learning query-aware features within the ViT layers (early fusion) is essential.
 % \MG{dino.txt - same results; post-hoc late fusion doesn't work}
 % \MG{contrast with random conditioning}
 % \MG{contrast with FLAIR/MaskInversion}
 % A more comparable study for late fusion would be add the cross attention layer on top of the frozen ViT features. We find that this although enables steerability, the downstream performance of the multimodal features are suboptimal for fine-grained vision-lanuage tasks. We discuss it in detail in Section~\ref{sec:method}. # dont delete comment
-\textbf{FLAIR} tries to bridge CLIP/SigLIP style models with text steerable encoders by training text-informed attention pooling over query-agnostic ViT features. This enables text steering but still lags behind our method (by 13\%). Moreover our method is agnostic to visual encoder family, however FLAIR is a cross-modal encoder. They require 2 orders of magnitude larger data, while we can efficient adapt any ViT to be text-steerable.
+FLAIR~\cite{xiao2025flair} tries to bridge cross-modal encoders with text-steerable features by training text-conditioned attention pooling over frozen ViT features.
+This achieves steerability (81.3\%) but still significantly lags \model{} by 13\%.
+Morover, unlike \model{} which adapts any frozen ViT family, FLAIR is restricted to CLIP-style backbones and requires two orders of magnitude more training data.
+% \textbf{FLAIR} tries to bridge CLIP/SigLIP style models with text steerable encoders by training text-informed attention pooling over query-agnostic ViT features. This enables text steering but still lags behind our method (by 13\%). Moreover our method is agnostic to visual encoder family, however FLAIR is a cross-modal encoder. They require 2 orders of magnitude larger data, while we can efficient adapt any ViT to be text-steerable.
 
 \newif\iffindingbox
 \findingboxtrue
@@ -144,38 +159,44 @@ Our method can steer the semantics of the visual features with text while standa
 \end{tcolorbox}
 \fi
 
-\subsubsection{MLLMs: Steerable but Inefficient}
+\subsubsection{Steerable but Inefficient or Specialized: MLLMs and OV Models}
 
-MLLMs can moderately steer visual features, but at substantial computational cost.
-InternVL3-1B scores only 51.2\%; scaling the LLM to 2B parameters raises this to 77\%.
-Our method
-outperforms their 1B and 2B variants by 40\% and 14\% respectively while adding only 130M parameters to visual encoder via cross-attention blocks. \MG{Add FLOPs}
+\textbf{MLLMs} can moderately steer visual features but at substantial computational cost.
+InternVL3-1B scores only 51.2\%; scaling to 2B raises this to 77\%.
+\model{} outperforms both variants by 40\% and 14\% respectively while adding only 130M parameters via cross-attention blocks. \MG{Add FLOPs}
+\textbf{GroundingDINO} and \textbf{SAM3} on the other hand are highly steerable, with SAM3 nearly matching \model{}'s retrieval accuracy.
+However, their intermediate representations are optimized for localization and lack the generality needed for downstream transfer, as we analyze in \cref{subsec:pareto}.
+% \subsubsection{MLLMs: Steerable but Inefficient}
+% MLLMs can moderately steer visual features, but at substantial computational cost.
+% InternVL3-1B scores only 51.2\%; scaling the LLM to 2B parameters raises this to 77\%.
+% Our method
+% outperforms their 1B and 2B variants by 40\% and 14\% respectively while adding only 130M parameters to visual encoder via cross-attention blocks. \MG{Add FLOPs}
 % In fact, our approach can be viewed as an inverted MLLM: instead of conditioning a language model on frozen visual features (late fusion), we condition the visual features on text within the ViT layers themselves (early fusion).
 % Recent work~\cite{chen2025vlm_benchmark} finds that that VLMs perform substantially worse than their underlying visual encoder on vision-centric benchmarks.
 % Because the text directly influences visual representation learning process, SteerViT can guide attention toward task-relevant regions in a way that post-hoc fusion cannot.
 % \MG{(out-of-place)}
-
-
-\subsubsection{Open-Vocabulary (OV) Localization}
-GroundingDINO and SAM3 are highly steerable, with SAM3 nearly matching \model{}'s retrieval accuracy.
+% \subsubsection{Open-Vocabulary (OV) Localization}
+% GroundingDINO and SAM3 are highly steerable, with SAM3 nearly matching \model{}'s retrieval accuracy.
 % They apply heavy multimodal processing on their visual backbones for task-specific optimization.
 % However, although features extracted from them are steerable with text, these features are task-specific i.e localization. As illustrated in Figure~\ref{fig:teaser}, these features are transferrable for downstream reuse, scoring poorly on standard vision benchmarks. Unlike our method,     preserves the representation quality of the visual encoder. We discuss this further in Section~\ref{}. #dont delete comment
-However, their intermediate representations are optimized for localization and lack the generality needed for downstream transfer, as we analyze in Section~\ref{subsec:pareto}.
+% However, their intermediate representations are optimized for localization and lack the generality needed for downstream transfer, as we analyze in Section~\ref{subsec:pareto}.
 
-\subsubsection{Conditioning on Random Object Class}.
+\subsubsection{Conditioning on a Random Object Class}
+To verify that steerability is genuinely text-driven rather than an artifact of training, we condition each model on a random (incorrect) object class and measure the retrieval degradation (hatched bars in Figure~\ref{fig:cond_ret_baselines}).
+CLIP and SigLIP show no degradation under random conditioning, confirming their features are unconditionally visual and not steerable.
+FLAIR exhibits a moderate drop ($-36.1\%$), while \model{} drops by $-50.8\%$, indicating stronger text-dependence.
+OV models (SAM3, GroundingDINO) see large drops, consistent with their deep text integration.
+MLLMs show only mild sensitivity, with InternVL3-1B declining by just $-16.1\%$.
+\model{}'s catastrophic degradation under random conditioning confirms that its steerability is driven by the text query rather than by the training objective or data.
+% CLIP,SigLIP post hoc late fusion - no performance degradation when conditioning on random object class. multimodal feature not steerable with text. feature is unconditional visual
+% FLAIR - random conditioning doesn't decrease performance as much ours (-36.1\% v/s -50.8\% for ours), early fusion remains more steerable.
+% OV methods see big dip, very steerable. MLLMs not as much, very slight dip for MLLMs, especially if small i.e internvl3-1b sees only -16.1\% decrease
+% our method - conditioning on a random object class instead of the correct one causes retrieval performance to degrade catastrophically, demonstrating that the steerability is indeed driven by the text query rather than by fine-tuning data or objective.
 
-CLIP,SigLIP post hoc late fusion - no performance degradation when conditioning on random object class. multimodal feature not steerable with text. feature is unconditional visual
 
-FLAIR - random conditioning doesn't decrease performance as much ours (-36.1\% v/s -50.8\% for ours), early fusion remains more steerable.
-
-OV methods see big dip, very steerable. MLLMs not as much, very slight dip for MLLMs, especially if small i.e internvl3-1b sees only -16.1\% decrease
-
-our method - conditioning on a random object class instead of the correct one causes retrieval performance to degrade catastrophically, demonstrating that the steerability is indeed driven by the text query rather than by fine-tuning data or objective.
-
-
-
-In summary, our method and open-vocabulary localization models (SAM3, GroundingDINO) can steer global semantics with natural language, whereas standard vision encoders collapse to salient objects.
-MLLMs exhibit moderate steerability but remain parameter-inefficient.
+In summary, only \model{} and OV localization models are text-steerable, standard ViTs collapse to salient concepts with even post-hoc late fusion failing for CLIP-style models, and although MLLMs offer moderate steerability, it comes at a prohibitive cost.
+% In summary, our method and open-vocabulary localization models (SAM3, GroundingDINO) can steer global semantics with natural language, whereas standard vision encoders collapse to salient objects.
+% MLLMs exhibit moderate steerability but remain parameter-inefficient.
 
 % Table: kNN experiments
 
@@ -241,23 +262,27 @@ As shown in Figure~\ref{fig:steer_attn} (left), text-conditioned features outper
 
 \label{subsec:pareto}
 \MG{Section title TBD}
-Steerability must not come at the cost of feature quality.
-The primary purpose of visual representation learning is to produce features that transfer to downstream tasks such as classification and segmentation.
-A trivial solution that completely overwrites visual features with text yields total steerability but discards the underlying representation.
-
-We quantify the representation quality of the visual features by their downstream transfer on ... \MG{To Do JR: exp setup}
-
-Existing models fall into three regimes (Figure~\ref{fig:teaser}):
-
-\textbf{SAM3} and \textbf{GroundingDINO} achieve high steerability but produce task-specific representations that score poorly on standard vision probes;
-
-\textbf{MLLMs} perform reasonably on classification probes but falter on dense tasks and require billions of parameters for moderate steerability;
-
-\textbf{Query-agnostic visual encoders} (DINOv2, SigLIP) produce rich transferable features but are not steerable.
-
-Our approach bridges this gap, achieving high steerability with only 10\% degradation on classification and segmentation probes.
-\MT{where/how do we see this result?
-also, do we need to put this sentence here if the first para is mostly about setup}
+Steerability is only useful if it preserves the downstream transfer that makes visual representations valuable in the first place.
+A trivial solution that overwrites frozen features with text yields perfect steerability but destroys the underlying representation.
+Figure~\ref{fig:teaser} (bottom) maps existing models along these two axes, revealing three regimes:
+\textbf{SAM3} and \textbf{GroundingDINO} achieve high steerability but produce localization-specific features that score poorly on standard vision probes;
+\textbf{MLLMs} perform reasonably on classification but falter on dense tasks and require billions of parameters for moderate steerability;
+\textbf{query-agnostic encoders} (DINOv2, SigLIP) produce rich transferable features but cannot be steered.
+\model{} bridges this gap, achieving both high steerability and strong downstream transfer (Figure~\ref{fig:teaser}, bottom). \MG{To Do JR: exp setup}
+We do observe a modest degradation (${\sim}10\%$) on classification and segmentation probes relative to the frozen baseline, which raises a natural question: can we control this tradeoff continuously?
+The tanh-gated cross-attention mechanism (\cref{eq:gated_ca}) provides exactly such a knob.
+% \subsection{Feature Quality vs.\ Steerability: A Pareto Analysis / Desideratum 3: Preserving Visual Representation Quality while Steering}
+% Steerability must not come at the cost of feature quality.
+% The primary purpose of visual representation learning is to produce features that transfer to downstream tasks such as classification and segmentation.
+% A trivial solution that completely overwrites visual features with text yields total steerability but discards the underlying representation.
+% We quantify the representation quality of the visual features by their downstream transfer on ... \MG{To Do JR: exp setup}
+% Existing models fall into three regimes (Figure~\ref{fig:teaser}):
+% \textbf{SAM3} and \textbf{GroundingDINO} achieve high steerability but produce task-specific representations that score poorly on standard vision probes;
+% \textbf{MLLMs} perform reasonably on classification probes but falter on dense tasks and require billions of parameters for moderate steerability;
+% \textbf{Query-agnostic visual encoders} (DINOv2, SigLIP) produce rich transferable features but are not steerable.
+% Our approach bridges this gap, achieving both high steerability and high feature quality - preserving downstream transfer while steering the semantics of the visual features. 
+% We do observe some degradation in feature quality with 10\% degradation on classification and segmentation probes.
+% also, do we need to put this sentence here if the first para is mostly about setup}
 
 
 \subsubsection{Cross Attention Gate as a Continuous Steerability Knob}
