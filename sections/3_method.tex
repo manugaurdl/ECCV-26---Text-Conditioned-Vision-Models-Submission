@@ -94,8 +94,9 @@ RefCOCO+ excludes spatial language (e.g., ``left of''), encouraging the model to
 
 \textbf{Visual Genome}~\cite{krishna2017visual} (preprocessed following MDeTr~\cite{kamath2021mdetr}) contributes region descriptions paired with bounding boxes across densely annotated scenes.
 These descriptions span a broader vocabulary and more complex spatial relationships than the RefCOCO family, increasing the diversity of text conditioning signals.
+We use SAM2 to convert bounding boxes to binary segmentation masks.
 
 \textbf{Mapillary Vistas}~\cite{neuhold2017mapillary} provides street-level imagery with fine-grained panoptic annotations.
-Including this dataset expands the visual domain beyond COCO's indoor and object-centric bias toward outdoor, driving, and urban scenes, improving out-of-distribution generalization.
+Including this dataset expands the visual domain beyond COCO's indoor and object-centric bias toward outdoor, driving, and urban scenes, improving out-of-distribution generalization. We use Describe Anything's synthetically generated referential expressions along with accompanying binary segmentation masks. 
 
-This combination exposes the model to varied scene complexities (from single objects to dense urban panoramas), expression lengths (from two-word labels to multi-sentence descriptions), and visual domains (indoor, outdoor, street-level), encouraging robust text-conditioned representations. {\color{red} add image resolution}
+This combination exposes the model to varied scene complexities (from single objects to dense urban panoramas), expression lengths (from two-word labels to multi-sentence descriptions), and visual domains (indoor, outdoor, street-level), encouraging robust text-conditioned representations.

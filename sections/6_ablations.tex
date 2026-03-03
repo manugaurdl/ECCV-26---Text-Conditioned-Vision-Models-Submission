@@ -50,11 +50,11 @@ To understand which layers benefit most from text conditioning, we compare four 
 \subsection{Training Signal}
 \label{subsec:training_signal}
 
-Patch-level localization admits two natural supervision strategies: \emph{pointing}, via a Gaussian heatmap centered on the bounding-box midpoint ($\sigma{=}1.1$), and \emph{segmenting}, via the tokenized object mask used in our objective (\cref{sec:objective}).
+Patch-level localization admits two natural supervision strategies: \textbf{pointing}, via a Gaussian heatmap centered on the bounding-box midpoint ($\sigma{=}1.1$), and \textbf{segmenting}, via the tokenized object mask used in our objective (\cref{sec:objective}).
 % TODO: add quantitative comparison once numbers are ready (e.g., PODS, steerability, or a pmass metric).
 % Placeholder: ``Switching from Gaussian to mask supervision improves PODS by X points and steerability by Y points.''
-The mask signal produces a notable emergent behavior: when multiple instances of the queried class appear in an image, the model activates on \emph{all} matching regions simultaneously, despite training annotations labeling only one referent per sample.
-This arises because the mask target teaches the cross-attention layers to identify \emph{which tokens match the text} rather than \emph{where the most likely centre is}---any token whose content matches the query receives high activation regardless of instance count.
+The mask signal produces a notable emergent behavior: when multiple instances of the queried class appear in an image, the model activates on all matching regions simultaneously, despite training annotations labeling only one referent per sample.
+This arises because the mask target teaches the cross-attention layers to identify \textit{which tokens match the text} rather than \textit{where the most likely centre is}, thus any token whose content matches the query receives high activation regardless of instance count.
 The Gaussian-trained model, by contrast, collapses to a single peak, consistent with its unimodal supervision.
 We provide further discussion and qualitative examples of this emergence in \cref{app:training_signal}.
 
