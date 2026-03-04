@@ -13,17 +13,26 @@
 \section{Introduction}
 \label{sec:intro}
 
+
+\MG{Motivation: Saliency Bias}\\
 Pretrained visual encoders exhibit a strong saliency bias: they effectively process images through the most prominent visual concept in the scene.
 This behavior stems from photographer bias in training data, where subjects are centered and in-focus, and paired caption used for vision-language modelling typically describe only primary objects.
 Self-attention reinforces this tendency by routing global information through high-norm tokens that correspond to salient foreground objects~\cite{caron2021dino, oquab2024dinov2}.
 The result is \MT{non-steerable \st{query-agnostic}} representations that collapse to coarse, scene-level semantics.
-Consider a kitchen image containing appliances, utensils, and a few mugs in the background: DINOv2~\cite{oquab2024dinov2} features emphasize the global ``kitchen'' scene, \sout{discarding} attenuating the fine-grained cues needed to reliably retrieve, count, or localize specific objects like the mugs.
-\MT{this is a strong claim; I don't think it is fair to say models don't see objects beyond prominent one. They are just muted. Otherwise performance for KNN would be 0, but it is not}
+Consider a kitchen image containing appliances, utensils, and a few mugs in the background: DINOv2~\cite{oquab2024dinov2} features emphasize the global ``kitchen'' scene, \sout{discarding} attenuating the fine-grained cues needed to reliably retrieve, count, or localize specific objects like the mugs.\\
+% \MT{this is a strong claim; I don't think it is fair to say models don't see objects beyond prominent one. They are just muted. Otherwise performance for KNN would be 0, but it is not}
 
-This limitation leaves current models trapped between two extremes (Figure~\ref{fig:teaser}).
+\MG{Existing Multimodal Modelling Approaches: Arch Figure}
+CLIP/Siglip --> post-hoc late fusion of text features fails to steer visual features from scene level semantics to objects of interest. Remains to be a non-steerable ViT feature.
+
+
+
+OV Localization --> 
+
+\sout{This limitation leaves current models trapped between two extremes (Figure~\ref{fig:teaser}).
 Standard visual encoders such as DINOv2~\cite{oquab2024dinov2} and SigLIP~\cite{zhai2023_siglip} produce rich, general-purpose features but offer no mechanism to focus on a particular visual concept.
 Open-vocabulary localization models such as SAM3~\cite{carion2025_sam3} and GroundingDINO~\cite{liu2023groundingdino} accept text queries but produce task-specific representations that lack the generality and fidelity for downstream transfer.
-No existing approach achieves both high-quality visual features and prompt-based steerability.
+No existing approach achieves both high-quality visual features and prompt-based steerability.}
 
 
 In this context, we explore the question: \textit{can text conditioning steer the semantics of visual representations without degrading their quality?}
@@ -46,24 +55,49 @@ We find that this leads to three desirable properties/desiderata:
 \MG{I want to say that this steerability (as defined by first two points) doesn't come with degraded performance on standard vision benchmarks i.e preserves their downstream transfer - which is the point of representation learning}
 \end{itemize}
 
+
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\textwidth]{figures/architecture_comparison.pdf}
+\caption{\textbf{Taxonomy of text conditioning in extracted vision features.} The panels illustrate whether and where language prompts influence visual representations. \model{} integrates text conditioning by incorporating lightweight vision$\rightarrow$language cross-attention inside pretrained ViT blocks.
+}
+\label{fig:arch_comparison}
+\end{figure}
+
+
 Our method is able to embody these properties while existing methods fail. \MG{need to add TL;DR of Section 4.1, 4.2, 4.4, and then flow into OOD finding}
 \MT{skipped for now}
 
 Together, these properties yield a surprising consequence: natural language can steer frozen vision encoders to generalize to out-of-distribution domains.
 \MT{above claim needs support?}
-SHIFT represents a new class of vision transformers that use text to extend generalization at inference time.
+SHIFT represents a new class of vision transformers that use text to extend generalization at inference time. \MG{merge sentences}
+
+
 Just as in-context learning adapts language models to novel tasks without retraining, text prompts adapt visual representations to novel domains without fine-tuning.
-MLLMs condition LLMs with visual inputs for the same reason.
+
+{\color{pink} MLLMs condition LLMs with visual inputs for the same reason.
 Although this improves their generalization, it introduces language shortcuts that degrade vision-centric performance~\cite{chen2025vlm_benchmark}.
-In contrast, SHIFT conditions the visual encoder on text rather than the reverse.
+In contrast, SHIFT conditions the visual encoder on text rather than the reverse.} \MG{put it in (2)}
 Since we preserve the representation quality of the underlying ViT, language is used purely as a steering signal without succumbing to language shortcuts.
 
-Early fusion of language with visual features is a deliberate design choice.
+{\color{brown} Early fusion of language with visual features is a deliberate design choice.
 Cross-modal encoders such as CLIP~\cite{radford2021_clip} and SigLIP~\cite{zhai2023_siglip} share a multimodal space, but their visual encoders remain query-agnostic: text and vision interact only after feature extraction, so text cannot steer the visual representation itself.
 SHIFT bridges this gap by 
 % injecting text conditioning within the ViT layers of a frozen unimodal encoder,
 preserving the representational depth of vision-only pretraining while gaining the generalization provided by language without the catastrophic forgetting that accompanies task-specific fine-tuning.
 % SHIFT takes a complementary approach from the visual representation learning perspective: it preserves the representational depth of vision-only pretraining while gaining the generalization that language provides, without the catastrophic forgetting that accompanies task-specific fine-tuning.
+} \MG{maybe related works- keep post hoc late fusion doesn't work in (2)}
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=1.0\linewidth]{figures/heatmaps.pdf}
+\caption{
+\textbf{\model{} outputs interpretable heatmaps that highlight prompt-specifiable image regions.} 
+\JR{heatmap overlay not exported correctly to PDF; need fixing}
+}
+\label{fig:heatmap_teaser}
+\end{figure}
 
 \MG{Can we purpose the following representation alignment argument in somehow? Late fusion sucks; thats estabilished. I guess MLLM and ours is both good options depending upon what your priority is (knowledge vs vision)
 }
@@ -124,14 +158,5 @@ SHIFT can guide the semantics of the visual representation with text while prese
 \end{enumerate}
 
 
-\begin{figure}[t]
-\centering
-\includegraphics[width=1.0\linewidth]{figures/heatmaps.pdf}
-\caption{
-\textbf{\model{} outputs interpretable heatmaps that highlight prompt-specifiable image regions.} 
-\JR{heatmap overlay not exported correctly to PDF; need fixing}
-}
-\label{fig:heatmap_teaser}
-\end{figure}
 
 

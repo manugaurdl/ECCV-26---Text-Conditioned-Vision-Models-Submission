@@ -1,4 +1,4 @@
-\section{Methodology}
+\section{\model{}: Steering Vision Transformers with Text}
 \label{sec:method}
 
 % method text-conditioned visual
@@ -26,24 +26,36 @@
     % token length [optional!]
 % conclusion
 
-\MT{skipping for now as discussed with MG}
-SHIFT injects text conditioning into a frozen Vision Transformer through sparse, gated cross-attention layers that steer visual features without degrading them.
-As illustrated in Figure~\ref{fig:arch}, our architecture consists of three components: (1) a frozen RoBERTa-Large text encoder that produces token-level embeddings from the input prompt, (2) a lightweight multimodal adapter that projects these text embeddings into the visual embedding space, and (3) tanh-gated cross-attention layers interleaved within a frozen ViT that progressively fuse textual cues into the visual representation.
-Given an image and a text prompt, SHIFT produces text-contextualized patch-level visual features that remain in the base ViT's embedding space.
-We train the model on a diverse mixture of referential segmentation datasets (Section~\ref{sec:data}) using a binary segmentation objective at the ViT patch level (Section~\ref{sec:objective}).
-The segmentation head serves solely as a training signal and is discarded at inference; the output of interest is the steered visual representation itself.
+% \MT{skipping for now as discussed with MG}
+
+We inject text into a frozen ViT through gated cross-attention layers that steer visual features towards the text prompt without degrading them.
+We describe \model{}'s architectural modifications and training data and objectives below.
+
+% As illustrated in \cref{fig:arch_training}, our architecture consists of three components:
+% (1)~a frozen text encoder (RoBERTa-Large~\cite{liu2019roberta}) that produces token-level embeddings from the input prompt;
+% (2)~a lightweight multimodal adapter (MLP) that projects these text embeddings into the visual embedding space; and
+% (3)~tanh-gated cross-attention layers interleaved within a frozen ViT that progressively fuse textual cues into the visual representation.
+% Given an image and a text prompt, SHIFT produces text-contextualized patch-level visual features that remain in the base ViT's embedding space.
+% We train the model on a diverse mixture of referential segmentation datasets (Section~\ref{sec:data}) using a binary segmentation objective at the ViT patch level (Section~\ref{sec:objective}).
+% The segmentation head serves solely as a training signal and is discarded at inference; the output of interest is the steered visual representation itself.
 
 \subsection{Architecture}
 \label{sec:arch}
 
 \begin{wrapfigure}{r}{0.4\textwidth}
-    \centering
-    \includegraphics[width=\linewidth]{figures/training_architecture.pdf}
-    \caption{\textbf{Instilling textual steering into vision encoders with \model{}.}
-    Our method adds lightweight vision$\rightarrow$language cross-attention layers within pretrained ViT blocks and applies a patch-level segmentation proxy objective to fuse prompt cues into patch tokens. \MG{we train with softCE}
-    }
-    \label{fig:arch_training}
+\centering
+\vspace{-15mm}
+\includegraphics[width=\linewidth]{figures/training_architecture.pdf}
+\vspace{-2mm}
+\caption{\textbf{Steering ViTs using text conditioning.}
+Our method adds lightweight vision$\rightarrow$language cross-attention layers within pretrained ViT blocks and applies a patch-level segmentation proxy objective to fuse prompt cues into patch tokens.
+\MG{we train with softCE}
+}
+\label{fig:arch_training}
 \end{wrapfigure}
+
+As illustrated in \cref{fig:arch_training}, our \model{} consists of four components:
+
 \textbf{Visual Encoder.}
 We use a frozen DINOv2 ViT-B/14~\cite{oquab2024dinov2} as our visual backbone.
 For an input image $X_v \in \mathbb{R}^{H \times W \times 3}$, the ViT produces a sequence of $N$ patch tokens $Z_v \in \mathbb{R}^{N \times d}$ along with a \texttt{[CLS]} token, where $d$ is the embedding dimension.

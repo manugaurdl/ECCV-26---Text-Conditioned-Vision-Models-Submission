@@ -29,15 +29,6 @@
 \subsection{Baselines}
 \label{subsec:baselines}
 
-\begin{figure}[t!]
-\centering
-\includegraphics[width=\textwidth]{figures/architecture_comparison.pdf}
-\caption{\textbf{Taxonomy of text conditioning in extracted vision features.} The panels illustrate whether and where language prompts influence visual representations. \model{} integrates text conditioning by incorporating lightweight vision$\rightarrow$language cross-attention inside pretrained ViT blocks.
-
-}
-\label{fig:arch_comparison}
-\end{figure}
-
 % We benchmark \model{} against a number of existing methods that allow for prompt-based steering of their internal visual representations as well as unimodal vision encoders.
 
 We compare \model{} against baselines spanning five model families that differ in how, and whether, they incorporate text into visual features (see \cref{sec:related_work} for an extended discussion and \cref{app:baseline_extraction} for feature-extraction details):
@@ -231,18 +222,17 @@ In summary, only \model{} and OV localization models are text-steerable, standar
 \MT{do we want to highlight task or takeaway in subsec headers? benchmarks are new, so ok to focus on takeaways here}
 \MG{Not sure}
 
-In the previous section, we validated that text conditioning steers global semantics. In this section we examine whether text-conditioning can route self-attention to tokens corresponding to the queried object, improving dense predictions for non-salient concepts.
-\MT{add clarity about CLS's attention to visual tokens?}
-We construct a benchmark by stitching together four images from PASCAL-VOC into a single mosaic image, reducing the saliency of each individual object.
-This setup lets us quantify the foreground bias of self-attention and measure how effectively text can be used by our method to redirect it.
+In the previous section, we demonstrated that text conditioning can effectively steers global semantics. 
+Next, we examine how \model{} routes and aggregates global representations via attention to query-relevant tokens.
+% In this section we examine whether text-conditioning can route self-attention to tokens corresponding to the queried object, improving dense predictions for non-salient concepts.
+For that, we construct a benchmark by stitching together four images from PASCAL-VOC \cite{pascal_voc} into a single $2\times2$ mosaic, reducing the saliency of each primary subject.
+By measuring the area under the precision-recall-curve (AUPRC) of the \texttt{[CLS]}$\rightarrow$patch attention scores in the ultimate layer, we can quantify how effectively global attention is redirected to prompt-specific regions\footnote{Tokens consistently acting as attention sinks are ignored (cf. \cite{darcet2023vitneedreg}).}. 
 
-\subsubsection{Qualitative Analysis} \MG{make consistent with Figure 5.}
-DINOv2's \texttt{[CLS]} attention maps concentrate on salient foreground objects, confirming the saliency bias hypothesized in Section~\ref{sec:intro}.
-Figure~\ref{fig:steer_attn} (right) illustrates this: DINOv2 allocates attention toward the house and bathtub but ignores the tree along the road.
-\MT{I'm not sure if we can say what DINOv2 should do on montages no?} 
-\MG{why not? the images is still a composition of objects, just smaller objects now}
+\subsubsection{Qualitative Analysis}
+As revealed by Figure \ref{fig:steer_attn}, DINOv2's attention map focuses primarily on the prominent ``pony'' and ``airplane'' entities, confirming the saliency bias hypothesized in Section~\ref{sec:intro}.
+
 When conditioned on ``tree,'' our method routes attention to the full extent of the tree and partly to a potted plant in an adjacent quadrant due to its semantic association.
-Additional qualitative examples appear in the Appendix.
+Additional qualitative examples appear in the Appendix. \JR{need to create and link apdx section.}
 
 \subsubsection{Quantitative Evaluation}
 We quantify DinoV2 ability to localize distinct objects by using \texttt{[CLS]} attention maps as a proxy for spatial focus.
@@ -385,57 +375,90 @@ Second, since \model{} is trained exclusively on human-annotated referring expre
 
 
 % Sections~\ref{subsec:cond_ret_exp}
-We have established that our method can steer global feature semantics and where the the feature lies in the hierarchy of semantic abstraction is dictated by the specificity of the query.
+We have shown that query specificity dictates the level of semantic abstraction (\cref{subsec:text_density_exp}).
+Here we visualize how text conditioning reshapes embedding space topology via UMAP.
+DINOv2 imposes a fixed topology dictated by saliency, clustering images by their dominant foreground object.
+\model{} dynamically reorganizes this topology according to the text query.
+We demonstrate two complementary modes: steering along the \textit{semantic hierarchy} and steering by \textit{compositional attributes}.
+% --- Old intro (commented out) ---
+% We have established that our method can steer global feature semantics and where the the feature lies in the hierarchy of semantic abstraction is dictated by the specificity of the query.
 % Having demonstrated that our method can successfully steer global ViT features (Section \ref{subsec:cond_ret_exp}), preserve visual quality (Section \ref{subsec:mosaic_exp}), and that query specificity dictates the level of semantic abstraction (Section \ref{subsec:text_density_exp}).
-In this section, we analyze U-MAP visualizations to better understand the embedding space topology,  consequently \model{}'s ability to steer semantics.
+% In this section, we analyze U-MAP visualizations to better understand the embedding space topology,  consequently \model{}'s ability to steer semantics.
 % U-MAP visu reveal how text conditioning reshapes the embedding space topology.
-Standard ViT's like DINOv2 exhibit a fixed topology dictated by saliency bias, clustering images by the dominant foreground object.  
-Our method on the other hand \model{} dynamically reshapes this topology based on the input text query.
-We explore this by visualizing \textit{Semantic Steering} and \textit{Object Composition Steering}. 
+% Standard ViT's like DINOv2 exhibit a fixed topology dictated by saliency bias, clustering images by the dominant foreground object.  
+% Our method on the other hand \model{} dynamically reshapes this topology based on the input text query.
+% We explore this by visualizing \textit{Semantic Steering} and \textit{Object Composition Steering}. 
 % \MG{to do MG: compress}
 % \MG{To Do: We also analyze how changing text density and scaling down cross attention gating affects this.}
 
-\subsubsection{Steering Feature along the Semantic Hierarchy}
+\subsubsection{Steering Along the Semantic Hierarchy}
 
-This experiment tests whether text can steer clustering using different levels of semantic details, ranging from low level fine-grained object description (as seen in ~\cref{subsec:text_density_exp}) to higher level semantics i.e object class (``bird'') and generic semantic superclass (``animal'').
+We test whether text can steer clustering at different levels of the semantic hierarchy, from object class (``bird'') to generic superclass (``animal'').
 
-\paragraph{Setup.} We select images containing $N$ distinct object classes divided into $k$ object classes.
+\paragraph{Setup.} We select images spanning nine PASCAL-VOC classes: bird, bus, car, cat, dog, horse, motorbike, person, and train.
 
-\paragraph{Analysis.} 
-As shown in Figure~\ref{fig:tsne_semantic}, the baseline DINOv2 embeddings (left) form six distinct clusters, rigidly adhering to object class and treating ``dog'' and ``horse'' as separate concepts.
+\paragraph{Analysis.}
+As shown in Figure~\ref{fig:tsne_semantic} (panel~1), DINOv2 embeddings cluster rigidly by object class.
+Conditioning on \texttt{``animal''} (panel~2) merges all animal classes (bird, cat, dog, horse) into a single macro-cluster while pushing non-animal classes apart.
+Crucially, fine-grained structure is preserved within the animal cluster: dogs and cats remain closer neighbors than birds, confirming that text controls clustering granularity without destroying object-level semantics.
 
-Conditioning our model on \texttt{``Animal''} (right) transforms the embedding space: all animal classes (dog, cat, horse, bird, sheep) collapse into a single macro-cluster, while non-animal classes are pushed away.
-Crucially, object-level semantics are preserved within the animal cluster: dogs and cats remain closer neighbors than birds (Figure~\ref{fig:tsne_semantic}), confirming that text controls the granularity of clustering without destroying fine-grained structure.
+Drilling down further, conditioning on \texttt{``bird''} (panel~3) increases separability between bird and non-bird images while preserving the higher-level animal versus non-animal macro-separation.
+This confirms that text can steer clustering at multiple levels of the semantic hierarchy simultaneously.
+% --- Old text (commented out) ---
+% \subsubsection{Steering Feature along the Semantic Hierarchy}
+% This experiment tests whether text can steer clustering using different levels of semantic details, ranging from low level fine-grained object description (as seen in ~\cref{subsec:text_density_exp}) to higher level semantics i.e object class (``bird'') and generic semantic superclass (``animal'').
+% \paragraph{Setup.} We select images containing $N$ distinct object classes divided into $k$ object classes.
+% \paragraph{Analysis.} 
+% As shown in Figure~\ref{fig:tsne_semantic}, the baseline DINOv2 embeddings (left) form six distinct clusters, rigidly adhering to object class and treating ``dog'' and ``horse'' as separate concepts.
+% Conditioning our model on \texttt{``Animal''} (right) transforms the embedding space: all animal classes (dog, cat, horse, bird, sheep) collapse into a single macro-cluster, while non-animal classes are pushed away.
+% Crucially, object-level semantics are preserved within the animal cluster: dogs and cats remain closer neighbors than birds (Figure~\ref{fig:tsne_semantic}), confirming that text controls the granularity of clustering without destroying fine-grained structure.
 
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\linewidth]{figures/tsne_animal.pdf}
-\caption{\textbf{\model{} enables hierarchical semantic steering.} \textbf{(1)} DINOv2 clusters images by object class. \textbf{(2)} Conditioning \model{} on \texttt{``animal''} separates images into animal and non-animal clusters. \textbf{(3)} \JR{potentially remove this hierarchy level} \textbf{(4)} With \texttt{``eye''}-conditioning, two primary clusters containing animate and inanimate classes emerge. \JR{plot is not final; caption needs adaptation}}
+\caption{\textbf{\model{} steers embedding topology via text.}
+\textbf{(1)} DINOv2 clusters by object class.
+\textbf{(2)} Conditioning on \texttt{``animal''} merges animal classes into one cluster while separating non-animals.
+\textbf{(3)} Conditioning on \texttt{``bird''} increases bird vs.\ non-bird separability while preserving the animal/non-animal macro-structure.
+\textbf{(4)} Conditioning on \texttt{``eye''} groups all animate classes (including person) together, demonstrating compositional attribute steering.
+\JR{plot is not final; caption needs adaptation}}
+% --- Old caption (commented out) ---
+% \caption{\textbf{\model{} enables hierarchical semantic steering.} \textbf{(1)} DINOv2 clusters images by object class. \textbf{(2)} Conditioning \model{} on \texttt{``animal''} separates images into animal and non-animal clusters. \textbf{(3)} \JR{potentially remove this hierarchy level} \textbf{(4)} With \texttt{``eye''}-conditioning, two primary clusters containing animate and inanimate classes emerge. \JR{plot is not final; caption needs adaptation}}
 \label{fig:tsne_semantic}
 \end{figure}
 
-\subsubsection{Steering Feature along the Object Composition Hierarchy}
+\subsubsection{Steering by Compositional Attributes}
 
-This experiment tests a more challenging scenario: clustering visually dissimilar objects (e.g., office chair and bike) based on a shared sub-object attribute (wheel), ignoring their primary semantic category.
+Semantic categories are not the only axis along which text can steer features.
+We also explore steering by compositional attributes i.e shared sub-object properties. This defines an grouping principle orthogonal to semantic categories.
 
-\paragraph{Setup.} We curate a heterogeneous dataset split into two compositional groups:
-\begin{itemize}
-\item \textbf{Has-Part ``Wheel'':} Cart, wheelchair, bike, car, airplane.
-\item \textbf{No-Part ``Wheel'':} Apple, house, person.
-\end{itemize}
+Conditioning on \texttt{``eye''} (Figure~\ref{fig:tsne_semantic}, panel~4) produces two clusters: animate classes that possess eyes (bird, cat, dog, horse, person) versus inanimate objects (bus, car, motorbike, train).
+Notably, \textit{person} images, which were distant from animals under both \texttt{``animal''} and \texttt{``bird''} conditioning, now join the animate cluster since the shared attribute ``has eyes'' overrides the semantic category boundary.
+This demonstrates that \model{} can steer representations by compositional properties, not just taxonomic ones.
 
-\paragraph{Analysis.} 
-DINOv2 fails to capture this shared attribute: the t-SNE visualization (Figure~\ref{fig:tsne_compositional}, left) shows clusters organized by object identity, with a wheelchair clustered closer to a person (contextual bias) than to a cart.
-
-Conditioning on \texttt{``Wheel''} produces a binary separation of the embedding space (Figure~\ref{fig:tsne_compositional}, right): one cluster containing all objects with wheels, regardless of whether they are vehicles or medical equipment, and another containing objects without wheels.
-This confirms that text conditioning can route attention to specific compositional attributes rather than the global object concept.
-\begin{figure}[t]
-\centering
-% \includegraphics[width=\linewidth]{old_figures/tsne_compositional_steering.png}
-\caption{\textbf{Compositional attribute steering.} \textbf{Left:} DINOv2 separates objects by class (wheelchair far from car). \textbf{Right:} Conditioned on \texttt{``Wheel''}, our method clusters diverse wheeled objects together (cart, wheelchair, car), distinct from objects without wheels (apple, house).}
-\label{fig:tsne_compositional}
-\end{figure}
+% --- Old "wheel" experiment (commented out) ---
+% \subsubsection{Steering Feature along the Object Composition Hierarchy}
+%
+% This experiment tests a more challenging scenario: clustering visually dissimilar objects (e.g., office chair and bike) based on a shared sub-object attribute (wheel), ignoring their primary semantic category.
+%
+% \paragraph{Setup.} We curate a heterogeneous dataset split into two compositional groups:
+% \begin{itemize}
+% \item \textbf{Has-Part ``Wheel'':} Cart, wheelchair, bike, car, airplane.
+% \item \textbf{No-Part ``Wheel'':} Apple, house, person.
+% \end{itemize}
+%
+% \paragraph{Analysis.} 
+% DINOv2 fails to capture this shared attribute: the t-SNE visualization (Figure~\ref{fig:tsne_compositional}, left) shows clusters organized by object identity, with a wheelchair clustered closer to a person (contextual bias) than to a cart.
+%
+% Conditioning on \texttt{``Wheel''} produces a binary separation of the embedding space (Figure~\ref{fig:tsne_compositional}, right): one cluster containing all objects with wheels, regardless of whether they are vehicles or medical equipment, and another containing objects without wheels.
+% This confirms that text conditioning can route attention to specific compositional attributes rather than the global object concept.
+% \begin{figure}[t]
+% \centering
+% % \includegraphics[width=\linewidth]{old_figures/tsne_compositional_steering.png}
+% \caption{\textbf{Compositional attribute steering.} \textbf{Left:} DINOv2 separates objects by class (wheelchair far from car). \textbf{Right:} Conditioned on \texttt{``Wheel''}, our method clusters diverse wheeled objects together (cart, wheelchair, car), distinct from objects without wheels (apple, house).}
+% \label{fig:tsne_compositional}
+% \end{figure}
 
 % TODO: Impact of varying text density
 % TODO: Impact of turning down the Cross Attention knob
@@ -476,7 +499,7 @@ Performance of existing training- and adaptation-free AS baselines is stated as 
 \model{} again matches dedicated methods on this extreme OOD setting.
 As shown in Table~\ref{tab:mvtec_visa}, \model{} reaches 79.4 PRO on MVTec~AD, substantially outperforming CLIP-based approaches (SAM3 at 54.5, CLIPseg at 34.6) and closing much of the gap to specialist methods such as FADE (84.5).
 On VisA, \model{} ties FADE on $\text{ROC}_P$ (91.5) and reaches 77.5 PRO, indicating robust transfer to a harder, more diverse inspection setting.}
-\MG{move feature extraction and table to Supplementary? Have one metric ROCp - 2 lines on a plot for MVtech and VisA?}
+\MG{move feature extraction and table to Supplementary? 3 columns: a) and b) qualitative results, c) quantify results iwth line plot -  one metric ROCp - 2 lines on a plot for MVtech and VisA?}
 
 These results reinforce the pattern observed on PODS: text-driven steering unlocks capabilities already present in the frozen ViT and transfers them to domains far beyond the training distribution.
 

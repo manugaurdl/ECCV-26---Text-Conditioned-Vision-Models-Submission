@@ -24,6 +24,7 @@
 
 \paragraph{Visual Representation Families.}
 Modern vision systems extract features through architecturally distinct paradigms.
+\JR{in the rest of the paper we use bold text instead of italics for paragraph headings}
 \textit{Unimodal encoders} such as DINOv2~\cite{oquab2024dinov2} and MAE~\cite{he2022mae} learn rich visual representations via self-supervised objectives but produce features that are entirely query-agnostic.
 \textit{Cross-modal encoders} like CLIP~\cite{radford2021_clip} and SigLIP~\cite{zhai2023_siglip} align image and text embeddings through contrastive pretraining, yet their dual-encoder design limits multimodal interaction to post-hoc fusion rather than early feature-level conditioning.
 \textit{Multimodal large language models} (MLLMs) process interleaved image--text sequences and can produce text-influenced visual representations, but they route visual tokens through a large language backbone, incurring substantial computational overhead for moderate steerability.
