@@ -1,3 +1,4 @@
+\appendix
 \section{Appendix}
 
 \subsection{Training Signal: Pointing vs.\ Segmenting}
@@ -58,5 +59,19 @@ Because features are available at multiple spatial scales, we first interpolate 
 \input{tables/knn_exp_indoor}
 
 \input{tables/knn_exp_outdoor}
+
+\subsection{Anomaly Segmentation}
+We perform zero-shot anomaly segmentation (AS) on the MVTec~AD~\cite{bergmann_mvtech} and VisA~\cite{zou2022_visa_dataset} datasets.
+{\color{gray} We derive the anomaly map by upsampling the continuous heatmap produced by the learned linear segmentation head.
+As for all text-steerable methods, we use an ensemble of ten anomaly prompts (e.g., \texttt{``the anomaly in the <object>.''}) and average the resulting heatmaps across prompts.
+Following standard practice in the AD literature~\cite{WinCLIP_Jeong23CVPR}, we measure the pixel-wise \textit{Area under the Receiver Operating Characteristics} ($\text{ROC}_P$), the \textit{Per-Region-Overlap} (PRO), and threshold-optimal $F_1$ score ($F_1^{\max}$).
+Performance of existing training- and adaptation-free AS baselines is stated as reported in the original publication. 
+
+\input{tables/anomaly_detection_table}
+
+\model{} again matches dedicated methods on this extreme OOD setting.
+As shown in Table~\ref{tab:mvtec_visa}, \model{} reaches 79.4 PRO on MVTec~AD, substantially outperforming CLIP-based approaches (SAM3 at 54.5, CLIPseg at 34.6) and closing much of the gap to specialist methods such as FADE (84.5).
+On VisA, \model{} ties FADE on $\text{ROC}_P$ (91.5) and reaches 77.5 PRO, indicating robust transfer to a harder, more diverse inspection setting.}
+\MG{move feature extraction and table to Supplementary? 3 columns: a) and b) qualitative results, c) quantify results iwth line plot -  one metric ROCp - 2 lines on a plot for MVtech and VisA?}
 
 \label{fig:gate_factor_train_iter}

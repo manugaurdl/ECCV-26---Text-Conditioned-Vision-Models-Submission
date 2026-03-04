@@ -23,17 +23,21 @@
 
 
 \paragraph{Visual Representation Families.}
-Modern vision systems extract features through architecturally distinct paradigms.
-\JR{in the rest of the paper we use bold text instead of italics for paragraph headings}
+\JR{in the rest of the paper we use bold text instead of italics for paragraph headings (i.e. subsubsections)}
+{\color{gray} Modern vision systems extract features through architecturally distinct paradigms.}
 \textit{Unimodal encoders} such as DINOv2~\cite{oquab2024dinov2} and MAE~\cite{he2022mae} learn rich visual representations via self-supervised objectives but produce features that are entirely query-agnostic.
-\textit{Cross-modal encoders} like CLIP~\cite{radford2021_clip} and SigLIP~\cite{zhai2023_siglip} align image and text embeddings through contrastive pretraining, yet their dual-encoder design limits multimodal interaction to post-hoc fusion rather than early feature-level conditioning.
+\textit{Cross-modal encoders} like CLIP~\cite{radford2021_clip} and SigLIP~\cite{zhai2023_siglip} align image and text embeddings through contrastive pretraining, yet their dual-encoder design limits multimodal interaction to post-hoc fusion rather than early feature-level conditioning. 
+\YA{technically we should also look at CoCoOp}
 \textit{Multimodal large language models} (MLLMs) process interleaved image--text sequences and can produce text-influenced visual representations, but they route visual tokens through a large language backbone, incurring substantial computational overhead for moderate steerability.
 \textit{Open-vocabulary localization models} such as GroundingDINO~\cite{liu2023groundingdino} and SAM3~\cite{carion2025_sam3} fuse text deeply into their encoder through cross-modal attention, yielding highly steerable intermediate features; however, these representations are optimized for localization and transfer poorly to general vision tasks.
-Our work bridges this gap: we condition frozen ViT features on text within the transformer layers themselves, achieving high steerability while preserving the representation quality of the base encoder.
+Our work bridges this gap: we condition frozen ViT features on text within the transformer layers themselves, achieving high steerability while preserving the representation quality of the base encoder.}
+
 
 \paragraph{Text-Conditioned Visual Features.}
+\YA{we should say that this family basically doesn't exist. and highly differentiate/dismiss FLAIR }
 % TODO: expand with FLAIR, SAM3/MaskInversion, ELIP, TIE
 FLAIR~\cite{xiao2025flair} applies text-conditioned attention pooling over frozen CLIP features to produce text-informed global representations, but operates only at the pooling stage rather than within the encoder itself.
+
 % SAM3 --> MaskInversion
 % ELIP, TIE
 
