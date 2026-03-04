@@ -383,31 +383,29 @@ Second, since \model{} is trained exclusively on human-annotated referring expre
 
 \MT{please describe experimental setup}
 
+
 % Sections~\ref{subsec:cond_ret_exp}
 We have established that our method can steer global feature semantics and where the the feature lies in the hierarchy of semantic abstraction is dictated by the specificity of the query.
 % Having demonstrated that our method can successfully steer global ViT features (Section \ref{subsec:cond_ret_exp}), preserve visual quality (Section \ref{subsec:mosaic_exp}), and that query specificity dictates the level of semantic abstraction (Section \ref{subsec:text_density_exp}).
-In this section, we use t-SNE visualizations to analyze the embedding space topology to better understand semantic steering in SteerViT.
-t-SNE visualizations reveal how text conditioning reshapes the embedding space topology.
-Standard pretrained encoders like DINOv2 exhibit a fixed topology dictated by saliency bias, clustering images by the dominant foreground object.
-Our method dynamically reconfigures this topology based on the input text query.
-We explore this through two steering scenarios: \textit{Semantic Steering} and \textit{Object Composition Steering}. \MG{to do MG: compress}
+In this section, we analyze U-MAP visualizations to better understand the embedding space topology,  consequently \model{}'s ability to steer semantics.
+% U-MAP visu reveal how text conditioning reshapes the embedding space topology.
+Standard ViT's like DINOv2 exhibit a fixed topology dictated by saliency bias, clustering images by the dominant foreground object.  
+Our method on the other hand \model{} dynamically reshapes this topology based on the input text query.
+We explore this by visualizing \textit{Semantic Steering} and \textit{Object Composition Steering}. 
+% \MG{to do MG: compress}
 % \MG{To Do: We also analyze how changing text density and scaling down cross attention gating affects this.}
-
 
 \subsubsection{Steering Feature along the Semantic Hierarchy}
 
-This experiment tests whether text can steer clustering from fine-grained object classes to broad semantic superclasses.
+This experiment tests whether text can steer clustering using different levels of semantic details, ranging from low level fine-grained object description (as seen in ~\cref{subsec:text_density_exp}) to higher level semantics i.e object class (``bird'') and generic semantic superclass (``animal'').
 
-\paragraph{Setup.} We select images containing $N$ distinct object classes divided into $k$ supercategories.
+\paragraph{Setup.} We select images containing $N$ distinct object classes divided into $k$ object classes.
 
 \paragraph{Analysis.} 
-As shown in Figure~\ref{fig:tsne_semantic}, the baseline DINOv2 embeddings (left) form six distinct clusters, rigidly adhering to granular object identity and treating ``dog'' and ``horse'' as separate concepts.
+As shown in Figure~\ref{fig:tsne_semantic}, the baseline DINOv2 embeddings (left) form six distinct clusters, rigidly adhering to object class and treating ``dog'' and ``horse'' as separate concepts.
 
 Conditioning our model on \texttt{``Animal''} (right) transforms the embedding space: all animal classes (dog, cat, horse, bird, sheep) collapse into a single macro-cluster, while non-animal classes are pushed away.
 Crucially, object-level semantics are preserved within the animal cluster: dogs and cats remain closer neighbors than birds (Figure~\ref{fig:tsne_semantic}), confirming that text controls the granularity of clustering without destroying fine-grained structure.
-
-% TODO: Impact of varying text density
-% TODO: Impact of turning down the Cross Attention knob
 
 
 \begin{figure}[t]
