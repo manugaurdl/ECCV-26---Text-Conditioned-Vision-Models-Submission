@@ -44,6 +44,15 @@ For SAM3~\cite{carion2025_sam3}, we take the patch-level outputs of the \textit{
 For GroundingDINO~\cite{liu2023groundingdino}, we use the outputs of the cross-modal \textit{Feature Enhancer} layer.
 Because features are available at multiple spatial scales, we first interpolate them to a common intermediate resolution before averaging to obtain dense pseudo-patch-level features.
 
+\subsection{Caption Length and Localization}
+
+\begin{figure}[h!]
+\centering
+\includegraphics[width=0.5\textwidth]{old_figures/token_len.png}
+\caption{\textbf{Denser captions improve localization.} On the Ref4 benchmark, referential segmentation performance increases with caption length, confirming that richer text conditioning yields more precise spatial steering.}
+\label{fig:ref4_token_len}
+\end{figure}
+
 \subsection{Conditional Retrieval}
 
 \input{tables/knn_exp_indoor}
