@@ -36,7 +36,12 @@ Our work bridges this gap: we condition frozen ViT features on text within the t
 \paragraph{Text-Conditioned Visual Features.}
 \YA{we should say that this family basically doesn't exist. and highly differentiate/dismiss FLAIR }
 % TODO: expand with FLAIR, SAM3/MaskInversion, ELIP, TIE
-FLAIR~\cite{xiao2025flair} applies text-conditioned attention pooling over frozen CLIP features to produce text-informed global representations, but operates only at the pooling stage rather than within the encoder itself.
+FLAIR~\cite{xiao2025flair} applies text-conditioned attention pooling over frozen CLIP features to produce text-informed global representations. Unlike \model{}, it operates at the pooling stage rather than within the encoder itself.
+Our results suggest a promising paradigm for multimodal representation learning: rather than training joint vision-language encoders from scratch on paired data, inject language conditioning into strong unimodal vision encoders.
+High quality unpaired vision-only and language-only data vastly exceed paired high quality multimodal data; our approach leverages this asymmetry by preserving the representational depth learned from each modality independently.
+Text then serves not as a training signal but as a steering mechanism that extends generalization to domains where labeled data is scarce.
+
+Failure of FLAIR --> 
 
 % SAM3 --> MaskInversion
 % ELIP, TIE

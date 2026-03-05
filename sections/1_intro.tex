@@ -275,23 +275,19 @@ These results suggest that conditioning vision on language -- rather than langua
 
 In summary, we make the following contributions:
 \begin{enumerate}
-\item We introduce Steerable ViT (\model{}), a text-conditioned visual encoder that instills text understanding into frozen ViTs via \sout{sparse} sparsely interspersed, gated cross attention layers trained on grounding.
-\MT{sparse because of every 3rd layer? could be confused with sparse attention} \YA{either way, unnecessary detail for intro, imo. just say it's PEFT and only adds x\% new parameters?}
-% sparse, tanh-gated cross-attention layers trained on referential segmentation.
-% \item We demonstrate a Pareto improvement over existing models: SHIFT achieves high text steerability while preserving the feature quality of the underlying ViT, bridging the gap between unsteerable encoders and quality-degraded multimodal models.
-\item We demonstrate a Pareto improvement over existing models:
-% \item Our approach dynamically routes attention to task-relevant visual concepts, 
-\model{} can guide the semantics of the visual representation with text while preserving their downstream transfer, bridging the gap between unsteerable encoders and quality-degraded multimodal models.
-\MT{needs to be rephrased :)} \YA{agreed. "By comparing the paretro frontiers of \textit{general representation quality} vs \textit{text steerability}, we dominate all other...}
-\item We demonstrate that text conditioning enables zero-shot domain transfer that outperforms supervised fine-tuning: on personalized object discrimination (PODS), descriptive prompts surpass a fine-tuned DINOv2 baseline (54.4 vs.\ 48.0 PR-AUC), and on industrial anomaly detection (MVTec~AD, VisA), our general-purpose model matches dedicated methods, all without task-specific training and across ViT families (DINOv2~\cite{oquab2024dinov2}, SigLIP~\cite{zhai2023_siglip}, MAE~\cite{he2022mae}).
-\MG{better - demonstrating generalization to out-of-distribution domains across ViT families (DINOv2~\cite{oquab2024dinov2}, SigLIP~\cite{zhai2023_siglip}, MAE~\cite{he2022mae}) without task-specific training.}
-\MT{hoping that this holds true ...}
-\YA{again, hope that numbers are not needed in intro}
-
-% \item We conduct extensive zero-shot evaluation on fine-grained multimodal retrieval, referential segmentation, personalized object discrimination, and anomaly detection,  demonstrating generalization to out-of-distribution domains across ViT families (DINOv2~\cite{oquab2024dinov2}, SigLIP~\cite{zhai2023_siglip}, MAE~\cite{he2022mae}) without task-specific training.
-
+\item We introduce \model{} (Steerable ViT), a new paradigm for multimodal modelling that equips any pretrained ViT with text steerability via a simple, scalable pretext task in grounding, adding only X\% new parameters.
+\item We demonstrate a Pareto improvement over existing approaches: \model{} steers visual features with text while preserving the base ViT's downstream transfer, bridging the gap between unsteerable unimodal encoders and quality-degraded multimodal models.
+\item We find that text prompts serve as a zero-shot generalization mechanism, enabling \model{} to transfer to novel domains -- personalized object discrimination, industrial anomaly detection -- matching or outperforming dedicated methods and supervised fine-tuning baselines, without task-specific training, across multiple ViT backbones.
 \end{enumerate}
 
+% --- Old contributions (commented out during revision) ---
+% % \item We introduce Steerable ViT (\model{}), a text-conditioned visual encoder that instills text understanding into frozen ViTs via \sout{sparse} sparsely interspersed, gated cross attention layers trained on grounding.
+% \MT{sparse because of every 3rd layer? could be confused with sparse attention} \YA{either way, unnecessary detail for intro, imo. just say it's PEFT and only adds x\% new parameters?}
+% % \item We demonstrate a Pareto improvement over existing models:
+% % \model{} can guide the semantics of the visual representation with text while preserving their downstream transfer, bridging the gap between unsteerable encoders and quality-degraded multimodal models.
+% \MT{needs to be rephrased :)} \YA{agreed. "By comparing the paretro frontiers of \textit{general representation quality} vs \textit{text steerability}, we dominate all other...}
+% % \item We demonstrate that text conditioning enables zero-shot domain transfer that outperforms supervised fine-tuning: on personalized object discrimination (PODS), descriptive prompts surpass a fine-tuned DINOv2 baseline (54.4 vs.\ 48.0 PR-AUC), and on industrial anomaly detection (MVTec~AD, VisA), our general-purpose model matches dedicated methods, all without task-specific training and across ViT families (DINOv2~\cite{oquab2024dinov2}, SigLIP~\cite{zhai2023_siglip}, MAE~\cite{he2022mae}).
+% \MG{better - demonstrating generalization to out-of-distribution domains across ViT families (DINOv2~\cite{oquab2024dinov2}, SigLIP~\cite{zhai2023_siglip}, MAE~\cite{he2022mae}) without task-specific training.}
 
 
 
