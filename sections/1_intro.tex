@@ -145,6 +145,8 @@ Together, these properties yield a surprising consequence: natural language serv
 Analogous to how prompting adapts LLMs to novel tasks without retraining, text prompts adapt \model{}'s visual features to novel domains without fine-tuning.
 Across diverse tasks spanning text-guided retrieval, personalized object discrimination, and industrial anomaly detection, \model{} matches or outperforms strong baselines, including DINOv2, SAM3, and billion-scale MLLMs,  without task-specific training.
 These results suggest that conditioning vision on language -- rather than language on vision -- opens an efficient route to multimodal visual understanding. \MG{new paradigm line}
+% These results position \model{} as a new class of steerable vision transformers, suggesting that conditioning vision on language -- rather than language on vision -- opens an efficient route to multimodal visual understanding.
+
 % where labeled data is scarce.
 
 % --- End old Part 4 notes ---
@@ -270,18 +272,6 @@ These results suggest that conditioning vision on language -- rather than langua
 % % On industrial anomaly detection, a domain entirely absent from our training data, SHIFT matches dedicated methods without any task-specific training and the consequent catastrophic forgetting.
 % \MT{let's use \textbackslash{}model\{\} given the confusion between SteerViT and SHIFT or other things!}
 
-% % OLD:
-% % Together, these properties yield a surprising consequence: natural language can steer frozen vision encoders to generalize to out-of-distribution domains.
-% % \MT{above claim needs support?}
-% % Cross-modal encoders such as CLIP also leverage language to extend generalization, but contrastive training on noisy web-scraped pairs sacrifices the fine-grained visual structure that self-supervised encoders learn from curated vision-only data; MLLMs, conversely, condition language on vision but introduce language shortcuts that degrade vision-centric performance~\cite{chen2025vlm_benchmark}.
-% % \MT{let's use \textbackslash{}model\{\} given the confusion between SteerViT and SHIFT or other things!}
-% % Because SteerViT conditions the visual encoder on text rather than the reverse, it retains the representational depth of unimodal pretraining and uses language purely as a steering signal, enabling generalization to novel concepts without catastrophic forgetting.
-% % \MT{we show the goodness of our approach across widely varying applications:}
-% % On personalized object discrimination, descriptive text prompts outperform a fine-tuned DINOv2 baseline in a zero-shot manner (Section~\ref{subsec:ood_generalization}).
-% % % Together, these properties yield a surprising consequence: natural language can steer frozen vision encoders to generalizes to out-of-distribution domains \sout{more effectively than supervised fine-tuning.}
-% % % % Because our method preserves the rich visual representations learned from unimodal visual pretraining, with the right representation alignment, natural language can lift these features to novel tasks without the catastrophic forgetting that accompanies fine-tuning on limited target data.
-% % On personalized object discrimination, descriptive text prompts outperform a fine-tuned DINOv2 baseline in a zero-shot manner (Section~\ref{subsec:ood_generalization}).
-% On industrial anomaly detection, a domain entirely absent from our training, SteerViT matches dedicated methods without any adaptation.
 
 In summary, we make the following contributions:
 \begin{enumerate}
