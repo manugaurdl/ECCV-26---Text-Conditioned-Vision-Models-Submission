@@ -19,35 +19,44 @@
 % Self-attention reinforces this tendency by routing global information through high-norm tokens that correspond to salient foreground objects~\cite{caron2021dino, oquab2024dinov2}.
 % The result is \MT{non-steerable \st{query-agnostic}} representations that collapse to coarse, scene-level semantics.
 % Consider a kitchen image containing appliances, utensils, and a few mugs in the background: DINOv2~\cite{oquab2024dinov2} features emphasize the global ``kitchen'' scene, \sout{discarding} attenuating the fine-grained cues needed to reliably retrieve, count, or localize specific objects like the mugs.\\
-Pretrained Vision Transformers exhibit a strong saliency bias \YA{see comment in abstract}: their representations collapse toward the most prominent visual concept in a scene.
-Photographer bias in training data~\cite{torallba}, where subjects are centered and in focus, paired captions that typically describe only primary objects~\cite{}, and transformer's \sout{associativity} inductive bias reinforce this tendency.
+%Pretrained Vision Transformers exhibit a strong saliency bias \YA{see comment in abstract}: their representations collapse toward the most prominent visual concept in a scene.
+%Photographer bias in training data~\cite{torallba}, where subjects are centered and in focus, paired captions that typically describe only primary objects~\cite{}, and transformer's \sout{associativity} inductive bias reinforce this tendency.
+Pretrained Vision Transformers such as DINOv2~\cite{oquab2024dinov2} and MAE~\cite{he2022mae} aim to provide a generic representation of an image that can be applied to a variety of downstream tasks such as retrieval, classification, and segmentation.  However, such representations tend to focus on the most prominent object in the image, likely due to the well-known photographer bias for capturing centered objects in vision datasets~\cite{torralba2011unbiased}. Consider \cref{fig:teaser}; DINOv2 retrieves images with the large object %(``wooden kitchen'', \sout{large appliances} ``marble island''), 
+and ignores smaller objects in the background. \textcolor{red}{Deva: Given this narrative, I'd vote for a real example.}
 
+
+%This makes such representations difficult to steer to less prominant visual concepts in images.
 % Self-attention further amplifies it by routing global information through high-norm tokens that correspond to salient foreground objects~\cite{caron2021dino, oquab2024dinov2}. \YA{leave out, I don't think it's necessary and makes reviewer question if all of this is needed if one instead uses registers}
 % This results in rich, semantic but non-steerable representations: no existing mechanism lets a user direct what the model focuses on.
-Consequently, these encoders learn rich, semantic representations yet they remain non-steerable i.e can't direct what the model focused on.
+%Consequently, these encoders learn rich, semantic representations yet they remain non-steerable i.e can't direct what the model focused on.
 % no existing method lets a user direct what the model focuses on,
-This is illustrated in \cref{fig:teaser}, DINOv2~\cite{oquab2024dinov2} features emphasize dominant concepts (``wooden kitchen'', \sout{large appliances} ``marble island''), attenuating non-salient objects (``fruit bowl'') in the background.
+
 % \YA{by all measures, DINO is not coarse.. and not "scene-level" in the typical way of "scene = places205 vs object=imagenet" kind of way........ instead fully focus on the "these models are really great, but no one has thought to make them steerable! this would be great!} scene-level semantics.
 % \YA{todo: refer to qualitative figure of Fig1}
 % \MT{this is a strong claim; I don't think it is fair to say models don't see objects beyond prominent one. They are just muted. Otherwise performance for KNN would be 0, but it is not}
-However, many downstream tasks require focusing on specific objects rather than the dominant scene concept, for instance, retrieving images by a particular object in a cluttered scene, localizing a described entity, or detecting anomalies in a specific component.
-These tasks require visual features that can be directed toward a user-specified object of interest.
-A natural language query is a compelling steering signal for this: it is flexible, compositional, and requires no task-specific heads or labeled target data.
+Given the lack of any other input, focusing on the dominant object seems quite reasonable. %However, many downstream tasks require focusing on specific objects rather than the dominant scene concept, for instance, retrieving images by a particular object in a cluttered scene, localizing a described entity, or detecting anomalies in a specific component.
+But clearly there are tasks that may require focusing on less prominent visual concepts; consider the task of retrieving images of anomalous parts with small imperfections. We argue that it would be useful to have generic visual representations that could be {\it steered} based on a additional language prompt. 
+%These tasks require visual features that can be directed toward a user-specified object of interest.
+%A natural language query is a compelling steering signal for this: it is flexible, compositional, and requires no task-specific heads or labeled target data.
 % These tasks demand 
 % \YA{be mindful of CV people: what is a query? first define it what you mean. e.g. "Such a task would require for example describing the object to focus on in some way from a user query... }
 % query-dependent visual features that can shift toward the object of interest.
-This 
-\sout{raises a natural question}
-motivate us to ask
-: \textit{can we steer the semantics of visual representations with text?}
+%This 
+%\sout{raises a natural question}
+%motivate us to ask
+%: \textit{can we steer the semantics of visual representations with text?}
 
-In this work, we explore steering \sout{frozen ViT representations} pretrained vision transformers with natural language and posit three desiderata such text-conditioned visual features should satisfy:
+In this work, we seek to steer %\sout{frozen ViT representations} 
+pretrained vision transformers with natural language. We posit two desiderata that such steerable representations should satisfy:
 % We posit three desiderata for text-conditioned visual features:
 \begin{itemize}[nosep]
-\item \textbf{Global feature steerability:} Text steers the semantics of the global feature to represent specific, non-salient concepts in cluttered scenes rather than collapsing to the dominant scene-level concept (\cref{subsec:cond_ret_exp}).
+\item \textbf{Steerability:} The representation should adapt to the input text. In particular, it should be steerable across space (so that it adapts to non-salient objects in cluttered scenes;~\cref{subsec:cond_ret_exp}) and semantics (so that it can focus on particular attributes such as man-made versus natural concepts;~\cref{subsec:XX}).
+%should be able to capture non-salient concepts in cluttered scenes rather than collapsing to the dominant scene-level concept. 
+%(\cref{subsec:cond_ret_exp}).
 % \item \textbf{Global feature steerability:} Text steers the global representation from the dominant scene concept toward the queried object, enabling conditional retrieval of non-salient entities in cluttered scenes (\cref{subsec:cond_ret_exp}).
-\item \textbf{Local feature steerability:} Self-attention routes information through patch-level tokens corresponding to the queried concept, improving localization for non-salient objects (\cref{subsec:mosaic_exp}). \YA{does improved localisation stem FROM local feature steerability? it would seem that we either should rename it, or maybe measure the patch-level features too?}
-\item \textbf{Representation quality preservation:} Text steering does not degrade the pretrained \YA{we should say more often that we do post-training of already-pretrained models} ViT's downstream transfer on standard vision benchmarks (\cref{subsec:pareto}).
+%\item \textbf{Local feature steerability:} Self-attention routes information through patch-level tokens corresponding to the queried concept, improving localization for non-salient objects (\cref{subsec:mosaic_exp}). \YA{does improved localisation stem FROM local feature steerability? it would seem that we either should rename it, or maybe measure the patch-level features too?}
+\item \textbf{Representation quality:} The final steered representation should still support a wide range of visual tasks, such as retrieval, classification, and segmentation (\cref{subsec:pareto}).
+%Text steering does not degrade the pretrained \YA{we should say more often that we do post-training of already-pretrained models} ViT's downstream transfer on standard vision benchmarks (\cref{subsec:pareto}).
 % \item \textbf{Representation quality preservation:} Text steering, as described above, desn't degrade the base ViT's downstream transfer on standard vision benchmarks (\cref{subsec:pareto}).
 \end{itemize}\\
 
