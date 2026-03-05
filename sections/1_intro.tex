@@ -5,9 +5,8 @@
 \textbf{\model{} enables prompt-driven semantic steering while preserving feature quality.}
 \textbf{Left:} Retrieval of non-salient background objects quantifies how effectively text prompts steer global visual representations.
 \textbf{Right:} Quality–steerability trade-off: vision-only encoders yield strong (global and patch-level) features but little steerability, whereas multimodal models are steerable yet less transferable; \model{} achieves both high quality and high steerability.
-\JR{Left-side Figure still not finalized}
-\YA{Fig on right: add the Steering-front for our model, bigger fonts, indicate via right-up diagonal arrow the "better" direction in the plot, make axes label only the bold stuff and put the details in caption, connect the left part ("x-axis") also visually to the plot (or maybe just flip the plot to make it the y-axis for easier connection!!) are the encoders shown all same size? are we not advantaging SAM3 with its high-res, big model?} 
-\YA{maybe have the query image be smaller and on the left and then arrows going into DINOv2 with a box and SteerViT with a box and then as "outgoing" we'd have the images... BUT MAYBE WE SHOULD GO BACK TO THE SCHEMATIC IMAGES JONA HAD BEFORE, it's too small otherwise, and we'll want to show qualitative results in paper anyhow.}}
+\JR{TODO: adapt caption to new Figure}
+=}
 \label{fig:teaser}
 \end{figure}
 
@@ -21,65 +20,132 @@
 % The result is \MT{non-steerable \st{query-agnostic}} representations that collapse to coarse, scene-level semantics.
 % Consider a kitchen image containing appliances, utensils, and a few mugs in the background: DINOv2~\cite{oquab2024dinov2} features emphasize the global ``kitchen'' scene, \sout{discarding} attenuating the fine-grained cues needed to reliably retrieve, count, or localize specific objects like the mugs.\\
 Pretrained Vision Transformers exhibit a strong saliency bias \YA{see comment in abstract}: their representations collapse toward the most prominent visual concept in a scene.
-Photographer bias in training data, where subjects are centered and in focus, and paired captions that typically describe only primary objects, reinforce this tendency.
-Self-attention further amplifies it by routing global information through high-norm tokens that correspond to salient foreground objects~\cite{caron2021dino, oquab2024dinov2}. \YA{leave out, I don't think it's necessary and makes reviewer question if all of this is needed if one instead uses registers}
-The result is non-steerable representations locked to coarse, \YA{by all measures, DINO is not coarse.. and not "scene-level" in the typical way of "scene = places205 vs object=imagenet" kind of way........ instead fully focus on the "these models are really great, but no one has thought to make them steerable! this would be great!} scene-level semantics.
-Consider a kitchen image containing appliances, utensils, and a few mugs in the background: DINOv2~\cite{oquab2024dinov2} features emphasize the dominant ``kitchen'' concept, attenuating 
-% the fine-grained cues needed to retrieve, or localize the mugs.
-non-salient objects.  \YA{todo: refer to qualitative figure of Fig1}
+Photographer bias in training data~\cite{torallba}, where subjects are centered and in focus, paired captions that typically describe only primary objects~\cite{}, and transformer's \sout{associativity} inductive bias reinforce this tendency.
 
+% Self-attention further amplifies it by routing global information through high-norm tokens that correspond to salient foreground objects~\cite{caron2021dino, oquab2024dinov2}. \YA{leave out, I don't think it's necessary and makes reviewer question if all of this is needed if one instead uses registers}
+% This results in rich, semantic but non-steerable representations: no existing mechanism lets a user direct what the model focuses on.
+Consequently, these encoders learn rich, semantic representations yet they remain non-steerable i.e can't direct what the model focused on.
+% no existing method lets a user direct what the model focuses on,
+This is illustrated in \cref{fig:teaser}, DINOv2~\cite{oquab2024dinov2} features emphasize dominant concepts (``wooden kitchen'', \sout{large appliances} ``marble island''), attenuating non-salient objects (``fruit bowl'') in the background.
+% \YA{by all measures, DINO is not coarse.. and not "scene-level" in the typical way of "scene = places205 vs object=imagenet" kind of way........ instead fully focus on the "these models are really great, but no one has thought to make them steerable! this would be great!} scene-level semantics.
+% \YA{todo: refer to qualitative figure of Fig1}
 % \MT{this is a strong claim; I don't think it is fair to say models don't see objects beyond prominent one. They are just muted. Otherwise performance for KNN would be 0, but it is not}
+However, many downstream tasks require focusing on specific objects rather than the dominant scene concept, for instance, retrieving images by a particular object in a cluttered scene, localizing a described entity, or detecting anomalies in a specific component.
+These tasks require visual features that can be directed toward a user-specified object of interest.
+A natural language query is a compelling steering signal for this: it is flexible, compositional, and requires no task-specific heads or labeled target data.
+% These tasks demand 
+% \YA{be mindful of CV people: what is a query? first define it what you mean. e.g. "Such a task would require for example describing the object to focus on in some way from a user query... }
+% query-dependent visual features that can shift toward the object of interest.
+This 
+\sout{raises a natural question}
+motivate us to ask
+: \textit{can we steer the semantics of visual representations with text?}
 
-Many downstream tasks require focusing on specific objects rather than the dominant scene concept: retrieving images by a particular object in a cluttered scene, localizing a described entity, or detecting anomalies in a specific component.
-These tasks demand 
-\YA{be mindful of CV people: what is a query? first define it what you mean. e.g. "Such a task would require for example describing the object to focus on in some way from a user query... }
-query-dependent visual features that can shift toward the object of interest.
-Natural language is a compelling steering signal for this: it is flexible, compositional, and requires no task-specific heads or labeled target data.
-This raises a natural question: \textit{can we steer the semantics of ViT features using text?}
-
-In this work, we explore steering frozen ViT representations with natural language and posit three desiderata that such text-conditioned visual features should satisfy:
+In this work, we explore steering \sout{frozen ViT representations} pretrained vision transformers with natural language and posit three desiderata such text-conditioned visual features should satisfy:
 % We posit three desiderata for text-conditioned visual features:
 \begin{itemize}[nosep]
 \item \textbf{Global feature steerability:} Text steers the semantics of the global feature to represent specific, non-salient concepts in cluttered scenes rather than collapsing to the dominant scene-level concept (\cref{subsec:cond_ret_exp}).
 % \item \textbf{Global feature steerability:} Text steers the global representation from the dominant scene concept toward the queried object, enabling conditional retrieval of non-salient entities in cluttered scenes (\cref{subsec:cond_ret_exp}).
 \item \textbf{Local feature steerability:} Self-attention routes information through patch-level tokens corresponding to the queried concept, improving localization for non-salient objects (\cref{subsec:mosaic_exp}). \YA{does improved localisation stem FROM local feature steerability? it would seem that we either should rename it, or maybe measure the patch-level features too?}
-\item \textbf{Representation quality preservation:} Text steering does not degrade the base \YA{we should say more often that we do post-training of already-pretrained models} ViT's downstream transfer on standard vision benchmarks (\cref{subsec:pareto}).
+\item \textbf{Representation quality preservation:} Text steering does not degrade the pretrained \YA{we should say more often that we do post-training of already-pretrained models} ViT's downstream transfer on standard vision benchmarks (\cref{subsec:pareto}).
 % \item \textbf{Representation quality preservation:} Text steering, as described above, desn't degrade the base ViT's downstream transfer on standard vision benchmarks (\cref{subsec:pareto}).
 \end{itemize}\\
 
-We examine how existing multimodal approaches (\cref{fig:arch_comparison}) fare against these desiderata.
-\MG{alt:No existing approach satisfies all three desiderata.} \YA{In intro I would also just go with: no existing approach satisfies this. To address this gap, we build on top of strong pretrained ... , and leave out the next paragraph. Use the space instead to make a table with these desiderate and model families in the form of a $\checkmark$ $\xmark$ table}
+% We examine how existing multimodal approaches () fare against these desiderata.
+No existing multimodal approach (see \cref{fig:arch_comparison}) satisfies all three desiderata.
+% \YA{In intro I would also just go with: no existing approach satisfies this. To address this gap, we build on top of strong pretrained ... , and leave out the next paragraph. Use the space instead to make a table with these desiderate and model families in the form of a $\checkmark$ $\xmark$ table}
+
+\begin{table}[h!]
+\centering
+\small
+\tabcolsep=2.0mm
+\caption{Method families evaluated against our desiderata. \cmark~= satisfied, \xmark~= not, $\sim$~= partially. \JR{Does this look better than tilde: \LEFTcircle?}
+\MT{if we are keeping the architectures figure, may be nice to have this table and that fig together}}
+\vspace{-2mm}
+\label{tab:method_comparison}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Method} & \textbf{Text Steerable} & \textbf{Feature Quality} & \textbf{V-L Fusion} \\
+\midrule
+DINOv2 & \xmark & \cmark & \xmark \\
+CLIP / SigLIP & \xmark & \cmark & Late (post-hoc) \\
+OV (SAM3, GDino) & \cmark & \xmark & \sout{Task-specific head} \\
+MLLM & $\sim$ & $\sim$ & Early, in LLM \\
+\midrule
+\model{} (Ours) & \cmark & \cmark & Early, in ViT \\
+\bottomrule
+\end{tabular}
+\vspace{-4mm}
+\end{table}
+
+
+Late fusion of vision-language features either fails to steer the visual representation \MG{alt: achieve text-steerability} (CLIP~\cite{radford2021_clip}, SigLIP~\cite{zhai2023_siglip}) or degrades downstream feature quality (SAM3~\cite{carion2025_sam3} GroundingDINO~\cite{liu2023groundingdino}).
+In contrast, MLLMs achieve both via early cross-modal fusion inside the LLM (\cref{fig:arch_comparison})
+% achieving moderate steerability alongside reasonable feature quality.
+
+This highlights that \textit{text must influence the encoding process, not merely interact with its outputs.}
+However, MLLMs produce vision-conditioned language features, not visual ones, that are only moderately steerable and fall short of unimodal encoders 
+% like DINOv2~\cite{oquab2024dinov2} (\cref{fig:teaser}, right) 
+on standard vision benchmarks.
+
+% While SAM3~\cite{carion2025_sam3} and GroundingDINO~\cite{liu2023groundingdino} produce task-specific features that sacrifice downstream transfer performance, CLIP~\cite{radford2021_clip} and SigLIP~\cite{zhai2023_siglip}, fails to steer the visual representation with post-hoc late fusion text with ViT features.
+% \textit{text must influence the visual encoding process, not merely interact with its outputs.} \MG{takeaway missing unimodal richness; late fusion can't do both -- steer and feature; early can : without language -- inversion -- ours   }
 
 %%%% YUKI suggests to leave out [start]:
-\textbf{Open-vocabulary (OV) localization} models such as SAM3~\cite{carion2025_sam3} and GroundingDINO~\cite{liu2023groundingdino} accept text queries and achieve steerability, but produce task-specific representations that sacrifice downstream transfer quality compared to standard vision encoders.
-\textbf{Cross-modal} encoders such as CLIP~\cite{radford2021_clip} and SigLIP~\cite{zhai2023_siglip} learn a shared vision-language space, but their visual encoders remain query-agnostic: text and vision interact only after feature extraction.
-We find that such post-hoc late fusion fails to steer the visual representation itself:
-\textit{text must influence the visual encoding/rep.learning process, not merely interact with its outputs.}
+% \MG{table}
+% \textbf{Open-vocabulary (OV) localization} models such as SAM3~\cite{carion2025_sam3} and GroundingDINO~\cite{liu2023groundingdino} accept text queries and achieve steerability, but produce task-specific representations that sacrifice downstream transfer quality compared to standard vision encoders.
+% \textbf{Cross-modal} encoders such as CLIP~\cite{radford2021_clip} and SigLIP~\cite{zhai2023_siglip} learn a shared vision-language space, but their visual encoders remain query-agnostic: text and vision interact only after feature extraction.
+% We find that such post-hoc late fusion fails to steer the visual representation itself:
+% \textit{text must influence the visual encoding/rep.learning process, not merely interact with its outputs.}
 
 % \textbf{Self-supervised encoders} such as DINOv2~\cite{oquab2024dinov2} learn the richest visual representations (\cref{fig:teaser}, right) but cannot be steered with text.
 % The central challenge is therefore how to merge strong unimodal experts into a vision-centric multimodal encoder.
 % \textbf{MLLMs} address this by fusing visual inputs early inside a pretrained LLM (\cref{fig:arch_comparison}).
 % While this achieves early cross-modal fusion, the resulting features are representations of the language model, not the visual encoder: they offer only moderate steerability relative to OV methods, at substantially higher computational cost, and language shortcuts further degrade vision-centric performance~\cite{chen2025vlm_benchmark} (\cref{fig:teaser}, right).
 % We take the inverse approach: early fusion of text inside the visual encoder rather than the language model, producing text-contextualized visual features while keeping the ViT frozen to preserve its representation quality.
-
-\textbf{Self-supervised encoders} such as DINOv2~\cite{oquab2024dinov2} learn the richest visual representations (\cref{fig:teaser}, right) but cannot be steered with text.
-The central challenge is therefore how to merge strong unimodal experts into a vision-centric multimodal encoder.
-\textbf{MLLMs} address this by conditioning a pretrained LLM with visual inputs.  (\cref{fig:arch_comparison}).
-While this achieves early cross-modal fusion, the resulting features are representations of the language model, not a visual encoder. The resultant features offer moderate text steerability and succumb to language shortcuts (~\cite{chen2025vlm_benchmark}) that degrades vision-centric performance(\cref{fig:teaser}, right).\\
+% \textbf{Self-supervised encoders} such as DINOv2~\cite{oquab2024dinov2} learn the richest visual representations (\cref{fig:teaser}, right) but cannot be steered with text.
+% The central challenge is therefore how to merge strong unimodal experts into a vision-centric multimodal encoder.
+% \textbf{MLLMs} address this by conditioning a pretrained LLM with visual inputs.  (\cref{fig:arch_comparison}).
+% While this achieves early cross-modal fusion, the resulting features are representations of the language model, not a visual encoder. The resultant features offer moderate text steerability and succumb to language shortcuts (~\cite{chen2025vlm_benchmark}) that degrades vision-centric performance(\cref{fig:teaser}, right).\\
 %%%% YUKI suggests to leave out [end]%%%%%%%%%%%%%
 
-Hence, we take the inverse approach: early fusion of text inside the visual encoder resulting in text-conditioned visual features. Our method, \model{} equips any frozen Vision Transformer with the ability to steer its features via natural language. \MG{poor flow from last para}
-We interleave tanh-gated cross-attention layers~\cite{alayrac2022flamingo} within a frozen ViT and train them usin referential segmentation as a proxy signal to learn steerable representations.
-Zero-initialized gates ensure the model recovers the original ViT at initialization, preserving representation quality by construction. \YA{the preservation could also be achieved when just not doing the conditioning.. technically. then we could always retain representation level performance. this might be an option too, to just condsider it "a switch"}
+\begin{figure}[t!]
+\centering
+\includegraphics[width=\textwidth]{figures/architecture_comparison.pdf}
+\caption{\textbf{Taxonomy of \YA{Taxonomy of visual feature extraction architectures., ... otherwise the plain dino etc don't fit this caption. }text conditioning in extracted vision features.} The panels illustrate whether and where language prompts influence visual representations. \model{} integrates text conditioning by incorporating lightweight vision$\rightarrow$language cross-attention inside pretrained ViT blocks.
+}
+\label{fig:arch_comparison}
+\end{figure}
+
+%%% Option A (fold challenge in):
+Hence, to merge strong unimodal vision encoders with text steerability, we posit a new paradigm of multimodal modelling\MG{alt: we invert the MLLM paradigm}: 
+% we invert the MLLM paradigm: 
+rather than conditioning language on vision, we introduce \model{} that conditions a pretrained ViT on text to produce text-conditioned visual features.
+% \model{} introduces this paradigm by 
+Our framework
+interleaves lightweight tanh-gated cross-attention layers~\cite{alayrac2022flamingo} within a frozen ViT, injecting text directly into the visual encoding process.
+Rather than complex multi-task objectives, \model{} we adopt patch-level referential segmentation, operating entirely within the ViT's feature space and discarding it at inference.
+We find it to be the simplest pretext task for encouraging vision-language alignment \MG{alt:text-steerability} that scales naturally with data.
+Moreover, our cross-attention blocks are zero-initialized, hence the model recovers the original ViT at initialization, preserving representation quality by construction.
+\model{} is the first approach to satisfy all three desiderata (\cref{fig:teaser}).
+
+%%% Option B (drop challenge):
+% We take the inverse approach: rather than conditioning language on vision, we condition a frozen ViT on text, producing text-conditioned visual features that retain the richness of unimodal pretraining.
+% \model{} introduces this paradigm by interleaving lightweight tanh-gated cross-attention layers~\cite{alayrac2022flamingo} within a frozen ViT, injecting text directly into the visual encoding process.
+
+% Hence, we take the inverse approach: early fusion of text inside the visual encoder resulting in text-conditioned visual features. Our method, \model{} equips any frozen Vision Transformer with the ability to steer its features via natural language. \MG{poor flow from last para}
+% We interleave tanh-gated cross-attention layers~\cite{alayrac2022flamingo} within a frozen ViT and train them usin referential segmentation as a proxy signal to learn steerable representations.
+% Zero-initialized gates ensure the model recovers the original ViT at initialization, preserving representation quality by construction.
+\YA{the preservation could also be achieved when just not doing the conditioning.. technically. then we could always retain representation level performance. this might be an option too, to just condsider it "a switch"}
 \YA{when describing the approach in intro, we want to give more of an AHA moment. This doesn't give me that, it sounds like we took something off-the-shelf and it works. 
 Maybe instead say: a) we introduce a new inverse-MLLM like architecture, previously unexplored b) we develop a simple-as-hell pretext task that scales with data and encourages text-conditionality }
 
-Together, these properties yield a surprising consequence: natural language can steer frozen vision encoders to generalize to out-of-distribution domains.
-\model{} represents a new class of vision transformers that use text to extend generalization at inference tim
-Analogous to how in-context learning adapts LLMs to novel tasks without retraining, prompting adapts \model's visual features to novel domains without fine-tuning, leveraging the representational depth that unimodal pretraining already provides.
-On personalized object discrimination (PODS), descriptive text prompts outperform a supervised fine-tuned DINOv2 baseline in a zero-shot manner (54.4 vs.\ 48.0 PR-AUC).
-On industrial anomaly detection (MVTec~AD, VisA), a domain entirely absent from our training data, \model{} matches dedicated methods without any task-specific training.
-\YA{don't add the numbers in intro, but rather say something like across X datasets and Y tasks we outperform best models like DINOv2, SAM3 and much bigger billion-scale MLLMs.. showing that this SteerViT paradigm might be an efficient route to multimodal understanding }
+{\color{gray} \model{} represents a new class of vision transformers that preserve the representational depth of unimodal pretraining and use text to extend generalization at inference time.} \MG{maybe at end}
+Together, these properties yield a surprising consequence: natural language serves as a steering mechanism, preserving the representational depth of unimodal pretraining and extending generalization to domains unseen during training.
+Analogous to how prompting adapts LLMs to novel tasks without retraining, text prompts adapt \model{}'s visual features to novel domains without fine-tuning.
+Across diverse tasks spanning text-guided retrieval, personalized object discrimination, and industrial anomaly detection, \model{} matches or outperforms strong baselines, including DINOv2, SAM3, and billion-scale MLLMs,  without task-specific training.
+These results suggest that conditioning vision on language -- rather than language on vision -- opens an efficient route to multimodal visual understanding. \MG{new paradigm line}
+% where labeled data is scarce.
 
 % --- End old Part 4 notes ---
 
@@ -140,13 +206,7 @@ On industrial anomaly detection (MVTec~AD, VisA), a domain entirely absent from 
 % \end{itemize}
 
 
-% \begin{figure}[t!]
-% \centering
-% \includegraphics[width=\textwidth]{figures/architecture_comparison.pdf}
-% \caption{\textbf{Taxonomy of text conditioning in extracted vision features.} The panels illustrate whether and where language prompts influence visual representations. \model{} integrates text conditioning by incorporating lightweight vision$\rightarrow$language cross-attention inside pretrained ViT blocks.
-% }
-% \label{fig:arch_comparison}
-% \end{figure}
+
 
 
 % Our method is able to embody these properties while existing methods fail. \MG{need to add TL;DR of Section 4.1, 4.2, 4.4, and then flow into OOD finding}
@@ -225,7 +285,7 @@ On industrial anomaly detection (MVTec~AD, VisA), a domain entirely absent from 
 
 In summary, we make the following contributions:
 \begin{enumerate}
-\item We introduce \model{} \YA{write out first time}, a text-conditioned visual encoder that instills text understanding into frozen ViTs via \sout{sparse} sparsely interspersed, gated cross attention layers trained on grounding.
+\item We introduce Steerable ViT (\model{}), a text-conditioned visual encoder that instills text understanding into frozen ViTs via \sout{sparse} sparsely interspersed, gated cross attention layers trained on grounding.
 \MT{sparse because of every 3rd layer? could be confused with sparse attention} \YA{either way, unnecessary detail for intro, imo. just say it's PEFT and only adds x\% new parameters?}
 % sparse, tanh-gated cross-attention layers trained on referential segmentation.
 % \item We demonstrate a Pareto improvement over existing models: SHIFT achieves high text steerability while preserving the feature quality of the underlying ViT, bridging the gap between unsteerable encoders and quality-degraded multimodal models.

@@ -28,8 +28,10 @@
 
 % \MT{skipping for now as discussed with MG}
 
-We inject text into a frozen ViT through gated cross-attention layers that steer visual features towards the text prompt without degrading them.
-We describe \model{}'s architectural modifications and training data and objectives below.
+
+Next, we describe the architectural modifications and post-training to turn a pretrained ViT into a \model{} model.
+% We inject text into a frozen ViT through gated cross-attention layers that steer visual features towards the text prompt without degrading them.
+% We describe \model{}'s architectural modifications and training data and objectives below.
 
 % As illustrated in \cref{fig:arch_training}, our architecture consists of three components:
 % (1)~a frozen text encoder (RoBERTa-Large~\cite{liu2019roberta}) that produces token-level embeddings from the input prompt;
@@ -47,8 +49,8 @@ We describe \model{}'s architectural modifications and training data and objecti
 \vspace{-15mm}
 \includegraphics[width=\linewidth]{figures/training_architecture.pdf}
 \vspace{-3mm}
-\caption{\textbf{Steering ViTs using text conditioning.}
-Our method adds lightweight vision-to-language cross-attention layers within pretrained ViT blocks and applies a patch-level segmentation proxy objective to fuse prompt cues into patch tokens. \YA{add:We train this with existing referential object localisation datasets of X~M images??}
+\caption{\textbf{Steering any ViT using text conditioning.}
+Our method adds lightweight vision-to-language cross-attention layers within pretrained ViT blocks and applies a patch-level segmentation proxy objective to fuse prompt cues into patch tokens. We train on XXXX \YA{add:We train this with existing referential object localisation datasets of X~M images??}
 \YA{great job! maybe all RoBERTa-"L"? or "M"? and also add somewhere "pretrained ViT"? }
 }
 \label{fig:arch_training}
@@ -57,21 +59,18 @@ Our method adds lightweight vision-to-language cross-attention layers within pre
 As illustrated in \cref{fig:arch_training}, our \model{} consists of four components:
 
 \colorbox{visionblue}{\textbf{A. Visual encoder.}}
-For an image $X_v \in \mathbb{R}^{H \times W \times 3}$, a ViT produces a sequence of $N$ patch tokens $Z_v \in \mathbb{R}^{N \times d}$ and \YA{optionally} a  \texttt{[CLS]} token, where $d$ is the embedding dimension.
+For an image $X_v \in \mathbb{R}^{H \times W \times 3}$, a ViT produces a sequence of $N$ patch tokens $Z_v \in \mathbb{R}^{N \times d_v}$ and optionally a  \texttt{[CLS]} token, where $d_v$ is the embedding dimension.
 All original ViT parameters remain frozen throughout training; new capacity enters exclusively through the interleaved cross-attention layers described below.
 While most experiments adopt the DINOv2 ViT-B/14~\cite{oquab2024dinov2} as our backbone, we will show that our approach also improves steerability of SigLIP or MAE.
 
 
 \colorbox[RGB]{234,133,125}{\textbf{B. Text encoder.}}
-We adopt a frozen, pretrained text encoder (RoBERTa-Large~\cite{liu2019roberta}) to produce token-level embeddings from the input conditioning prompt.
-Given an input prompt $X_t$, the encoder extracts a variable-length sequence of token embeddings $Z_t \in \mathbb{R}^{L \times d_t}$, where $L$ is the number of text tokens and $d_t$ is the text embedding dimension.
-We $\ell_2$-normalize these embeddings before passing them to the multimodal adapter.
+We adopt a frozen, pretrained text encoder (RoBERTa-Large~\cite{liu2019roberta}) to produce token-level embeddings $Z_t \in \mathbb{R}^{L \times d_t}$ for a given input conditioning prompt $X_t$, where $L$ is a variable number of text tokens and $d_t$ is the text embedding dimension.
+% Given an input prompt $X_t$, the encoder extracts a variable-length sequence of token embeddings $Z_t \in \mathbb{R}^{L \times d_t}$, where $L$ is the number of text tokens and $d_t$ is the text embedding dimension.
+% We $\ell_2$-normalize these embeddings before passing them to the multimodal adapter.
 
-\YA{output of roberta is variable length? so then need to explain that MLP is applied token-wise}
-
-\colorbox{textred}{\textbf{C. Multimodal adapter}}
-\JR{make starting with '.' consistent}
-is a trainable two-layer MLP that projects the normalized text embeddings $Z_t$ into visual-aligned tokens $H_t \in \mathbb{R}^{L \times d}$, matching the ViT's embedding dimension $d$.
+\colorbox{textred}{\textbf{C. Multimodal adapter.}}
+Each language embedding $Z_t^i$ is $\ell_2$-normalized and fed through a trainable two-layer MLP that projects the sequence into visual-aligned tokens $H_t \in \mathbb{R}^{L \times d_v}$.
 We add learnable positional encoding to $H_t$ to preserve token order before injecting them into the ViT through the gated cross-attention mechanism. 
 \YA{I think it wouldn't hurt to describe the steps you're doing with math.. including actually the L2 normalisation earlier etc. }
 
@@ -84,9 +83,11 @@ We add learnable positional encoding to $H_t$ to preserve token order before inj
       shade,
       left color=textred,
       right color=visionblue] (X)
-{\textbf{D. Gated cross-attention layers.}}
-To fuse textual conditioning into the ViT's residual stream, we adapt the gated cross-attention (CA) dense formulation from Flamingo~\cite{alayrac2022flamingo} \YA{, but essentially apply it in a reverse manner: we let the vision model look at text-features, not the other way around. (something like this)}.
-Each inserted layer applies multi-head cross-attention followed by a feed-forward network (FFN).
+{\textbf{D. Gated cross-attention layers.}}; % <-- DON'T remove - Semicolon needed to tikz to compile without error
+To fuse textual conditioning into the ViT's residual stream, we invert the gated cross-attention (CA) formulation from Flamingo~\cite{alayrac2022flamingo} by allowing hidden vision states to attend to language tokens (language-to-vision CA in \cite{alayrac2022flamingo}).
+We insert CA layers into every other Transformer encoder block (e.g., 6 CA layers across 12 blocks in ViT-B), with each layer consisting of multi-head cross-attention followed by a feed-forward network (FFN).
+% To fuse textual conditioning into the ViT's residual stream, we adapt the gated cross-attention (CA) dense formulation from Flamingo~\cite{alayrac2022flamingo} \YA{, but essentially apply it in a reverse manner: we let the vision model look at text-features, not the other way around. (something like this)}.
+% Each inserted layer applies multi-head cross-attention followed by a feed-forward network (FFN).
 The visual patch tokens $Z_v^{(\ell)}$ at layer $\ell$ serve as queries and the adapted text tokens $H_t$ serve as keys and values:
 \begin{equation}
 \small
@@ -98,39 +99,25 @@ Z_v^{(\ell+1)} = Z_v^{(\ell)} + \tanh(\alpha_\ell) \cdot \text{FFN}\!\left(\hat{
 \label{eq:gated_ca}
 \end{equation}
 Since $\tanh(0) = 0$, the model is mathematically identical to the frozen ViT at initialization.
-As training progresses, the gates learn to open, allowing the model to smoothly incorporate text conditioning. \YA{I think something like this would be nice to add:
-"Despite the zero-initialisation, the gate still receives a learning signal since
+% As training progresses, the gates learn to open, allowing the model to smoothly incorporate text conditioning. 
+Despite the zero-initialisation, the gate still receives a learning signal since
 \begin{equation}
 \frac{\partial Z_v^{(\ell+1)}}{\partial \alpha_\ell}
 =
 \mathrm{sech}^2(\alpha_\ell)\,\mathrm{FFN}\!\left(\hat{Z}_v^{(\ell)}\right),
 \end{equation}
-and $\mathrm{sech}^2(0)=1$, yielding
-\(
-\left.\frac{\partial Z_v^{(\ell+1)}}{\partial \alpha_\ell}\right|_{\alpha_\ell=0}
-=
-\mathrm{FFN}(\hat{Z}_v^{(\ell)}).
-\)
-Thus $\alpha_\ell$ can move away from zero during optimization, gradually activating the conditioning pathway.
-}
-We insert these CA layers in every other Transformer encoder block (e.g., 6 layers across 12 blocks in ViT-B).
-
-% \MT{TODO}
-% We insert these cross-attention layers at every third layer 
-% (i.e.~$\ell = {2, 5, 8, 11}$ and 0-indexed for the 12-layer ViT-B).
-% starting from 2 (i.e., blocks 2, 5, 8, 11 for the 12-block ViT-B).
-% The final transformer block always remains unmodified, ensuring that the output features stay close to the pretrained ViT's representation space.
-
+and $\mathrm{sech}^2(0)=1$. %, yielding \( \left.\frac{\partial Z_v^{(\ell+1)}}{\partial\alpha_\ell}\right|_{\alpha_\ell=0} = \mathrm{FFN}(\hat{Z}_v^{(\ell)}).\)
+Thus, $\alpha_\ell$ can move away from zero during optimization, gradually activating the conditioning pathway and allowing the model to incorporate language-based clues.
 
 \subsection{Training Objective}
 \label{sec:objective}
-\YA{first sentence should be that we design a pretext task and that task needs to somehow motivate text-integration. therefore we do referntial segmentation, but with a twist: we do it only at patch-level, as this is significantly cheaper and faster (no decoder needed). and we do it with gaussian... [IS THIS STILL WHATR WE DO?]}
-We train \model{} on referential segmentation at \YA{the original pretrained } ViT's patch resolution rather than at pixel level. 
-Given an image $X_v$ and a prompt $X_t$ referring to a target object, the model predicts which patches correspond to the referred object.
+In order to encourage the vision encoder to leverage and incorporate language clues, we design a pretext task requiring consideration of the prompt to be solved. We select referential segmentation for this purpose, where, given an image $X_v$ and a prompt $X_t$ referring to a target object, the model predicts which patches correspond to the referred object.
 
-The ViT partitions the image into an $n \times n$ grid of non-overlapping patches.
-We convert the ground-truth binary segmentation mask $M \in \{0, 1\}^{H \times W}$ into patch-level labels $y \in [0, 1]^{n \times n}$ by computing the fraction of foreground pixels within each patch.
-A linear classifier head maps each patch representation $z_i \in \mathbb{R}^{d}$ to a probability $p_i$ through softmax.
+
+The ground-truth is given by the fraction of foreground pixels within of a pixel-wise binary segmentation mask that was patchified to match the ViT's $n \times n$ grid of non-overlapping patches.
+% The ViT partitions the image into an 
+% We convert the ground-truth binary segmentation mask $M \in \{0, 1\}^{H \times W}$ into patch-level labels $y \in [0, 1]^{n \times n}$ by computing the fraction of foreground pixels within each patch.
+A linear classifier head maps each patch representation $Z_v^i \in \mathbb{R}^{d}$ to a probability $p_i$ through softmax.
 We adopt the soft cross-entropy loss
 \begin{equation}
 \mathcal{L} = - \sum_{i=1}^{n \times n} y_i \log p_i \, ,
@@ -146,6 +133,7 @@ as it encourages the CA layers to route
 % task-relevant
 textual information into the corresponding visual patch tokens, producing steered representations.
 % as a byproduct.
+Performing segmentation on a patch- rather than pixel-level reduces the training complexity and forgoes the need for pixel-level decoders. 
 
 
 \subsection{Training Data}
