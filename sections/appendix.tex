@@ -4,10 +4,11 @@
 
 \subsection{Parallels to Human Image Perception}
 
-Instead, inspired by neuroscience evidence that suggests that humans fundamentally parse images differently based on the textual prompt.
-% For those
-% Motivated by human vision, there exists evidence to suggest that people parse images quite differently depending on the textual prompt, often manifested as top-down task-guided attention~\cite{buswell1935people} (example in supplement). 
-In the paper - "In human vision, studies indicate that people parse images differently depending on prior priming using a text prompt~\cite{buswell1935people} (example in supplement)."
+% Instead, inspired by neuroscience evidence that suggests that humans fundamentally parse images differently based on the textual prompt.
+% % For those
+% % Motivated by human vision, there exists evidence to suggest that people parse images quite differently depending on the textual prompt, often manifested as top-down task-guided attention~\cite{buswell1935people} (example in supplement). 
+% In the paper - "In human vision, studies indicate that people parse images differently depending on prior priming using a text prompt~\cite{buswell1935people} (example in supplement)."
+\cref{fig:gaze_cogsci} illustrates how human gaze patterns over the same image shift depending on a task-relevant textual prompt~\cite{buswell1935people}, providing inspiration from neuroscience for \model{}'s early fusion of language into the visual encoding process.
 
 
 \begin{figure}[h!]
@@ -25,7 +26,7 @@ In the paper - "In human vision, studies indicate that people parse images diffe
 % \label{fig:ref4_token_len}
 % \end{figure}
 
-\subsection{Training  }
+\subsection{Training Data}
 \label{apdx:data}
 
 We train on a mixture of referential segmentation and grounding datasets to ensure diversity in both visual domains and textual expression styles:
@@ -44,7 +45,7 @@ improving out-of-distribution generalization.
 We adopt Describe Anything's~\cite{lian2025describeanything} synthetic
 referential expressions along with accompanying segmentation masks.
 
-Overall, our combined dataset of 133k unique images and 1.91M image-text pairs exposes the model to varied scene complexities (from single objects to dense urban panoramas), expression lengths (from two-word labels to multi-sentence descriptions), and visual domains (indoor, outdoor, street-level), encouraging robust steered representations.
+Overall, our combined dataset of 133k unique images and 1.91M image-text pairs exposes the model to varied scene complexities (from single objects to dense urban panoramas), expression lengths (from two-word labels to multi-sentence descriptions), and visual domains (indoor, outdoor, street-level), encouraging robust steered representations. \MG{Would be nice to have a sunburst chart}
 
 \subsection{Baseline Feature Extraction}
 \label{app:baseline_extraction}
@@ -57,25 +58,32 @@ Images and language inputs are embedded independently by their respective encode
 We combine the resulting visual and text feature vectors via element-wise addition (late fusion), the simplest form of post-hoc multimodal interaction.
 
 \paragraph{MLLMs (InternVL3~\cite{zhu2025internvl3}, Qwen3-VL~\cite{Qwen3-VL}).}
-We concatenate the user prompt~$X_t$ followed by the image~$X_v$ into a single multimodal input sequence and extract the last-language-block hidden states at image-token positions as dense, text-contextualized visual features.
-For global features, we adapt the last-token pooling approach of E5-V~\cite{Jiang2024E5VUE}: a postfix is appended instructing the model to summarize the image contents in one word while focusing on the aspect specified by~$X_t$.
+\sout{We concatenate the user prompt~$X_t$ followed by the image~$X_v$ into a single multimodal input sequence and extract the last-language-block hidden states at image-token positions as dense, text-contextualized visual features.
+For global features, we adapt the last-token pooling approach of E5-V~\cite{Jiang2024E5VUE}: a postfix is appended instructing the model to summarize the image contents in one word while focusing on the aspect specified by~$X_t$.}
+\MG{We feed the text prompt~$X_t$ and image~$X_v$ as a single multimodal input sequence and extract hidden states from the last LLM layer.
+For dense features, we take the hidden state at each image-token position.
+For global features, following E5-V~\cite{Jiang2024E5VUE}, we append an instruction asking the model to summarize the image in one word in addition to the initial text prompt $X_t$
+% while focusing on the visual concept specified in ~$X_t$ 
+and extract the last-token hidden state.}
 
 \paragraph{Open-Vocabulary Localization (SAM3~\cite{carion2025_sam3}, GroundingDINO\cite{liu2023groundingdino}).}
-We use the modality-fused encoder states, ignoring decoder components responsible for bounding-box or mask generation.
-For SAM3, we take the patch-level outputs of the \textit{Fusion Encoder} and apply mean pooling to obtain image-level features.
+\MG{We ignore decoder outputs and extract intermediate features from the multimodal encoder.}
+For SAM3, we take the patch-level outputs of the \textit{Fusion Encoder} and apply mean pooling to obtain global image features.
 For GroundingDINO, we use the outputs of the cross-modal \textit{Feature Enhancer} layer.
-Because features are available at multiple spatial scales, we first interpolate them to a common intermediate resolution before averaging to obtain dense pseudo-patch-level features. These are optionally further aggregated via mean pooling if global features are desired. 
+Because features are available at multiple spatial scales, we first interpolate them to a common intermediate resolution before averaging to obtain dense pseudo-patch-level features. \MG{These are mean pooled to yield global features.}
 
 \subsection{Assessing Representational Steerability with CORE}
 \label{apdx:CORE}
 
-For our \textit{COnditional REtrieval} (CORE) benchmark introduced in \cref{subsec:cond_ret_exp}, we select select 100 base images for each of six scenes (three indoor and three outdoor environments) from SUN397~\cite{Herranz2016_SUNdataset}. For each image, we create five separate instances by inpainting a scene-dependent background objects using FLUX.2 [dev] \cite{flux-2-2025}, resulting in a total of 500 images per scene. 
-The selected scenes, the five corresponding objects added to each as well as the text-conditioning prompts are reported in Table~\ref{tab:core_object_prompts}.
+For our \textit{COnditional REtrieval} (CORE) benchmark introduced in \cref{subsec:cond_ret_exp}, we select select 100 base images for each of six scenes (three indoor and three outdoor environments) from SUN397~\cite{Herranz2016_SUNdataset}. For each image, we create five separate instances by inpainting a \MG{scene-relevant background object (for e.g., an ``olive oil bottle'' in ``kitchen'')} using FLUX.2 [dev] \cite{flux-2-2025}, resulting in a total of 500 images per scene. 
+The selected scenes, the corresponding give objects added to each scene and the text-conditioning prompts are reported in Table~\ref{tab:core_object_prompts}.
 
-To test the ability of models to steer their global representations in order to retrieve images relevant to a specified prompts, we frame the problem as one-vs-all retrieval. For each image $X_v^\Omega$ containing object $\Omega$, the objective is to retrieve other instances including $\Omega$. Here, all images (query and gallery instances) are encoded with the same object-specific prompt $X_t^\Omega$ (cf.~\cref{tab:core_object_prompts}). For a given query image, the gallery is comprised of 495 variations with non-identical base images of the same scene. The steerability score is calculated using top-1 retrieval accuracy and averaged across query images and object types.
+\MG{With each image as a query and rest 499 as the retrieval database, we frame the problem as one-vs-all image retrieval. This evaluates the visual encoder's ability to steer its global representation using the text prompt in order to retrieve the images comprising the objects specified in the prompt}
+% To test the ability of visual encoders to steer their global representations in order to retrieve images relevant to a specified prompts, we frame the problem as one-vs-all retrieval. 
+For each image $X_v^\Omega$ containing object $\Omega$, the objective is to retrieve other instances including $\Omega$. Here, all images (query and gallery instances) are encoded with the same object-specific prompt $X_t^\Omega$ (cf.~\cref{tab:core_object_prompts}). For a given query image, the gallery is comprised of 495 variations with non-identical base images of the same scene. The steerability score is calculated using top-1 retrieval accuracy and averaged across query images and object types.
 
 \input{tables/core_prompts}
-
+\MG{TO DO}
 We report detailed quantitative results on a per-scene basis in Table \ref{tab:knn_exp_quant_full}. \model{} consistently boasts the best performance across all environments, demonstrating how its global image representations get shaped and steered by the language input. When prompted with an incorrect description of a randomly chosen different object (\xmark), performance drops drastically, indicating the tight integration and important role of the textual inputs. Cross-modal vision encoders (blue), on the other hand, see negligible changes in this setting. 
 
 \input{tables/knn_exp_apdx}
@@ -100,13 +108,20 @@ Despite many of the inpainted object being very small and in the background, the
 
 % \JR{Further describe how MOSAICs are acquired (e.g., resizing, background color)}
 
-The MOSAIC Localization benchmark introduced in \cref{subsec:mosaic_exp} is constructed to investigate how models aggregate global representations internally and how this process is affected by text-conditioning. 
-To ensure the absence of singular salient objects, four images from PASCAL-VOC~\cite{pascal_voc} are padded to an $1:1$ aspect ratio and stitched together into a single $2\times2$ mosaic. 
-For each mosaic, pixel-wise segmentation masks are constructed using the original dataset ground-truth and instances of the same class are considered across all four images. 
+% The MOSAIC Localization benchmark introduced in \cref{subsec:mosaic_exp} is constructed to investigate how models aggregate global representations internally and how this process is affected by text-conditioning. 
+% To ensure the absence of singular salient objects, four images from PASCAL-VOC~\cite{pascal_voc} are padded to an $1:1$ aspect ratio and stitched together into a single $2\times2$ mosaic. 
+% For each mosaic, pixel-wise segmentation masks are constructed using the original dataset ground-truth and instances of the same class are considered across all four images.
+\MG{The MOSAIC benchmark introduced in \cref{subsec:mosaic_exp} evaluates whether text conditioning can steer the self-attention of the \texttt{[CLS]} token toward patch tokens corresponding to a prompted object.
+We stitch four PASCAL-VOC~\cite{pascal_voc} images (padded to $1{:}1$ aspect ratio) into a single $2\times2$ mosaic to eliminate a single dominant salient object.
+For a given text prompt specifying an object class, the ground-truth is a binary segmentation mask over the mosaic's patch grid, constructed from instances of that class across all four sub-images.}
 
 Figure~\ref{apdx_fig:steer_attn} provides more qualitative examples of attention maps on such multi-image mosaic. 
 % Following the same methodology as specified in \cref{subsec:mosaic_exp} and used in \cref{fig:steer_attn}, we provide additional qualitative examples of attention maps on multi-image mosaics in \cref{fig:steer_attn}. 
-Again, we see a strong propensity of DINOv2 to focus on the most dominant object(s) within the collage. \model{} selectively attends to the objects or entities specified in the prompt (\cref{apdx_fig:steer_attn}, top). Despite being trained with single-instance data (i.e., only one object corresponding to prompt), a more complex behavior emerges that allows the model to attend to multiple concept instances, even across sub-images in the mosaic (\cref{apdx_fig:steer_attn}, middle). \model{} also considers described attributes and routes global attention accordingly (e.g., ``black sheep'' vs. ``white sheep'' in \cref{apdx_fig:steer_attn} (bottom)).
+Again, we see a strong propensity of DINOv2 to focus on the most dominant object(s) within the collage. \model{} selectively attends to the objects or entities specified in the prompt (\cref{apdx_fig:steer_attn}, top). Despite being trained with single-instance data (i.e., only one object corresponding to prompt), 
+% a more complex behavior emerges that allows the model to attend to multiple concept instances, even across sub-images in the mosaic (\cref{apdx_fig:steer_attn}, middle). 
+\MG{we find that our model can localize multiple instances of an object class across images in mosaic (\cref{apdx_fig:steer_attn}, \model{} attends to all instances of ``chair'' in middle row).
+We discuss this emergent multi-localization property of our method in ~\cref{app:training_signal}}
+\model{} also considers described attributes and routes global attention accordingly (e.g., ``black sheep'' vs. ``white sheep'' in \cref{apdx_fig:steer_attn} (bottom)).
 
 \begin{figure}[ht]
 \centering
@@ -157,7 +172,7 @@ As shown in Table~\ref{tab:mvtec_visa}, \model{} reaches 79.8 PRO on MVTec~AD, s
 On VisA, \model{} surpasses FADE on $\text{ROC}_P$ (90.2 vs. 91.5) and ties at 79.3 PRO, indicating robust transfer to a harder, more diverse inspection setting.
 Qualitative examples of \model{}'s predictions on a subset of object types and defect categories are provided in Figure \ref{apdx_fig:anomaly_detection_examples}. Whereas the predicted heatmaps are especially accurate for texture-based inputs, the zero-shot setting makes it impossible to accurately predict certain defects (e.g., flipped metal nut), as no training on non-anomalous instances and no other visible defects (e.g., scratch) are present. 
 
-\subsection{Additional Impact Analysis of Design Choices}
+\subsection{Additional Ablations on Training Design Choices}
 
 % ------------------------------------------------------------------
 \subsubsection{Training Duration}
@@ -175,7 +190,7 @@ We adopt 500k iterations for all final models.
 % ----------------------------------------------------------------
 \subsubsection{Scaling}
 \label{subsec:scaling}
-% \input{tables/scaling_table}
+\input{tables/scaling_table}
 
 \paragraph{Visual Encoder.}
 We scale the frozen DINOv2 backbone from ViT-S through ViT-B to ViT-L, and the SigLIP backbone from ViT-B to ViT-L.
