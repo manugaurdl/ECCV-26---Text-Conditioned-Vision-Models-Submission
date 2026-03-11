@@ -1,0 +1,25 @@
+\begin{wraptable}{r}{0.3\textwidth}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\vspace{-13mm}
+\caption{\textbf{Zero-shot anomaly segmentation} performance on MVTech. Dedicated AD methods in gray.}
+\label{tab:anomaly_detection_small}
+\begin{tabular}{lc}
+\toprule
+Method   & \multicolumn{1}{l}{PRO} \\
+\midrule
+\textbf{MaskCLIP} \cite{zhou2022_maskclip} & 40.5 \\
+\textbf{CLIPseg} \cite{lueddecke22_clipseg}  & 34.6 \\
+\textbf{SAM3} \cite{carion2025_sam3}     & 54.5 \\
+\addlinespace
+\color{gray}\textbf{WinCLIP} \cite{WinCLIP_Jeong23CVPR}  & \color{gray}64.6 \\
+\color{gray}\textbf{DIVAD} \cite{hicsonmez2026training}   & \color{gray}73.3 \\
+\color{gray}\textbf{FADE}  \cite{li2024_fade}   & \color{gray}84.5 \\
+\addlinespace
+\rowcolor{\methodcolor}\textbf{\model{}}   & 79.8 \\
+\bottomrule
+\end{tabular}
+\vspace{-5mm}
+\end{wraptable}
+

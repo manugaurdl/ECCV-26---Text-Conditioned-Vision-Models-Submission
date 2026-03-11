@@ -1,4 +1,5 @@
 \section{Experiments}
+\label{sec:experiments}
 
 
 % method text-conditioned visual
@@ -26,67 +27,55 @@
 % token length [optional!]
 % conclusion
 
-\subsection{Baselines}
+In this section, we empirically validate properties of our learned steerable representations and show applications to diverse downstream tasks.% such as personalized object discrimination or anomaly detection.
+
+
+\paragraph{Baselines.}
 \label{subsec:baselines}
-
-\begin{figure}[t!]
-\centering
-\includegraphics[width=\textwidth]{figures/architecture_comparison.pdf}
-\caption{\textbf{Taxonomy of text conditioning in extracted vision features.} The panels illustrate whether and where language prompts influence visual representations. \model{} integrates text conditioning by incorporating lightweight vision$\rightarrow$language cross-attention inside pretrained ViT blocks.
-
-}
-\label{fig:arch_comparison}
-\end{figure}
 
 % We benchmark \model{} against a number of existing methods that allow for prompt-based steering of their internal visual representations as well as unimodal vision encoders.
 
-We compare \model{} against baselines spanning five model families that differ in how, and whether, they incorporate text into visual features (see \cref{sec:related_work} for an extended discussion and \cref{app:baseline_extraction} for feature-extraction details):
-\begin{enumerate}[label=(\roman*),nosep]
-\item \textbf{Unimodal vision encoders}: DINOv2~\cite{oquab2024dinov2} and MAE~\cite{he2022mae}, which produce query-agnostic features with no text conditioning.
-\item \textbf{Cross-modal encoders}: CLIP~\cite{radford2021_clip} and SigLIP~\cite{zhai2023_siglip}, where we fuse visual and text embeddings via post-hoc element-wise addition (late fusion).
+We compare \model{} against baselines spanning multiple model families that differ in how, and whether, they incorporate text into visual features (see supplement
+% \cref{sec:related_work} for an extended discussion and 
+% \cref{app:baseline_extraction}
+for feature-extraction details):
+% \begin{enumerate}[label=(\roman*),nosep]
+% \item 
+(1)~\textbf{Unimodal vision encoders}: DINOv2~\cite{dinov2} and MAE~\cite{he2022mae}, produce query-agnostic features with no text conditioning.
+% \item 
+(2)~\textbf{Cross-modal encoders}: CLIP~\cite{radford2021_clip} and SigLIP~\cite{zhai2023_siglip}; we fuse visual and text embeddings via post-hoc element-wise addition (late fusion).
 % \item \textbf{FLAIR}~\cite{xiao2025flair}: A cross-model encoder that applies learned text-guided attention pooling over frozen visual features.
-\item \textbf{MLLMs}: InternVL3-1B and InternVL3-2B, from which we extract text-contextualized visual features via last-language-block image-token states.
-\item \textbf{Open-vocabulary localization}: SAM3~\cite{carion2025_sam3} and GroundingDINO~\cite{liu2023groundingdino}, whose \sout{modality-fused encoder states} \MG{intermediate multimodal state?} serve as text-steered visual representations.
-\end{enumerate}
+% \item
+(3)~\textbf{MLLMs}: InternVL3~\cite{zhu2025internvl3} and Qwen3-VL~\cite{Qwen3-VL}; we extract prompt-specified vision features by following the last-token summary pooling of E5-V~\cite{Jiang2024E5VUE}.
+% the last language-block's image-token states.
+% \item
+(4)~\textbf{Open-vocabulary (OV) localization}: SAM3~\cite{carion2025_sam3} and GroundingDINO~\cite{liu2023groundingdino}; we use and evaluate the intermediate multimodal state.
+% \end{enumerate}
+
+
 Where supported, all models process images at $336\times336$ resolution; for models with fixed input dimensions, we resize to this resolution.
 % to ensure comparable visual information.
 
 
-% For \textbf{cross-modal encoders} (e.g., CLIP~\cite{radford2021_clip}, SigLIP~\cite{zhai2023_siglip}, dino.txt), images and prompts are embedded independently using their respective encoders, limiting multimodal interaction to a simple post-hoc late-fusion, where the resulting visual and text features are combined via element-wise addition. 
-% As with the considered \textbf{vision-only baselines}, global feature aggregation is conducted as intended by the base method (e.g., CLS or mean pooling). 
-% FLAIR~\cite{xiao2025flair} is a CLIP-style model that is trained to produce text informed visual features by applying text-conditioned attention pooling on top frozen visual features.
-% % FLAIR~\cite{xiao2025flair} is a CLIP-style model that is specifically trained to produce text informed visual features by applying text-conditioned attention pooling on top frozen visual features tokens.
-% We extract text contextualized visual features from \textbf{MLLMs} by concatenating the user prompt $t$ followed by the image $I$ into a multimodal input sequence and selecting the last-language-block states at image-token positions. 
-% For global features, we adapt the last-token pooling approach of E5-V~\cite{Jiang2024E5VUE} and append a postfix instructing the model to summarize the image contents in one word while focusing on the aspect specified by $t$.
 
-% Text-conditioned representations are obtained from \textbf{open-vocabulary localization methods} via the modality-fused encoder states, ignoring decoder components responsible for generating bounding boxes or segmentation mask. 
-% Specifically, with SAM3~\cite{carion2025_sam3}, we take the patch-level outputs of the \textit{Fusion Encoder} and apply mean-pooling to get image-level features. 
-% Similarly, we use the outputs of the cross-modal \textit{Feature Enhancer} layer of GroundingDINO~\cite{liu2023groundingdino}. However, as features are available across multiple spatial scales, we first interpolate them to a common intermediate feature scale before being averaged to get dense pseudo-patch-level features. 
-% % \todo{ensure consistency with Methodology Section}
-
-% Where supported by the underlying architecture, we process images at a resolution of $336\times336$. For models with non-configurable input dimensions, we still resize to this resolution prior to processing to ensure comparable levels of visual information.
-
-
-\subsection{COnditional REtrieval (CORE): Steering Global Semantics with Text}
-
-
+\subsection{COnditional REtrieval: Steering Global Semantics with Text}
 \label{subsec:cond_ret_exp}
-\begin{figure}[h!]
+
+\begin{figure}[t]
 \centering
 % Left Figure: UMAP
-\begin{subfigure}[b]{0.4\textwidth}
+\begin{subfigure}[b]{0.38\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figures/core_qualitative_objects_scatter.pdf}
 \caption{
-Feature distribution across three object types  in ``kitchen'' scene.
+Feature distribution across three object types  in the ``kitchen'' scene.
 % DINOv2 embeddings are show no separability across inpainted objects, whereas our text-conditioned embeddings form distinct clusters for each queried concept.
-\MG{write about subclustering}
 }
 \label{fig:umap-neighbourhood}
 \end{subfigure}
 \hfill
 % Right Figure: DinoV2
-\begin{subfigure}[b]{0.59\textwidth}
+\begin{subfigure}[b]{0.61\textwidth}
 \centering
 \includegraphics[width=\textwidth]{figures/steerability_bar_chart.pdf}
 \caption{
@@ -96,8 +85,9 @@ Non-salient object retrieval performance on CORE across model families.
 }
 \label{fig:cond_ret_bar}
 \end{subfigure}
-\caption{\textbf{COnditional REtrieval (CORE) benchmark.} \textbf{Left:} While DINOv2 features form scene-level clusters, appropriate prompting of \model{} yields object-specific clusters. \textbf{Right:} Substantial differences in steerability between model families exist, with OV localization methods and \model{} offering the greatest adaptability. 
+\caption{\textbf{COnditional REtrieval (CORE) benchmark.} \textbf{Left:} While \colorbox{visionblue}{DINOv2} features form scene-level clusters, appropriate prompting of \colorbox{\methodcolor}{\model{}} yields object-specific clusters. \textbf{Right:} Substantial differences in steerability between model families exist, with OV localization methods and \model{} offering the greatest adaptability. 
 }
+\vspace{-5mm}
 \label{fig:cond_ret_baselines}
 \end{figure}
 
@@ -110,20 +100,30 @@ Non-salient object retrieval performance on CORE across model families.
 %   \label{fig:cond_ret_baselines}
 % \end{figure}
 
-To measure the degree to which text prompts can actively steer the global image representations, we propose a text-conditional retrieval benchmark, dubbed CORE (COnditional REtrieval).
+% To measure the degree to which prompts can actively steer the global image representations, we propose a text-conditioned retrieval benchmark, dubbed \textit{CORE (COnditional REtrieval)}.
+We propose \textit{CORE (COnditional REtrieval)}, a text-conditioned retrieval benchmark to measure the quality of steered global representations.
 
-We select 100 images for each of six indoor and outdoor scenes from the SUN397 dataset \cite{Herranz2016_SUNdataset} and inpaint five scene-relevant peripheral objects into every image using the FLUX.2 image editing model \cite{flux-2-2025} (e.g., a fruit bowl in a kitchen; a backpack in the park)\footnote{See Appendix \ref{} \JR{TODO} for details and qualitative examples.}.
-By framing the problem as one-vs-all retrieval where, given a query image with inpainted object $\text{O}$, the objective is to retrieve other instances containing $\text{O}$ within a scene $\text{S}$ (e.g., ``fruit bowl'' in ``kitchen''), we can quantify how well models prioritize specified non-salient background objects over scene-level visual similarities in their global representations.
-Here, both the query as well as the gallery images are extracted by conditioning on the name of the query object $\text{O}$ (e.g., ``the fruit bowl'').% to prevent ground-truth leakage through the text embeddings. 
-We measure the top-1 retrieval accuracy over the remaining 495 non-identical instances in $\text{S}$ and average over objects.
+
+We select 100 images each for three indoor and three outdoor scenes from the SUN397 dataset~\cite{Herranz2016_SUNdataset} and inpaint five scene-dependent peripheral objects into each image using the FLUX.2 image editing model~\cite{flux-2-2025}
+(e.g., a fruit bowl in a kitchen; a backpack in the park; see supplement for details).
+% By framing the problem as one-vs-all retrieval where, given a query image with inpainted object $\Omega$, the objective is to retrieve other instances containing $\Omega$ within a scene $\text{S}$ (e.g., ``fruit bowl'' in ``kitchen''), we can quantify how well models prioritize specified non-salient background objects over scene-level visual similarities in their global representations.
+We frame the problem as one-vs-all retrieval where, given a query image with an inpainted object $\Omega$, the goal is to retrieve other images containing $\Omega$ within a scene $\text{S}$.
+This allows us to quantify how well models prioritize specified non-salient background objects over scene-level visual similarities in their global representations.
+Here, both the query as well as the gallery images are extracted by conditioning on brief description 
+% \MT{description or name?}\JR{a short word description (around 6 words)}
+of the query object $\Omega$.
+%(e.g., ``the fruit bowl'').% to prevent ground-truth leakage through the text embeddings. 
+We measure the top-1 retrieval accuracy over the remaining 495 non-identical scenes of $\text{S}$ and average over objects.
 % The random chance is 20\%, since 99 out of 495 candidates share the query object.
 
-\subsubsection{Query-Agnostic Encoders Collapse to Salient Concepts.}
 
+\paragraph{Query-agnostic encoders collapse to salient concepts.}
+
+% \MT{usually not capitalized, sentence case}
 Query-agnostic encoders fail at conditional retrieval because their features collapse to the dominant scene concept (Figure~\ref{fig:cond_ret_baselines}).
-MAE barely exceeds random chance; DINOv2, despite its object-centric representations, achieves only 43\%.
-Cross-modal encoders (CLIP, SigLIP) fare no better despite operating in a shared vision-language space.
-In contrast, \model{} achieves 94.3\% retrieval accuracy, confirming that text conditioning shifts the global representation from the scene level (``kitchen'') to the queried concept (``fruit bowl'').
+MAE barely exceeds random chance and DINOv2, despite its object-centric representations, achieves only 43\% acc@1.
+Cross-modal \textit{visual} encoders (CLIP, SigLIP) also perform poorly despite operating in a shared vision-language space.
+In contrast, \model{} achieves 95.9\% retrieval accuracy, confirming that text conditioning shifts the global representation from the scene level (``kitchen'') to the queried concept (``fruit bowl'').
 % Among unimodal encoders, MAE barely exceeds random chance while DINOv2 roughly doubles MAE's accuracy owing to its more object-centric representations but only achieves 43\%.
 % Even multimodal encoders (CLIP, SigLIP) fail: post-hoc late fusion with text cannot rescue features that were never conditioned on the query.
 % Our method on the other hand achieves 94.3\% retrieval accuracy (cf., Figure~\ref{fig:cond_ret_baselines}), confirming that text conditioning shifts the global representation from the scene level (``kitchen'') to an object-of-interest-specific/prompt-steerable representation \MG{consistent with Fig2a} (``fruit bowl'').
@@ -133,36 +133,32 @@ In contrast, \model{} achieves 94.3\% retrieval accuracy, confirming that text c
 % In contrast, our method achieves 96.6\% and 91.3\% accuracy on indoor and outdoor scenes respectively, confirming that text conditioning shifts the global representation from the scene level (``kitchen'') to the queried concept (``mug in kitchen'').
 % an unconditional feature improvement.
 
-Figure~\ref{fig:umap-neighbourhood} illustrates this on ``kitchen'' scenes via UMAP.
-DINOv2 embeddings (left) show no separability across inpainted object types,
+Figure~\ref{fig:umap-neighbourhood} illustrates this on ``kitchen'' scenes for three objects via UMAP~\cite{UMAP}.
+DINOv2 embeddings (left) show no object separability,
 % DINOv2 embeddings show no separability across inpainted object types, 
-whereas our text-conditioned embeddings form distinct clusters for different text prompt. This confirms that \model{} can reorganize its embedding space around the queried concept.
+whereas our text-conditioned embeddings form distinct clusters for different text prompts.
+This confirms that \model{} can reorganize its embedding space around the queried concept.
 % When conditioned on ``fruit bowl'' (right), our method produces three distinct groups: a tight cluster of fruit-bowl instances, a secondary group of semantically related kitchen objects, and remaining unrelated objects pushed to the periphery, confirming that text conditioning reorganizes the embedding space around the queried concept.
 % Figure~\ref{fig:umap-neighbourhood} illustrates this in ``kitchen '' scenes via UMAP: DINOv2 embeddings show no separability across inpainted object types, whereas our text-conditioned embeddings form distinct clusters for each queried concept.
 % \MT{please describe how to interpret fig 2a better; describe how fire hydrant also pulls basketball?}
 
 
-% \subsubsection{CLIP/SigLIP's Text Encoder Do Not Enable Steerability}
-\subsubsection{Post-hoc Late Fusion Does Not Enable Steerability}
-A natural follow-up is whether post-hoc fusion with text can rescue query-agnostic ViTs?
-We explore this for CLIP and SigLIP, which share a multimodal embedding space by fusing visual features with text embeddings via element-wise addition.
-This yields a negligible 0.02\% boost, confirming that post-hoc late fusion cannot steer frozen representations.
-Early fusion within the ViT layers is essential: \model{}, which conditions intermediate representations on text via cross-attention, improves retrieval accuracy from below 43\% to 94.3\%.
-% A natural follow-up is whether post-hoc fusion with text can rescue query-agnostic representations.
-% For CLIP and SigLIP,which already share a multimodal embedding space, we fuse visual features with text embeddings via element-wise addition.
-% This yields a negligible boost of 0.02\%, confirming that late fusion cannot steer query-agnostic frozen representations. 
-% Learning query-aware features within the ViT layers (early fusion) is essential.
-% \MG{dino.txt - same results; post-hoc late fusion doesn't work}
-% \MG{contrast with random conditioning}
-% \MG{contrast with FLAIR/MaskInversion}
-% A more comparable study for late fusion would be add the cross attention layer on top of the frozen ViT features. We find that this although enables steerability, the downstream performance of the multimodal features are suboptimal for fine-grained vision-lanuage tasks. We discuss it in detail in Section~\ref{sec:method}. # dont delete comment
-FLAIR~\cite{xiao2025flair} tries to bridge cross-modal encoders with text-steerable features by training text-conditioned attention pooling over frozen ViT features.
-This achieves steerability (81.3\%) but still significantly lags \model{} by 13\%.
-Morover, unlike \model{} which adapts any frozen ViT family, FLAIR is restricted to CLIP-style backbones and requires two orders of magnitude more training data.
+% \paragraph{CLIP/SigLIP's Text Encoder Do Not Enable Steerability}
+\paragraph{Late fusion does not enable steerability.}
+% However, post-hoc fusion via
+Element-wise addition of aligned text and vision features as applied to CLIP and SigLIP promotes steerability, but only yields a negligible 0.02\% boost over their vision-only representations.
+% A natural follow-up is whether post-hoc fusion with text can rescue query-agnostic ViTs?
+% We explore this for CLIP and SigLIP, which share a multimodal embedding space by fusing visual features with text embeddings via element-wise addition.
+% This yields a negligible 0.02\% boost, confirming that post-hoc late fusion cannot steer frozen representations.
+In contrast, by conditioning intermediate representations on text (i.e., early fusion), \model{} improves retrieval accuracy from below 44\% (vanilla DINOv2) to 95.9\%.
+While FLAIR's attention pooling offers greater steerability (81.3\%) than typical cross-modal encoders, it still falls short of \model{} by 17\%.
+
+% FLAIR~\cite{xiao2025flair} tries to bridge cross-modal encoders with text-steerable features by training text-conditioned attention pooling over frozen ViT features.
+% This achieves steerability (81.3\%) but still significantly lags behind \model{} by 17\%.
+% \JR{Fine to remove the following (mentioned in related works)?}Moreover, unlike \model{} which adapts any frozen ViT family, FLAIR is restricted to CLIP-style backbones and requires two orders of magnitude more training data.
 % \textbf{FLAIR} tries to bridge CLIP/SigLIP style models with text steerable encoders by training text-informed attention pooling over query-agnostic ViT features. This enables text steering but still lags behind our method (by 13\%). Moreover our method is agnostic to visual encoder family, however FLAIR is a cross-modal encoder. They require 2 orders of magnitude larger data, while we can efficient adapt any ViT to be text-steerable.
 
-\newif\iffindingbox
-\findingboxtrue
+
 \iffindingbox
 \begin{tcolorbox}[colback=lightyellow,
 colframe=black, arc=4pt, boxsep=1pt]
@@ -172,14 +168,16 @@ Our method can steer the semantics of the visual features with text while standa
 \end{tcolorbox}
 \fi
 
-\subsubsection{Steerable but Inefficient or Specialized: MLLMs and OV Models}
+% \paragraph{Steerable but inefficient or specialized: MLLMs and OV models.}
+\paragraph{MLLMs and OV models are steerable, but inefficient or specialized.}
 
-\textbf{MLLMs} can moderately steer visual features but at substantial computational cost.
-InternVL3-1B scores only 51.2\%; scaling to 2B raises this to 77\%.
-\model{} outperforms both variants by 40\% and 14\% respectively while adding only 130M parameters via cross-attention blocks. \MG{Add FLOPs}
-\textbf{GroundingDINO} and \textbf{SAM3} on the other hand are highly steerable, with SAM3 nearly matching \model{}'s retrieval accuracy.
-However, their intermediate representations are optimized for localization and lack the generality needed for downstream transfer, as we analyze in \cref{subsec:pareto}.
-% \subsubsection{MLLMs: Steerable but Inefficient}
+\textit{MLLMs} can moderately steer their visual features but at substantial computational cost.
+% InternVL3-1B scores only 47\%; scaling to 2B raises this to 76\%.
+\model{} outperforms both InternVL3-1B and InternVL3-2B by 49 and 20 percentage points, respectively, while only adding 20M parameters via cross-attention blocks compared to billion-parameter-scale LLMs (\cref{tab:method_comparison}).
+Open-vocabulary localization models (GroundingDINO, SAM3) are highly steerable, with SAM3 nearly matching \model{}'s retrieval accuracy.
+However, their intermediate representations are optimized for localization and lack the generality needed for downstream transfer, as discussed in \cref{subsec:pareto}.
+
+% \paragraph{MLLMs: Steerable but Inefficient}
 % MLLMs can moderately steer visual features, but at substantial computational cost.
 % InternVL3-1B scores only 51.2\%; scaling the LLM to 2B parameters raises this to 77\%.
 % Our method
@@ -188,89 +186,93 @@ However, their intermediate representations are optimized for localization and l
 % Recent work~\cite{chen2025vlm_benchmark} finds that that VLMs perform substantially worse than their underlying visual encoder on vision-centric benchmarks.
 % Because the text directly influences visual representation learning process, SteerViT can guide attention toward task-relevant regions in a way that post-hoc fusion cannot.
 % \MG{(out-of-place)}
-% \subsubsection{Open-Vocabulary (OV) Localization}
+% \paragraph{Open-Vocabulary (OV) Localization}
 % GroundingDINO and SAM3 are highly steerable, with SAM3 nearly matching \model{}'s retrieval accuracy.
 % They apply heavy multimodal processing on their visual backbones for task-specific optimization.
 % However, although features extracted from them are steerable with text, these features are task-specific i.e localization. As illustrated in Figure~\ref{fig:teaser}, these features are transferrable for downstream reuse, scoring poorly on standard vision benchmarks. Unlike our method,     preserves the representation quality of the visual encoder. We discuss this further in Section~\ref{}. #dont delete comment
 % However, their intermediate representations are optimized for localization and lack the generality needed for downstream transfer, as we analyze in Section~\ref{subsec:pareto}.
 
-\subsubsection{Conditioning on a Random Object Class}
-To verify that steerability is genuinely text-driven rather than an artifact of training, we condition each model on a random (incorrect) object class and measure the retrieval degradation (hatched bars in Figure~\ref{fig:cond_ret_baselines}).
-CLIP and SigLIP show no degradation under random conditioning, confirming their features are unconditionally visual and not steerable.
-FLAIR exhibits a moderate drop ($-36.1\%$), while \model{} drops by $-50.8\%$, indicating stronger text-dependence.
-OV models (SAM3, GroundingDINO) see large drops, consistent with their deep text integration.
-MLLMs show only mild sensitivity, with InternVL3-1B declining by just $-16.1\%$.
-\model{}'s catastrophic degradation under random conditioning confirms that its steerability is driven by the text query rather than by the training objective or data.
+\paragraph{Conditioning on a random class breaks retrieval.}
+
+% \MT{title is not a finding unlike others above; a simple modification: Conditioning on a random class breaks retrieval.}
+To verify that steerability is genuinely text-driven rather than an artifact of training, we condition each model on a random (incorrect) object class.
+% and measure the retrieval degradation (hatched bars in Figure~\ref{fig:cond_ret_baselines}).
+Doing this has no effect on CLIP and SigLIP performance, confirming their features are unconditionally visual and not steerable.
+However, performance degrades drastically for FLAIR and \model{} ($-29.4$ and $-52.1$ percentage points), indicating strong text-dependence and corroborating that steerability is primarily prompt-driven.
+OV models see similar large drops, consistent with their deep text integration.
+MLLMs show only mild sensitivity, with InternVL3-1B declining by $-7.6\%$.
+% \model{}'s catastrophic degradation under random conditioning confirms that its steerability is driven by the text query rather than by the training objective or data.
 % CLIP,SigLIP post hoc late fusion - no performance degradation when conditioning on random object class. multimodal feature not steerable with text. feature is unconditional visual
 % FLAIR - random conditioning doesn't decrease performance as much ours (-36.1\% v/s -50.8\% for ours), early fusion remains more steerable.
 % OV methods see big dip, very steerable. MLLMs not as much, very slight dip for MLLMs, especially if small i.e internvl3-1b sees only -16.1\% decrease
 % our method - conditioning on a random object class instead of the correct one causes retrieval performance to degrade catastrophically, demonstrating that the steerability is indeed driven by the text query rather than by fine-tuning data or objective.
+\newline\newline
+In summary, only \model{} and OV localization models can reliably be steered through text whereas standard ViTs collapse to salient concepts, with post-hoc late fusion providing no benefits. Although MLLMs offer moderate steerability, their utilization bears significant computational burden.
 
-
-In summary, only \model{} and OV localization models are text-steerable, standard ViTs collapse to salient concepts with even post-hoc late fusion failing for CLIP-style models, and although MLLMs offer moderate steerability, it comes at a prohibitive cost.
 % In summary, our method and open-vocabulary localization models (SAM3, GroundingDINO) can steer global semantics with natural language, whereas standard vision encoders collapse to salient objects.
 % MLLMs exhibit moderate steerability but remain parameter-inefficient.
 
 % Table: kNN experiments
 
-\subsection{PASCAL-Mosaic Benchmark: Text Routes Dense Attention}
+\subsection{MOSAIC Localization: Text enables Targeted Attention}
 \label{subsec:mosaic_exp}
 % \subsection{Steering Attention}
-\begin{figure}[h!]
-\centering
 
-\centering
-\includegraphics[width=\textwidth]{figures/mosaic_attention_maps.pdf}
+% \MT{do we want to highlight task or takeaway in subsec headers? benchmarks are new, so ok to focus on takeaways here}
+% \MG{Not sure} \JR{since we do it later, would make sense to also do it here for the subsubsecs}
 
-\caption{\textbf{Text routes dense attention.} Attention maps on a four-image mosaic demonstrate that text conditioning redirects self-attention from salient objects to the queried concept whereas DINOv2 attends to the most prominent objects (``pony'' and ``airplane'').
-\JR{heatmap overlay is not properly exported to PDF; needs fixing}
+% In the previous section, 
+% We demonstrated the effectiveness of text-based steering. Next,
+We examine how \model{} routes and aggregates global representations via attention to query-relevant tokens.
+% In this section we examine whether text-conditioning can route self-attention to tokens corresponding to the queried object, improving dense predictions for non-salient concepts.
+For this, we construct a benchmark by stitching together four images from PASCAL-VOC \cite{pascal_voc} into a single $2\times2$ mosaic, resulting in a total of 363 composite images with reduced saliency of each primary subject.
+The \texttt{[CLS]}-to-patch attention scores in the final self-attention block highlight how global attention is redirected to prompt-specific regions (\cref{fig:heatmap_teaser}). 
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/mosaic_attention_maps.png}
+\vspace{-3mm}
+\caption{\textbf{Text enables targeted attention.} Attention maps on a four-image mosaic demonstrate that text conditioning with \colorbox{\methodcolor}{\model{}} redirects self-attention to the queried concept whereas \colorbox{visionblue}{DINOv2} attends to the most prominent objects. % (``pony'' and ``airplane'').
 }
+\vspace{-4mm}
 \label{fig:steer_attn}
 \end{figure}
 
-\MT{do we want to highlight task or takeaway in subsec headers? benchmarks are new, so ok to focus on takeaways here}
-\MG{Not sure}
+\paragraph{Qualitative analysis.}
+As revealed by \cref{fig:steer_attn}, DINOv2's attention map focuses primarily on the prominent ``pony'' and ``airplane'' entities, confirming the saliency bias hypothesized in \cref{sec:intro}.
+In contrast, \model{} conditioned on ``person'' routes attention to the barely visible person in the top-left.
+When prompted with ``potted plant'', it distributes attention among the class occurrences in the bottom-right image. 
+Additional qualitative examples are in the supplement.
 
-In the previous section, we validated that text conditioning steers global semantics. In this section we examine whether text-conditioning can route self-attention to tokens corresponding to the queried object, improving dense predictions for non-salient concepts.
-\MT{add clarity about CLS's attention to visual tokens?}
-We construct a benchmark by stitching together four images from PASCAL-VOC into a single mosaic image, reducing the saliency of each individual object.
-This setup lets us quantify the foreground bias of self-attention and measure how effectively text can be used by our method to redirect it.
-
-\subsubsection{Qualitative Analysis} \MG{make consistent with Figure 5.}
-DINOv2's \texttt{[CLS]} attention maps concentrate on salient foreground objects, confirming the saliency bias hypothesized in Section~\ref{sec:intro}.
-Figure~\ref{fig:steer_attn} (right) illustrates this: DINOv2 allocates attention toward the house and bathtub but ignores the tree along the road.
-\MT{I'm not sure if we can say what DINOv2 should do on montages no?} 
-\MG{why not? the images is still a composition of objects, just smaller objects now}
-When conditioned on ``tree,'' our method routes attention to the full extent of the tree and partly to a potted plant in an adjacent quadrant due to its semantic association.
-Additional qualitative examples appear in the Appendix.
-
-\subsubsection{Quantitative Evaluation}
-We quantify DinoV2 ability to localize distinct objects by using \texttt{[CLS]} attention maps as a proxy for spatial focus.
-We compute the area under the ROC curve (AUC) between attention maps and ground-truth segmentation masks from PASCAL-VOC for each queried object.
-\MT{not sure which models, but querying objects for dino is not possible in this way?}
-As shown in Figure~\ref{fig:steer_attn} (left), text-conditioned features outperform query-agnostic features by 33.7\% AUC on this dense prediction task.
-\MT{why not report AP which is more standard for segmentation?}
-\MT{outperform by 34 points or achieve 34 points?? later in text we say achieve 34}
-
-% \sout{GroundingDINO and SAM3 also route attention toward queried objects (Figure~\ref{fig:mosaic_baselines}), which is expected given that they are optimized for localization.}
-% However, while these models satisfy the first two desirable properties (global steerability and dense attention routing), they fail to preserve representation quality of the frozen visual features as illustrated by Figure~\ref{fig:teaser}.
-% We analyze this tradeoff in the next section.
+\paragraph{Quantitative evaluation.}
+We quantify this effect by measuring the area under the precision-recall-curve (PR-AUC) of the attention heatmaps and the ground-truth segmentation masks for each object type appearing in the mosaic instance.
+DINOv2 cannot be actively steered and primarily focuses on prominent objects, resulting in a low PR-AUC of 14.3\%.
+Textual steering allows \model{} to achieve a substantially higher score of 42.5\%, indicating increased spatial focus on the areas of interest during global aggregation.
 
 
-
-\subsection{Feature Quality vs.\ Steerability: A Pareto Analysis / Desideratum 3: Preserving Visual Representation Quality while Steering}
-
+\subsection{%Feature quality vs.\ steerability: A Pareto analysis. (OR)
+% Desideratum 3: 
+Preserving Visual Representation Quality while Steering}
 \label{subsec:pareto}
-\MG{Section title TBD}
-Steerability is only useful if it preserves the downstream transfer that makes visual representations valuable in the first place.
-A trivial solution that overwrites frozen features with text yields perfect steerability but destroys the underlying representation.
-Figure~\ref{fig:teaser} (bottom) maps existing models along these two axes, revealing three regimes:
-\textbf{SAM3} and \textbf{GroundingDINO} achieve high steerability but produce localization-specific features that score poorly on standard vision probes;
-\textbf{MLLMs} perform reasonably on classification but falter on dense tasks and require billions of parameters for moderate steerability;
-\textbf{query-agnostic encoders} (DINOv2, SigLIP) produce rich transferable features but cannot be steered.
-\model{} bridges this gap, achieving both high steerability and strong downstream transfer (Figure~\ref{fig:teaser}, bottom). \MG{To Do JR: exp setup}
-We do observe a modest degradation (${\sim}10\%$) on classification and segmentation probes relative to the frozen baseline, which raises a natural question: can we control this tradeoff continuously?
-The tanh-gated cross-attention mechanism (\cref{eq:gated_ca}) provides exactly such a knob.
+
+While previous sections revealed steerability for \model{} and OV, this is only useful if it preserves the downstream transfer, an important property of good visual representations.
+A naïve solution that overwrites visual features with text yields perfect steerability but destroys the underlying representation.
+
+To assess this trade-off, we contrast performance on the CORE steerability benchmark (cf. \cref{subsec:cond_ret_exp}) with vision-centric downstream tasks intended to measure representational quality. 
+In addition to training linear probes on global features across three fine-grained classification datasets (ImageWoof \cite{Howard_Imagewoof_2019}, Waterbirds \cite{Sagawa2020_waterbirds}, StanfordCars \cite{stanford_cars}),
+binary object-of-interest segmentation on ADE20k \cite{zhou2017scene} gauges the dense encoding performance.
+Here, promptable models are conditioned on the superclass (e.g., ``dog'' for ImageWoof) and the ADE20k class name, respectively.
+Additional details are in the supplement. 
+
+
+\paragraph{Steerability $\leftrightarrow$ Representation quality trade-off.}
+Figure~\ref{fig:teaser} (right) maps models along these two axes, revealing three regimes:
+(1)~\textbf{Open} \textbf{-vocabulary} \textbf{localization methods} (SAM3 and GroundingDINO) achieve high steerability but produce localization-specific features that score poorly on generic vision tasks.
+(2)~\textbf{MLLMs} perform reasonably on classification but falter on dense prediction tasks and require billions of parameters for moderate steerability.
+(3)~\textbf{Query-agnostic encoders} (DINOv2, SigLIP) produce rich transferable features but cannot be steered.
+\model{} bridges this gap, achieving both high steerability and strong downstream transfer. 
+However, a modest feature quality degradation (${\sim}5$ percentage points) relative to the vanilla DINOv2 baseline can be observed, raising the natural question: \textit{Can we control this trade-off?}
+
 % \subsection{Feature Quality vs.\ Steerability: A Pareto Analysis / Desideratum 3: Preserving Visual Representation Quality while Steering}
 % Steerability must not come at the cost of feature quality.
 % The primary purpose of visual representation learning is to produce features that transfer to downstream tasks such as classification and segmentation.
@@ -285,216 +287,171 @@ The tanh-gated cross-attention mechanism (\cref{eq:gated_ca}) provides exactly s
 % also, do we need to put this sentence here if the first para is mostly about setup}
 
 
-\subsubsection{Cross Attention Gate as a Continuous Steerability Knob}
-
-The tanh-gated cross-attention mechanism (Eq.~\ref{eq:gated_ca}) provides a continuous control knob for the quality-steerability tradeoff.
-\MT{need to be clear on gate factor is before or after tanh. it looks like after when you plot 0 - 1, but seems to be before in fig1 plotting 0 - 1.6}
-Because the gates are zero-initialized, the model is identical to DINOv2 at initialization ($\lambda = 0.0$).
-As training progresses, the gates learn slowly open, learning to incorporate text information in the visual features as illustrated in ~\cref{fig:gate_factor_train_iter}.
-% allowing text features to progressively steer the visual representation.
-At inference, we can scale the gate magnitude to smoothly interpolate between the original DINOv2 subspace and a fully text-conditioned state ($\lambda = 0.0 \rightarrow 1.0$).
-\MT{why is 0 gate not overlapping with dino base model in fig1}
-
-Plotting this trajectory (the green curve in Figure~\ref{fig:teaser}) reveals a clear Pareto frontier.
-We observe an optimal operating point at a scaling factor $\lambda = 0.6$: the model preserves the foundational feature quality of DINOv2 while unlocking high text steerability, outperforming both standard encoders and models like SAM3 and GroundingDINO.
-The knob is especially impactful for SigLIP, whose feature quality degrades more sharply under full cross-attention than DINOv2's; an intermediate gate scaling recovers much of SigLIP's original representation quality while retaining meaningful steerability, as shown by the SigLIP gating curve (blue curve) in Figure~\ref{fig:teaser} (right).
-
-
-% This is also illustrated by Figure~\ref{fig:tsne_semantic}: although the clusters are guided by the text query, within those clusters the object-level semantics of DINOv2 are preserved (e.g., cat is closer to dog than to birds).
-
-% Figure~\ref{fig:gate_factor} (right) further shows that increasing the gate factor from 0.0 to 0.6 doubles the mosaic benchmark AUC from 0.15 to 0.34, confirming that the gate directly controls how much attention is routed through text-relevant tokens.
-\begin{wrapfigure}{r}{0.3\textwidth}
+\begin{wrapfigure}{r}{0.375\textwidth}
 \centering
-\vspace{-1em}
-\includegraphics[width=\linewidth]{figures/mosaic_gate_factor.png}
-\caption{\textbf{Gate scaling modulates grounding performance.}
-Mosaic AUC increases with gate factor $\lambda$, confirming that cross-attention gates directly control text-guided attention routing.
-At $\lambda{=}0.6$, \model{} outperforms DINOv2.}
+\vspace{-8mm}
+\includegraphics[width=\linewidth]{figures/pareto_plot_gate_factor_inv.pdf}
+\vspace{-5mm}
+\caption{\textbf{Post-hoc steerability- visual quality modulation.} Scaling 
+% learned
+CA gates $\alpha_\ell$ at inference allows continuous interpolation between vanilla ViT and \model{} characteristics. A factor of $0.6$ provides the optimal steerability-quality trade-off for SigLIP- and DINOv2-based models.
+}
+\vspace{-4mm}
 \label{fig:gate_factor}
 \end{wrapfigure}
-%
-Figure~\ref{fig:gate_factor} shows that increasing the gate factor from 0.0 to 0.6 doubles the mosaic benchmark AUC from 0.15 to 0.34, confirming that the gate directly controls how much attention is routed through text-relevant tokens.
+
+
+\paragraph{Cross-attention gate as a continuous steerability knob.}
+The tanh-gated cross-attention mechanism (\cref{eq:gated_ca}) provides an implicit control knob for the quality-steerability trade-off. At inference, we can scale the learned gating parameters $\alpha_\ell$ by a factor $\omega \in [0, 1]$ to smoothly interpolate between the original DINOv2 subspace and a fully text-conditioned state.
+Plotting this trajectory (\cref{fig:teaser}, \cref{fig:gate_factor}) reveals a clear Pareto frontier with an optimal operating point at a scaling factor of $\omega {=} 0.6$ where DINOv2's feature quality is preserved while unlocking high textual steerability, improving over all baselines across both dimensions.
+This knob is especially impactful when applying \model{} to SigLIP, where feature quality degrades sharply but can be recovered in large part by setting $\alpha_\ell' = \alpha_\ell * 0.6$ while retaining meaningful steerability as shown in the orange curve of \cref{fig:gate_factor}.
+This flexible post-hoc modulation allows \model{} models to be adapted to downstream requirements at no additional cost. 
 
 % ------------------------------------------------------------------------------------------------------------------------------
 \subsection{Text Specificity Guides Semantic Granularity}
 \label{subsec:text_density_exp}
 \begin{figure}[t]
 \centering
-\begin{subfigure}[b]{0.49\textwidth}
-    \includegraphics[width=\textwidth]{figures/personalized_representations_bar_chart.pdf}
+% \begin{subfigure}[b]{0.49\textwidth}
+\includegraphics[width=0.45\textwidth]{figures/personalized_representations_back_to_back.pdf}
     % \caption{XXXX}
-\end{subfigure}
-\begin{subfigure}[b]{0.50\textwidth}
-    \includegraphics[width=\textwidth]{figures/personalized_representations_retrieval_comparison.pdf}
+% \end{subfigure}
+% \begin{subfigure}[b]{0.50\textwidth}
+\hfill
+\includegraphics[width=0.48\textwidth]{figures/personalized_representations_retrieval_comparison.pdf}
     % \caption{XXXX}
-\end{subfigure}
-
-\caption{\textbf{Text specificity controls feature granularity.} \textbf{Left:} 
-The quality of personalized representations produced by \model{} improves drastically with more detailed prompts, even surpassing a supervisedly fine-tuned DINOv2.
-\textbf{Right:} Qualitative example illustrating this effect. 
+% \end{subfigure}
+\vspace{-2mm}
+\caption{\textbf{Text controls feature granularity.} \textbf{Left:}
+The quality of personalized representations produced by \colorbox{\methodcolor}{\model{}} improves drastically with more detailed prompts for text conditioning (TC), even surpassing a supervised fine-tuned \colorbox{gray!75}{DINOv2}.
+\textbf{Right:} Retrieved images are better when providing \model{} with more detailed descriptions.
 }
+\vspace{-5mm}
 \label{fig:pods}
 \end{figure}
 
-In Section~\ref{subsec:cond_ret_exp}, we observed that the text you condition on has a profound impact on the resultant features with conditioning on a random object class halving retrieval performance.
-In this section, we systematically explore how text steers our visual representation.
-We evaluate classification and retrieval on the Personal Object Discrimination Suite (PODS), which evaluates using global features ability discriminate personalized object images under distribution shifts. 
-\MT{may need another sentence or 2 to explain PODS}
-We find that the semantics of the steered representation in \model{} is highly sensitive to the specificity of the text prompt.
-The model does not simply ``add'' information to the underlying visual encoder; rather, it steers the feature space to match the detail of the prompt.
+% \cref{subsec:cond_ret_exp} showed that the conditioning text has a profound impact on the resulting features; conditioning on a random object classes halved retrieval performance.
+% Here, we systematically
+We explore the role of text in forming high-fidelity visual representations.
+% In this section, we systematically explore how text steers our visual representation.
+We choose Personal Object Discrimination Suite (PODS)~\cite{sundaram2024personalized_pods}, a benchmark evaluating the formation of instance-aware feature spaces via the ability of models to recognize particular objects (e.g., \textit{your} mug vs. all other mugs).
+Given a small set of reference images, PODS computes cosine similarities on frozen global features and performs:
+(i)~one-vs-all instance classification as well as
+(ii)~similarity-based retrieval over a set of test images.
+% under distribution shifts.
+Following~\cite{sundaram2024personalized_pods}, we report PR-AUC for classification and NDCG for retrieval. 
 
-\subsubsection{From Coarse to Fine-Grained Steering}
-We analyze performance across three levels of textual detail (Figure~\ref{fig:pods}), and find:
-\begin{itemize}[nosep]
-\item \textbf{Coarse (Supercategory):} Conditioning on high-level supercategories discards lower-level texture and shape cues that are irrelevant to the superclass but crucial for instance identity. This explains the performance drop relative to vanilla DINOv2, which retains these features by default.
-\item \textbf{Intermediate (Class):} Conditioning on class names, which capture category-level attributes, significantly improves performance over the baseline.
-% \item \textbf{Fine-grained (Descriptive):} The largest gains occur with highly descriptive text queries (generated manually or synthetically). The model performs instance-level discrimination in a zero-shot manner, surpassing a supervised fine-tuned DINOv2. Detailed prompts act as a precise steering mechanism.
-\item \textbf{Fine-grained (Descriptive):} Highly descriptive prompts (generated by human or MLLMs) act as a precise steering mechanism, yielding the largest gains and enabling zero-shot instance-level discrimination that surpasses supervised fine-tuned DINOv2. This aligns with Figure~\ref{fig:ref4_token_len} (Appendix), where referential segmentation accuracy increases monotonically with caption length, confirming that denser text yields more precise steering.
-% \MG{Incorporate something like - this is illustrated in \label{fig:ref4_token_len}, and move the figure to appendix. Since here we cover role of descriptive prompts and how denser prompts/high text specificity improves performance, there's good synergy to refer to \label{fig:ref4_token_len} to add more validation. be brief tho}
-% The largest gains occur with highly descriptive text queries (generated manually or synthetically). The model performs instance-level discrimination in a zero-shot manner, surpassing a supervised fine-tuned DINOv2. 
-% Detailed prompts act as a precise steering mechanism.
-% Highly descriptive prompts (generated by human or MLLMs) yield the largest gains, enabling zero-shot instance-level discrimination that surpasses supervised fine-tuned DINOv2.
-% Crucially, MLLM-generated descriptions perform comparably to human-written ones (Figure~\ref{fig:pods}).
-\end{itemize}
 
-The comparable performance of human and MLLM-generated prompts has two implications.
-First, steerability does not depend on carefully curated author prompts: off-the-shelf MLLM captions are equally effective, making the approach practical without manual prompt engineering.
-Second, since \model{} is trained exclusively on human-annotated referring expressions (\cref{sec:data}), the transfer to MLLM-generated text at inference demonstrates robustness to distribution \model{} in the language modality. \MG{to do MG: compress}
-% This result has two implications.
-% First, steerability does not depend on carefully curated author prompts: off-the-shelf MLLM captions suffice, making the approach practical at scale.
-% Second, our model trains exclusively on human-annotated referring expressions (RefCOCO, Visual Genome) yet generalizes to MLLM-generated text at inference, demonstrating robustness to distribution \model{} in the language modality. 
+\paragraph{From coarse to fine-grained steering.}
 
-\MG{to do JR: Give an example from the figure for each category i.e mug, blue mug, blue mug with white crescent log}
-\end{itemize}
+We vary the amount of detail provided to \model{} via the text prompt from
+coarse supercategories (e.g., ``mug'', ``shoe''), 
+object names (e.g., ``white ECCV mug''),
+to comprehensive MLLM-generated descriptions of each instance's visual appearance. 
+As shown in \cref{fig:pods}, the semantics of the steered representations are sensitive to the prompt specificity.
+When conditioning is too coarse, the model overlooks fine-grained cues necessary for discriminating instances within an object category, yielding worse performance than vanilla DINOv2 ($26.7\%$ vs.\ $29.6\%$ Precision-Recall AUC). Enriching the prompt with instance-level detail substantially boosts performance to $58.3\%$ PR-AUC, surpassing custom DINOv2 variants fine-tuned on synthetic instance data ($48.0\%$ PR-AUC) and nearly closing the gap between zero-shot and fine-tuned DINOv2 on the Normalized Discounted Cumulative Gain (NDCG) metric. This result is particularly noteworthy given that DINOv2 fine-tuning is object-specific, requiring a separate model per object class: 100 models in this setting compared to a single \model{} model.
+These results demonstrate that \model{} does not simply \textit{add} information to the visual encoder but instead precisely steers the feature space to match the prompt-provided level of detail.
+% \JR{Not sure if to include the following:} This aligns with Figure~\ref{fig:ref4_token_len} (Appendix), where referential segmentation accuracy increases monotonically with caption length, confirming that denser text yields more precise steering.
+% \MT{yeah, ok to skip} \MG{can also say (also illustrated in Supplementary)}
 
 % This demonstrates that natural language can steer features effectively in out-of-distribution domains where labeled data for fine-tuning is scarce. \MG{can drive a strong point in conjuction with anomaly detection results}
-
-% --- Moved to appendix ---
-% \begin{figure}[h!]
-% \centering
-% \includegraphics[width=0.5\textwidth]{old_figures/token_len.png}
-% \caption{\textbf{Denser captions improve localization.} On the Ref4 benchmark, referential segmentation performance increases with caption length, confirming that richer text conditioning yields more precise spatial steering.}
-% \label{fig:ref4_token_len}
-% \end{figure}
 
 
 \subsection{Visualizing and Analyzing Steered Embedding Space}
 \label{sec:tsne_viz}
 
-\MT{please describe experimental setup}
+The results on PODS (\cref{subsec:text_density_exp}) indicate that query specificity dictates the level of semantic abstraction.
+Next, we explore how text conditioning shapes the embedding space topology of \model{} using two complementary modes: steering along the \textit{semantic hierarchy} and steering by \textit{compositional attributes}.
+
+For this, we select 500 images containing exactly one out of eight curated classes from PASCAL-VOC~\cite{pascal_voc}. The encoded global image features are then reduced to 2D using UMAP~\cite{UMAP}. 
 
 
-% Sections~\ref{subsec:cond_ret_exp}
-We have established that our method can steer global feature semantics and where the the feature lies in the hierarchy of semantic abstraction is dictated by the specificity of the query.
-% Having demonstrated that our method can successfully steer global ViT features (Section \ref{subsec:cond_ret_exp}), preserve visual quality (Section \ref{subsec:mosaic_exp}), and that query specificity dictates the level of semantic abstraction (Section \ref{subsec:text_density_exp}).
-In this section, we analyze U-MAP visualizations to better understand the embedding space topology,  consequently \model{}'s ability to steer semantics.
-% U-MAP visu reveal how text conditioning reshapes the embedding space topology.
-Standard ViT's like DINOv2 exhibit a fixed topology dictated by saliency bias, clustering images by the dominant foreground object.  
-Our method on the other hand \model{} dynamically reshapes this topology based on the input text query.
-We explore this by visualizing \textit{Semantic Steering} and \textit{Object Composition Steering}. 
-% \MG{to do MG: compress}
-% \MG{To Do: We also analyze how changing text density and scaling down cross attention gating affects this.}
-
-\subsubsection{Steering Feature along the Semantic Hierarchy}
-
-This experiment tests whether text can steer clustering using different levels of semantic details, ranging from low level fine-grained object description (as seen in ~\cref{subsec:text_density_exp}) to higher level semantics i.e object class (``bird'') and generic semantic superclass (``animal'').
-
-\paragraph{Setup.} We select images containing $N$ distinct object classes divided into $k$ object classes.
-
-\paragraph{Analysis.} 
-As shown in Figure~\ref{fig:tsne_semantic}, the baseline DINOv2 embeddings (left) form six distinct clusters, rigidly adhering to object class and treating ``dog'' and ``horse'' as separate concepts.
-
-Conditioning our model on \texttt{``Animal''} (right) transforms the embedding space: all animal classes (dog, cat, horse, bird, sheep) collapse into a single macro-cluster, while non-animal classes are pushed away.
-Crucially, object-level semantics are preserved within the animal cluster: dogs and cats remain closer neighbors than birds (Figure~\ref{fig:tsne_semantic}), confirming that text controls the granularity of clustering without destroying fine-grained structure.
+\paragraph{Steering Along the Semantic Hierarchy.}
+% While DINOv2 imposes a fixed topology dictated by the semantic relatedness of salient objects, \model{} dynamically reorganizes it according to the text query.
+As shown in Figure~\ref{fig:tsne_semantic} (1), DINOv2 embeddings cluster rigidly by object class.
+Conditioned on \texttt{``animal''} (2), two macro-clusters emerge for \model{}, containing all animal and non-animal classes, respectively. Crucially, fine-grained structure is preserved (e.g., dogs and cats remain closer than birds), confirming that text controls clustering granularity without destroying object-level semantics.
+When conditioned on \texttt{``bird''} (3) separability between bird and non-bird images increases while preserving the higher-level animal versus non-animal macro-separation.
+This confirms that text can steer clustering at multiple levels of the semantic hierarchy, an emergent behavior not actively encouraged during training.
 
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{figures/tsne_animal.pdf}
-\caption{\textbf{\model{} enables hierarchical semantic steering.} \textbf{(1)} DINOv2 clusters images by object class. \textbf{(2)} Conditioning \model{} on \texttt{``animal''} separates images into animal and non-animal clusters. \textbf{(3)} \JR{potentially remove this hierarchy level} \textbf{(4)} With \texttt{``eye''}-conditioning, two primary clusters containing animate and inanimate classes emerge. \JR{plot is not final; caption needs adaptation}}
+\includegraphics[width=\linewidth]{figures/object_umap_emoji_annotated.pdf}
+\vspace{-5mm}
+\caption{\textbf{\model{} steers embedding topology via text.} We show sub-sampled UMAP projections of 500 images across eight PASCAL-VOC classes.
+\textbf{(1)} \colorbox{visionblue}{DINOv2} clusters by object class.
+\textbf{(2)} Conditioning \colorbox{\methodcolor}{\model{}} on \texttt{``animal''} merges animal classes into one cluster while separating non-animals.
+\textbf{(3)} Conditioning on \texttt{``bird''} increases bird vs.\ non-bird separability while preserving the animal/non-animal macro-structure.
+\textbf{(4)} Conditioning on \texttt{``eye''} groups all animate classes (including person) together, demonstrating compositional attribute steering.
+}
+% --- Old caption (commented out) ---
+% \caption{\textbf{\model{} enables hierarchical semantic steering.} \textbf{(1)} DINOv2 clusters images by object class. \textbf{(2)} Conditioning \model{} on \texttt{``animal''} separates images into animal and non-animal clusters. \textbf{(3)} \JR{potentially remove this hierarchy level} \textbf{(4)} With \texttt{``eye''}-conditioning, two primary clusters containing animate and inanimate classes emerge. \JR{plot is not final; caption needs adaptation}}
+\vspace{-4mm}
 \label{fig:tsne_semantic}
 \end{figure}
 
-\subsubsection{Steering Feature along the Object Composition Hierarchy}
-
-This experiment tests a more challenging scenario: clustering visually dissimilar objects (e.g., office chair and bike) based on a shared sub-object attribute (wheel), ignoring their primary semantic category.
-
-\paragraph{Setup.} We curate a heterogeneous dataset split into two compositional groups:
-\begin{itemize}
-\item \textbf{Has-Part ``Wheel'':} Cart, wheelchair, bike, car, airplane.
-\item \textbf{No-Part ``Wheel'':} Apple, house, person.
-\end{itemize}
-
-\paragraph{Analysis.} 
-DINOv2 fails to capture this shared attribute: the t-SNE visualization (Figure~\ref{fig:tsne_compositional}, left) shows clusters organized by object identity, with a wheelchair clustered closer to a person (contextual bias) than to a cart.
-
-Conditioning on \texttt{``Wheel''} produces a binary separation of the embedding space (Figure~\ref{fig:tsne_compositional}, right): one cluster containing all objects with wheels, regardless of whether they are vehicles or medical equipment, and another containing objects without wheels.
-This confirms that text conditioning can route attention to specific compositional attributes rather than the global object concept.
-\begin{figure}[t]
-\centering
-% \includegraphics[width=\linewidth]{old_figures/tsne_compositional_steering.png}
-\caption{\textbf{Compositional attribute steering.} \textbf{Left:} DINOv2 separates objects by class (wheelchair far from car). \textbf{Right:} Conditioned on \texttt{``Wheel''}, our method clusters diverse wheeled objects together (cart, wheelchair, car), distinct from objects without wheels (apple, house).}
-\label{fig:tsne_compositional}
-\end{figure}
-
-% TODO: Impact of varying text density
-% TODO: Impact of turning down the Cross Attention knob
+\paragraph{Steering by Compositional Attributes.}
+Besides semantic categories, it is also possible to steer by compositional attributes, i.e., shared sub-object properties. This defines a grouping principle orthogonal to semantic categories.
+Conditioning on \texttt{``eye''} (Figure~\ref{fig:tsne_semantic}, (4)) produces two macro clusters: animate classes that possess eyes versus inanimate objects that do not.
+Notably, \textit{person} images which were situated close to inanimate objects with previous prompts, now feature greater separation and join the animate cluster as the shared attribute ``has eyes'' overrides the semantic category boundary.
+This demonstrates that we can steer representations by compositional properties, not just taxonomy.
 
 
 % ------------------------------------------------------------
 
-\subsection{Text Enables Zero-Shot Domain Transfer}
-\label{subsec:ood_generalization}
+\subsection{Text Facilitates Zero-Shot Domain Transfer}
+\input{tables/anomaly_detection_tiny}
 
-The previous sections established that \model{} steers global features with text, routes dense attention to queried concepts, and preserves representation quality of the underlying ViT.
-We now ask: does this combination enable generalization to domains unseen during training?
-We evaluate on two progressively harder out-of-distribution settings: personalized object discrimination (natural images of novel object instances with camera distribution shifts) and industrial anomaly detection (factory inspection imagery absent from all training data).
+The previous sections established that \model{} incorporates text to steer global features and route attention to queried objects, while preserving the representation quality of the underlying ViT. We now ask: \textit{Does this \shade{language-conditioned flexibility} translate into generalization to novel downstream tasks and unseen domains?}
+% We evaluate this aspect in two progressively harder out-of-distribution settings: personalized instance recognition via PODS and industrial anomaly segmentation.
+We evaluate this aspect in a hard out-of-distribution setting: industrial anomaly segmentation.
+% The previous sections established that \model{} steers global features with text, routes attention to queried concepts, and preserves representation quality of the underlying ViT.
+% We now ask: \textit{Does this combination enable generalization to domains unseen during training?} \JR{Feel like this is not motivated well enough yet. Doesn't feel like the most natural question to ask next. Maybe we can refer to literature saying language helps robustness in CLIP-like models?! (Although quite contested and confounded by data)}
 
-\subsubsection{Personalized Object Discrimination}
+% \paragraph{Personalized Object Discrimination: OOD Task Transfer.}
+% % The results on PODS in Section~\ref{subsec:text_density_exp} show that text specificity controls feature granularity on the PODS benchmark.
+% A surprising result emerging from the analysis of PODS performance in Section~\ref{subsec:text_density_exp} is that, when utilizing descriptive text prompts, \model{} not only adapts to this novel task setup zero-shot but outperforms the specialized DINOv2 variants fine-tuned on instance-specific data (58.3\% vs. 48.0\% PR-AUC).
+% \MT{not so on retrieval though .. someone may point out; can we pre-empt this?}
+% % Frozen DINOv2 scores 29.6\% AUPRC on PODS; supervised fine-tuning on synthetic instance  more than doubles this to 48.0\%; yet our method reaches 58.3\% without seeing a single labeled example from the target domain (Figure~\ref{fig:pods}).
+% In comparison, CLIP and SigLIP with late text fusion only achieve 26.7\% and 16.4\%, respectively, illustrating that generalization to this task requires both a rich frozen vision encoder and early multimodal interaction. 
 
-Section~\ref{subsec:text_density_exp} showed that text specificity controls feature granularity on the PODS benchmark
-% , an out-of-distribution task involving personalized object instances in the wild.
-A surprising result emerges from that analysis: with descriptive text prompts, \model{} not only adapts to this novel domain zero-shot but outperforms DINOv2 supervised fine-tuned on labeled target data.
-Frozen DINOv2 scores 28.0 PR-AUC on PODS; supervised fine-tuning more than doubles this to 48.0; yet our method reaches 54.4 without seeing a single labeled example from the target domain (Figure~\ref{fig:pods}).
-CLIP and SigLIP with late text fusion also fail on this task, confirming that OOD generalization requires both a rich frozen vision encoder and early text conditioning. \MG{poor writing}
+% \paragraph{Personalized Object Discrimination: OOD Task Transfer.}
+% A surprising result emerging from \cref{subsec:text_density_exp} is that, with descriptive text prompts, \model{} adapts to PODS zero-shot and even surpasses specialized DINOv2 variants fine-tuned on synthetic instance-specific data (58.3\% vs 48.0\% PR-AUC).
+% This improvement does not stem from the vision backbone alone as vanilla DINOv2 performs poorly out of the box, and gains only arise through the language modality.
+% However, CLIP and SigLIP reach only 26.7\% and 16.4\% PR-AUC, respectively, indicating that early fusion (when language is incorporated) is critical.
 
-Text conditioning in our method succeeds here because it steers the frozen encoder's rich representations without catastrophic forgetting; fine-tuning, by contrast, overwrites general features with task-specific ones.
+% also fail on this task, confirming that OOD generalization requires both a rich frozen vision encoder and early text conditioning. \MG{poor writing}
+% Text conditioning in our method succeeds here because it steers the frozen encoder's rich representations without catastrophic forgetting; fine-tuning, by contrast, overwrites general features with task-specific ones.
 % Just as in-context learning adapts language models to novel tasks at inference time, text prompts adapt visual representations to novel domains without retraining. 
-Analogous to how prompting/in-context learning adapts large language models to novel tasks without retraining, descriptive text adapts visual representations to novel domains without fine-tuning, leveraging the representational depth that unimodal pretraining already provides. \MG{incorrect placement}
 
-\subsubsection{Anomaly Detection: Extreme OOD Domain Transfer}
 
-Having established OOD generalization on natural images, we escalate the domain gap to industrial anomaly detection. It requires localizing subtle manufacturing defects in factory inspection imagery.
+% \paragraph{Anomaly Segmentation: Extreme OOD Domain Transfer.}
+In addition to generalizing to novel tasks like PODS (shown in Sec.~\ref{subsec:text_density_exp}), we showcase \model{}'s adaptability by performing anomaly segmentation (AS) on the MVTec~AD~\cite{bergmann_mvtech} dataset containing industrial images never seen during training with the goal of identifying subtle manufacturing defects or irregularities.
+Here, models are conditioned on an ensemble of ten prompts in the style of \texttt{``the anomaly in the <object>''} and anomaly maps are derived by upsampling the heatmap produced by the learned linear segmentation head. We compare to other segmentation models as well as dedicated AS methods using \textit{Per-Region-Overlap} (PRO).
+More details and extended results are provided in the supplement. 
+As shown in Table~\ref{tab:anomaly_detection_small}, \model{} again matches dedicated zero-shot methods despite the extreme OOD setting.
+These results reinforce the pattern of text-driven steering unlocking capabilities already present in the frozen ViT and transferring them to domains beyond the training distribution. \MG{ensemble part unclear + add examples}
+
+% Having established OOD generalization on natural images, we escalate the domain gap to industrial anomaly detection. It requires localizing subtle manufacturing defects in factory inspection imagery.
 % , a domain entirely absent from our training data.
 
-We perform zero-shot anomaly segmentation (AS) on the MVTec~AD~\cite{bergmann_mvtech} and VisA~\cite{zou2022_visa_dataset} datasets.
-{\color{gray} We derive the anomaly map by upsampling the continuous heatmap produced by the learned linear segmentation head.
-As for all text-steerable methods, we use an ensemble of ten anomaly prompts (e.g., \texttt{``the anomaly in the <object>.''}) and average the resulting heatmaps across prompts.
-Following standard practice in the AD literature~\cite{WinCLIP_Jeong23CVPR}, we measure the pixel-wise \textit{Area under the Receiver Operating Characteristics} ($\text{ROC}_P$), the \textit{Per-Region-Overlap} (PRO), and threshold-optimal $F_1$ score ($F_1^{\max}$).
-Performance of existing training- and adaptation-free AS baselines is stated as reported in the original publication. 
 
-\model{} again matches dedicated methods on this extreme OOD setting.
-As shown in Table~\ref{tab:mvtec_visa}, \model{} reaches 79.4 PRO on MVTec~AD, substantially outperforming CLIP-based approaches (SAM3 at 54.5, CLIPseg at 34.6) and closing much of the gap to specialist methods such as FADE (84.5).
-On VisA, \model{} ties FADE on $\text{ROC}_P$ (91.5) and reaches 77.5 PRO, indicating robust transfer to a harder, more diverse inspection setting.}
-\MG{move feature extraction and table to Supplementary? Have one metric ROCp - 2 lines on a plot for MVtech and VisA?}
+% \iffindingbox
+% \begin{tcolorbox}[colback=lightyellow,
+% colframe=black, arc=4pt, boxsep=1pt]
+% \paragraph{\textbf{\textit{Finding} 4.}}
+% Natural language serves as a data-efficient generalization mechanism
+% % : descriptive text prompts 
+% adapting 
+% % frozen visual representations 
+% the visual encoder
+% to out-of-distribution domains without task-specific training \JR{would remove the following since AS is zero-shot and it's a pretty strong claim in general}, outperforming supervised fine-tuning.
+% % on personalized object discrimination and matching dedicated methods on industrial anomaly detection.\
+% \YA{finding sounds a bit overblown: the finding is just that text even allows extreme OOD transfer. I don't see any evidence for "data-efficiency" and "adapting the visual encoder to out-of-distribution domains without .. training" sounds odd. }
+% \end{tcolorbox}
+% \fi
 
-These results reinforce the pattern observed on PODS: text-driven steering unlocks capabilities already present in the frozen ViT and transfers them to domains far beyond the training distribution.
-
-\iffindingbox
-\begin{tcolorbox}[colback=lightyellow,
-colframe=black, arc=4pt, boxsep=1pt]
-\paragraph{\textbf{\textit{Finding} 4.}}
-Natural language serves as a data-efficient generalization mechanism
-% : descriptive text prompts 
-adapting 
-% frozen visual representations 
-the visual encoder
-to out-of-distribution domains without task-specific training, outperforming supervised fine-tuning.
-% on personalized object discrimination and matching dedicated methods on industrial anomaly detection.
-\end{tcolorbox}
-\fi
-
-\include{tables/anomaly_detection_table}
+% \input{tables/anomaly_detection_table}
 
 % \section{Applications}
 % \subsection{Anomaly Detection}

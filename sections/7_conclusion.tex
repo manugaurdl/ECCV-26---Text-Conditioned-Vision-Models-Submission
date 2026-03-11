@@ -1,9 +1,23 @@
 \section{Conclusion}
+We introduced \model{}, the first \textit{vision-centric} multimodal model that equips a frozen Vision Transformer with text-steerable visual representations via tanh-gated cross-attention, adding only ${\sim}$20M parameters.  
+\model{} steers both global and local features while preserving the base ViT's representation quality, with gating enabling continuous control over the steerability--quality trade-off.  
+Across personalized object discrimination and industrial anomaly detection, it matches or surpasses billion-parameter MLLMs and task-specific methods without target-domain training, generalizing across multiple ViT backbones.  
+These results show that conditioning vision on language offers a lightweight paradigm for multimodal representation learning that preserves strong unimodal encoders while extending their generalization through text.
 
-We introduced SteerViT, a method that equips frozen Vision Transformers with the ability to steer their visual representations via natural language.
-By interleaving tanh-gated cross-attention layers within a frozen ViT and training them on referential segmentation, our approach achieves three desirable properties: it steers global semantics with text, routes dense attention to queried concepts, and preserves the representation quality of the underlying encoder.
-These properties combine to enable a fourth finding: text-conditioned steering generalizes to out-of-distribution domains more effectively than supervised fine-tuning, outperforming fine-tuned DINOv2 on personalized object discrimination and matching dedicated methods on industrial anomaly detection, all without target-domain training.
+% \section{Conclusion}
+% We presented \model{}, a framework that equips any frozen Vision Transformer with text-steerable visual representations by interleaving tanh-gated cross-attention layers trained on referential segmentation, adding only ${\sim}$20M parameters.
+% \model{} achieves a Pareto improvement over existing multimodal architectures: it steers both global and local visual features with text while preserving the base ViT's representation quality, and its learned gating mechanism provides continuous post-hoc control over the steerability--quality tradeoff.
+% Across personalized object discrimination and industrial anomaly detection, text-conditioned steering matches or outperforms billion-parameter MLLMs and dedicated task-specific methods without target-domain training, generalizing across multiple ViT backbones.
+% These results demonstrate that conditioning vision on language, rather than language on vision, offers a lightweight paradigm for multimodal representation learning: one that preserves the depth of strong unimodal encoders and extends their generalization through text.
 
-Our results suggest a promising paradigm for multimodal representation learning: rather than training joint vision-language encoders from scratch on paired data, inject language conditioning into strong unimodal vision encoders.
-Unpaired vision-only and language-only data vastly exceed paired multimodal data; our approach leverages this asymmetry by preserving the representational depth learned from each modality independently.
-Text then serves not as a training signal but as a steering mechanism that extends generalization to domains where labeled data is scarce.
+
+
+% We introduced SteerViT, a framework that equips pretrained Vision Transformers with the ability to steer their visual representations via natural language.
+% By interleaving tanh-gated cross-attention layers within a frozen ViT and training them on referential segmentation, our approach, unlike previous methods,
+% % achieves three desirable properties: it 
+% steers global semantics with text  preserves the representation quality of the underlying encoder.
+% We also find that text-conditioned steering enables generalization to out-of-distribution domains more effectively than supervised fine-tuning, outperforming fine-tuned DINOv2 on personalized object discrimination and matching dedicated methods on industrial anomaly detection, all without target-domain training.
+
+% % Our results suggest a promising paradigm for multimodal representation learning: rather than training joint vision-language encoders from scratch on paired data, inject language conditioning into strong unimodal vision encoders.
+% % Unpaired vision-only and language-only data vastly exceed paired multimodal data; our approach leverages this asymmetry by preserving the representational depth learned from each modality independently.
+% Text then serves not as a training signal but as a steering mechanism that extends generalization to domains where labeled data is scarce.
