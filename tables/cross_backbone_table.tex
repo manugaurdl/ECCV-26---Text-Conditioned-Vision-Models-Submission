@@ -1,85 +1,140 @@
-\begin{table}[t]
+
+% \begin{table}[t]
+\begin{wraptable}{r}{0.4\textwidth}
 \centering
 \footnotesize
-\setlength{\tabcolsep}{5pt}
-\begin{threeparttable}
+\tabcolsep=1.2mm
+\vspace{-12mm}
 \caption{%
-Generalization across ViT families.
-Early fusion (\model{}) consistently outperforms late fusion, with the largest gains on weaker self-supervised encoders.
-MVTech PRO measures zero-shot anomaly segmentation, a domain absent from training.
+\textbf{Steering different ViT pretraining approaches.}
+% Results presented as \textbf{base model / late fusion / \model{}}.
+\model{} consistently outperforms late fusion, with the largest gains on weaker backbones.
+% MVTech PRO measures zero-shot anomaly segmentation, a domain absent from training. 
+\JR{make SteerViT column green}
 }
 \label{tab:cross_backbone}
-\begin{tabular}{@{}l l
-                S[table-format=2.1]
-                S[table-format=2.1]
-                S[table-format=2.1]
-                S[table-format=2.1]@{}}
+\begin{tabular}{l ccc}
 \toprule
-{Backbone} & {Method}
-  & {FG-CLS $\uparrow$}
-  & {Steer.\ $\uparrow$}
-  & {PODS $\uparrow$}
-  & {MVTech $\uparrow$} \\
+\multirow{2}{*}{Backbone} & \multicolumn{3}{c}{CORE $\uparrow$} \\
+& Base & Late & \model{} \\
 \midrule
-\color{gray} DINOv2
-  & \color{gray} Frozen
-  & \color{gray} 89.0
-  & \color{gray} 43.5
-  & \color{gray} 28.6
-  & {--} \\
-\rowcolor{\methodcolor}
-DINOv2 & \textbf{Early (ours)}
-  & \textbf{77.0}
-  & \textbf{93.4}
-  & \textbf{55.3}
-  & \textbf{79.8} \\
-DINOv2 & Late
-  & 86.5
-  & 93.4
-  & 45.3
-  & 65.9 \\
-\addlinespace
-\color{gray} SigLIP
-  & \color{gray} Frozen
-  & \color{gray} 91.0
-  & \color{gray} 38.3
-  & {--}
-  & {--} \\
-\rowcolor{\methodcolor}
-SigLIP & \textbf{Early (ours)}
-  & \textbf{64.3}
-  & \textbf{90.9}
-  & \textbf{23.0}
-  & \textbf{77.3} \\
-SigLIP & Late
-  & 68.6
-  & 83.5
-  & 14.7
-  & 73.4 \\
-\addlinespace
-\color{gray} MAE
-  & \color{gray} Frozen
-  & \color{gray} 57.9
-  & \color{gray} {--}
-  & {--}
-  & {--} \\
-\rowcolor{\methodcolor}
-MAE & \textbf{Early (ours)}
-  & \textbf{54.3}
-  & \textbf{62.6}
-  & \textbf{14.2}
-  & \textbf{74.1} \\
-MAE & Late
-  & 49.7
-  & 35.5
-  & 8.9
-  & 65.1 \\
+DINOv2 & 43.5 & \textbf{93.4} & \textbf{93.4} \\
+SigLIP & 38.3 & 83.5 & \textbf{90.8} \\
+MAE    & 21.8 & 35.5 & \textbf{62.6} \\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}[flushleft]\footnotesize
-\item All models use ViT-B with early or late gated cross-attention.
-PODS uses descriptive text; frozen baselines use no text.
-\MT{why not add this in the caption if at all}
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
+% \begin{tabular}{l c c c}
+% \toprule
+% Backbone & Steer. $\uparrow$ & PODS $\uparrow$ & MVTech $\uparrow$ \\
+% \midrule
+% DINOv2
+%  & 43.5 / 93.4 / 93.4
+%  & 28.6 / 45.3 / 55.3
+%  &  -   / 65.9 / 79.8 \\
+% SigLIP
+%  & 38.3 / 83.5 / 90.8 
+%  & 16.4 / 14.7 / 23.0 
+%  &  -   / 73.4 / 77.3 \\
+% MAE
+%  & 21.8 / 35.5 / 62.6
+%  & \phantom{0}8.7 / \phantom{0}8.9 / 14.2
+%  &  -   / 65.1 / 74.1 \\
+% \bottomrule
+% \end{tabular}
+\vspace{-6mm}
+% \end{table}
+\end{wraptable}
+
+
+% \begin{tabular}{l cc cc}
+% \toprule
+% \multirow{2}{*}{Backbone} & \multicolumn{2}{c}{Original} & \multicolumn{2}{c}{\model{}} \\
+% & Steer. $\uparrow$ & PODS $\uparrow$ & Steer. $\uparrow$ & PODS $\uparrow$ \\
+% \midrule
+% DINOv2 & 43.5 & \textbf{93.4} & 28.6 & \textbf{55.3} \\
+% SigLIP & 38.3 & 16.4 & \textbf{90.9} & \textbf{23.0} \\
+% MAE    & 21.8 & \phantom{0}8.7 & \textbf{62.6} & \textbf{14.2} \\
+% \bottomrule
+% \end{tabular}
+
+
+
+
+
+
+
+
+% \begin{table}[t]
+% \centering
+% \footnotesize
+% \setlength{\tabcolsep}{5pt}
+% \begin{threeparttable}
+% \caption{%
+% Generalization across ViT pretrainings.
+% Early fusion (\model{}) consistently outperforms late fusion, with the largest gains on weaker self-supervised encoders.
+% MVTech PRO measures zero-shot anomaly segmentation, a domain absent from training.
+% }
+% \label{tab:cross_backbone}
+% \begin{tabular}{@{}l l
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]@{}}
+% \toprule
+% Backbone & Method
+%   & {Steer.\ $\uparrow$}
+%   & {PODS $\uparrow$}
+%   & {MVTech $\uparrow$} \\
+% \midrule
+% \textcolor{gray}{DINOv2}
+%   & \textcolor{gray}{Frozen}
+%   & \textcolor{gray}{43.5}
+%   & \textcolor{gray}{28.6}
+%   & {--} \\
+% \rowcolor{\methodcolor}
+% DINOv2 & \textbf{Early (ours)}
+%   & \textbf{93.4}
+%   & \textbf{55.3}
+%   & \textbf{79.8} \\
+% DINOv2 & Late
+%   & 93.4
+%   & 45.3
+%   & 65.9 \\
+% \addlinespace
+% \textcolor{gray}{SigLIP}
+%   & \textcolor{gray}{Frozen}
+%   & \textcolor{gray}{38.3}
+%   & \textcolor{gray}{16.4}
+%   & {--} \\
+% \rowcolor{\methodcolor}
+% SigLIP & \textbf{Early (ours)}
+%   & \textbf{90.9}
+%   & \textbf{23.0}
+%   & \textbf{77.3} \\
+% SigLIP & Late
+%   & 83.5
+%   & 14.7
+%   & 73.4 \\
+% \addlinespace
+% \textcolor{gray}{MAE}
+%   & \textcolor{gray}{Frozen}
+%   & \textcolor{gray}{21.8}
+%   & \textcolor{gray}{8.7}
+%   & {--} \\
+% \rowcolor{\methodcolor}
+% MAE & \textbf{Early (ours)}
+%   & \textbf{62.6}
+%   & \textbf{14.2}
+%   & \textbf{74.1} \\
+% MAE & Late
+%   & 35.5
+%   & 8.9
+%   & 65.1 \\
+% \bottomrule\end{tabular}
+% \begin{tablenotes}[flushleft]\footnotesize
+% \item All models use ViT-B with early or late gated cross-attention.
+% PODS uses descriptive text; frozen baselines use no text.
+% \MT{why not add this in the caption if at all}
+% \end{tablenotes}
+% \end{threeparttable}
+% \end{table}
+

@@ -1,0 +1,112 @@
+\begin{table*}[t]
+\caption{\textbf{Overview of scene and object types used in CORE benchmark.} Each of the three indoor and outdoor environments is paired with five corresponding objects, that are inpainted into images of that scene using an image editing model. The prompts provide contextual guidance, indicating the object models should focus on.}
+\label{tab:core_object_prompts}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.02}
+\begin{tabularx}{\textwidth}{
+    >{\raggedright\arraybackslash}X
+    >{\raggedright\arraybackslash}X
+    >{\raggedright\arraybackslash}X
+}
+\toprule
+\multicolumn{3}{l}{\textbf{Indoor}} \\
+\midrule
+\sceneheader{Kitchen}
+\promptitem{Blender}{the black blender with a transparent glass cup.}
+\promptitem{Fruit Bowl}{the fruit bowl with fresh red apples.}
+\promptitem{Olive Oil}{the green glass bottle of olive oil.}
+\promptitem{Green Towel}{the dark green kitchen towel.}
+\promptitem{Pizza}{the gray plate with a slice of peperoni pizza.}
+&
+\sceneheader{Living Room}
+\promptitem{TV Remote}{the small black TV remote.}
+\promptitem{Roses}{the small bouquet of red roses in a white and gray vase.}
+\promptitem{Books}{the stack of multiple books.}
+\promptitem{Ball}{the black and white soccer ball.}
+\promptitem{Wine Bottle}{the bottle of red wine.}
+&
+\sceneheader{Bathroom}
+\promptitem{Rubber Duck}{the small yellow rubber duck.}
+\promptitem{Mop}{the wet mop with a red handle.}
+\promptitem{Toilet Paper}{the stack of white toilet paper rolls on the floor.}
+\promptitem{Carpet}{the small pink carpet on the floor.}
+\promptitem{Coat}{the hanging winter coat.}
+\\
+\midrule
+\multicolumn{3}{l}{\textbf{Outdoor}} \\
+\midrule
+\sceneheader{Street}
+\promptitem{Tree}{the apple tree with ripe apples.}
+\promptitem{Trash Can}{the small metal trash can.}
+\promptitem{Flag}{the American flag.}
+\promptitem{Zebra}{the zebra walking on the street.}
+\promptitem{Puddle}{the puddle with water on the street.}
+&
+\sceneheader{\shortstack[l]{Suburb}}
+\promptitem{Garden Hose}{the coiled green garden hose.}
+\promptitem{Mailbox}{the blue curbside mailbox.}
+\promptitem{Bicycle}{the bicycle leaning against something.}
+\promptitem{Basketball}{the orange basketball.}
+\promptitem{Fire Hydrant}{the red fire hydrant.}
+&
+\sceneheader{Park}
+\promptitem{Stroller}{the baby stroller.}
+\promptitem{Traffic Cone}{the orange traffic cone.}
+\promptitem{Birdhouse}{the small birdhouse on a post.}
+\promptitem{Backpack}{the dark blue hiking backpack.}
+\promptitem{Kite}{the colorful kite lying on the grass.}
+\\
+\bottomrule
+\end{tabularx}
+\end{table*}
+
+
+% \begin{easylist}[itemize]
+%     \setlength{\itemsep}{1pt}
+%     \setlength{\parsep}{0pt}
+%     \setlength{\topsep}{2pt}
+    
+%     @ \textbf{Kitchen}
+%     @@ {\footnotesize \textbf{Blender:} \texttt{the black blender with a transparent glass cup.}}
+%     @@ {\footnotesize \textbf{Fruit Bowl:} \texttt{the fruit bowl with fresh red apples.}}
+%     @@ {\footnotesize \textbf{Olive Oil:} \texttt{the green glass bottle of olive oil.}}
+%     @@ {\footnotesize \textbf{Green Towel:} \texttt{the dark green kitchen towel.}}
+%     @@ {\footnotesize \textbf{Pizza:} \texttt{the gray plate with a slice of peperoni pizza.}}
+
+%     @ \textbf{Living Room}
+%     @@ {\footnotesize \textbf{TV Remote:} \texttt{the small black TV remote.}}
+%     @@ {\footnotesize \textbf{Roses:} \texttt{the small bouquet of red roses in a white and gray vase.}}
+%     @@ {\footnotesize \textbf{Books:} \texttt{the stack of multiple books.}}
+%     @@ {\footnotesize \textbf{Ball:} \texttt{the black and white soccer ball.}}
+%     @@ {\footnotesize \textbf{Wine Bottle:} \texttt{the bottle of red wine.}}
+
+%     @ \textbf{Bathroom}
+%     @@ {\footnotesize \textbf{Rubber Duck:} \texttt{the small yellow rubber duck.}}
+%     @@ {\footnotesize \textbf{Mop:} \texttt{the wet mop with a red handle.}}
+%     @@ {\footnotesize \textbf{Toilet Paper:} \texttt{the stack of white toilet paper rolls on the floor.}}
+%     @@ {\footnotesize \textbf{Carpet:} \texttt{the small pink carpet on the floor.}}
+%     @@ {\footnotesize \textbf{Coat:} \texttt{the hanging winter coat.}}
+
+%     @ \textbf{Street}
+%     @@ {\footnotesize \textbf{Tree:} \texttt{the apple tree with ripe apples.}}
+%     @@ {\footnotesize \textbf{Trash Can:} \texttt{the small metal trash can.}}
+%     @@ {\footnotesize \textbf{Flag:} \texttt{the American flag.}}
+%     @@ {\footnotesize \textbf{Zebra:} \texttt{the zebra walking on the street.}}
+%     @@ {\footnotesize \textbf{Puddle:} \texttt{the puddle with water on the street.}}
+
+%     @ \textbf{Suburb}
+%     @@ {\footnotesize \textbf{Garden Hose:} \texttt{the coiled green garden hose.}}
+%     @@ {\footnotesize \textbf{Mailbox:} \texttt{the blue curbside mailbox.}}
+%     @@ {\footnotesize \textbf{Bicycle:} \texttt{the bicycle leaning against something.}}
+%     @@ {\footnotesize \textbf{Basketball:} \texttt{the orange basketball.}}
+%     @@ {\footnotesize \textbf{Fire Hydrant:} \texttt{the red fire hydrant.}}
+
+%     @ \textbf{Park}
+%     @@ {\footnotesize \textbf{Stroller:} \texttt{the baby stroller.}}
+%     @@ {\footnotesize \textbf{Traffic Cone:} \texttt{the orange traffic cone.}}
+%     @@ {\footnotesize \textbf{Birdhouse:} \texttt{the small birdhouse on a post.}}
+%     @@ {\footnotesize \textbf{Backpack:} \texttt{the dark blue hiking backpack.}}
+%     @@ {\footnotesize \textbf{Kite:} \texttt{the colorful kite lying on the grass.}}
+% \end{easylist}

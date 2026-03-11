@@ -1,0 +1,60 @@
+
+
+\begin{table}[t]
+\caption{\textbf{Per-scene performance on the CORE benchmark.} \model{} performs consistently best across all indoor and outdoor scenes when using the correct prompt (\checkmark). When text-conditioning on an object other than the one to retrieve (\xmark; incorrect prompt), performance drops significantly. 
+% \checkmark\ indicates the use of the correct prompt; \xmark\ indicates use of a mismatched prompt.
+}
+\label{tab:knn_exp_quant_full}
+
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\sisetup{
+  table-format=2.1,
+  table-number-alignment=center
+}
+\resizebox{1.0\textwidth}{!}{
+\begin{threeparttable}
+\begin{tabular}{
+l
+S S @{\hspace{7pt}}
+S S @{\hspace{7pt}}
+S S @{\hspace{7pt}}
+S S @{\hspace{7pt}}
+S S @{\hspace{7pt}}
+S S
+}
+\toprule
+\multicolumn{1}{c}{\textbf{Method}} &
+\multicolumn{2}{c}{\textbf{Bathroom}} &
+\multicolumn{2}{c}{\textbf{Kitchen}} &
+\multicolumn{2}{c}{\textbf{Liv. Room}} &
+\multicolumn{2}{c}{\textbf{Park}} &
+\multicolumn{2}{c}{\textbf{Suburb}} &
+\multicolumn{2}{c}{\textbf{Street}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}
+\cmidrule(lr){8-9}\cmidrule(lr){10-11}\cmidrule(lr){12-13}
+&
+\multicolumn{1}{c}{\checkmark} & \multicolumn{1}{c}{\xmark} &
+\multicolumn{1}{c}{\checkmark} & \multicolumn{1}{c}{\xmark} &
+\multicolumn{1}{c}{\checkmark} & \multicolumn{1}{c}{\xmark} &
+\multicolumn{1}{c}{\checkmark} & \multicolumn{1}{c}{\xmark} &
+\multicolumn{1}{c}{\checkmark} & \multicolumn{1}{c}{\xmark} &
+\multicolumn{1}{c}{\checkmark} & \multicolumn{1}{c}{\xmark} \\
+\midrule
+\rowcolor[rgb]{0.70,0.89,0.99}\textbf{DINOv2} & 54.8 & n/a & 38.0 & n/a & 30.8 & n/a & 56.7 & n/a & 34.3 & n/a & 47.6 & n/a \\
+\rowcolor[rgb]{0.70,0.89,0.99}\textbf{SigLIP} & 61.2 & 61.6 & 31.0 & 29.4 & 35.2 & 35.0 & 31.6 & 32.6 & 30.3 & 30.9 & 40.4 & 39.8 \\
+\rowcolor[rgb]{0.70,0.89,0.99}\textbf{CLIP} & 64.2 & 64.2 & 37.6 & 37.6 & 47.6 & 47.6 & 44.6 & 44.2 & 26.3 & 26.3 & 44.8 & 44.8 \\
+\rowcolor[rgb]{0.70,0.89,0.99}\textbf{FLAIR} & 95.6 & 69.0 & 79.6 & 42.2 & 82.0 & 48.0 & 74.4 & 55.8 & 84.6 & 54.3 & 71.4 & 42.2 \\
+\rowcolor[rgb]{0.98,0.70,0.65}\textbf{InternVL3-1B} & 61.8 & 54.4 & 35.6 & 28.4 & 43.0 & 32.6 & 50.2 & 42.3 & 42.9 & 33.1 & 48.6 & 45.6 \\
+\rowcolor[rgb]{0.98,0.70,0.65}\textbf{InternVL3-2B} & 89.4 & 70.2 & 70.2 & 42.2 & 60.6 & 36.4 & 75.8 & 57.7 & 81.1 & 50.3 & 78.8 & 57.2 \\
+\rowcolor[rgb]{0.98,0.70,0.65}\textbf{Qwen3-VL-2B} & 81.6 & 57.6 & 48.8 & 30.8 & 63.8 & 33.6 & 66.5 & 46.1 & 64.0 & 34.3 & 64.8 & 45.4 \\
+\rowcolor[rgb]{0.99,0.91,0.58}\textbf{GroundingDINO} & 89.4 & 30.2 & 89.6 & 24.8 & 91.0 & 25.2 & 86.5 & 33.5 & 93.1 & 29.7 & 81.6 & 28.6 \\
+\rowcolor[rgb]{0.99,0.91,0.58}\textbf{SAM3} & 97.8 & 35.6 & 95.4 & 27.0 & 91.4 & 26.6 & 94.0 & 33.0 & 95.4 & 21.7 & 85.6 & 26.0 \\
+\rowcolor{\methodcolor}\textbf{\model{}} & \textbf{99.4} & 39.2 & \textbf{97.4} & 42.0 & \textbf{96.4} & 43.2 & \textbf{94.4} & 52.1 & \textbf{97.7} & 50.9 & \textbf{89.8} & 35.2 \\
+
+\bottomrule
+\end{tabular}
+\end{threeparttable}
+}
+\end{table}

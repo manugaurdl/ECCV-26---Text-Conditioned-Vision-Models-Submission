@@ -1,57 +1,69 @@
-\section{Analysis of \model{}}
+\subsection{Analysis of \model{}}
 % \section{Ablations \YA{Rather Analysis of SteerViT (since replacing with different backbone is not ablation, neither is scaling} }
 \label{sec:ablations}
 
 We ablate the key architectural and training decisions in \model{} to isolate the contribution of each component.
-Unless stated otherwise, all experiments use DINOv2 ViT-B/14 as the frozen visual backbone and RoBERTa-Large as the text encoder, trained for 500k iterations on the full data mixture (\cref{sec:data}).
-\MT{what is the default CA gate value during inference. also, indicate if this is pre/post tanh}
-\MT{can add details from YA's point about batch size, iterations, resolution, GPU hours, etc. perhaps}
+Unless stated otherwise, all experiments use DINOv2 ViT-B/14 as the frozen visual backbone and RoBERTa-Large as the text encoder, trained at $336{\times}336$ resolution with batch size 12 for 500k iterations (${\sim}$96 H100 GPU-hours) on the full data mixture (\cref{sec:data}), using AdamW with a cosine schedule that warms up to $3{\times}10^{-4}$ over 5k steps, decays to $3{\times}10^{-5}$ by 40k steps, and remains constant thereafter.
+The default gate $\alpha_l = 1$.
+% \MT{what is the default CA gate value during inference. also, indicate if this is pre/post tanh}\JR{it is the learned one. If we do, then we just vary the learned weights by a certain factor} \MT{not true? then why does fig 1 star appear at $\alpha_l = 1$?}\JR{since a factor of 1.0 is essentially not doing any changes -> default setup. Only if for != 1.0 we change model behavior. }
 We evaluate on four metrics: fine-grained classification probe accuracy (FG-CLS), text steerability via CORE retrieval (\cref{subsec:cond_ret_exp}), semantic segmentation mIoU on ADE20k, and personalized object discrimination PR-AUC on PODS with descriptive text prompts (\cref{subsec:text_density_exp}).
-\MG{should we keep class, supercat?} 
-\MT{no, at least obj name / description}
+% \MG{should we keep class, supercat?} 
+% \MT{no, at least obj name / description}
+
 
 % ------------------------------------------------------------------
-\subsection{Architecture Design Choices}
+\paragraph{Architecture Choices.}\input{tables/arch_ablation_table}
 \label{subsec:arch_ablation}
 
-\cref{tab:arch_ablation} isolates the contribution of each architectural component by modifying one design choice at a time from the full \model{} configuration.
 
-\input{tables/arch_ablation_table}
-
-\subsubsection{Early vs.\ late fusion.}
-Our method interleaves gated cross-attention blocks within the ViT layers (early fusion).
-The alternative, late fusion, appends them after the final ViT layer adding text information to the ViT output features via the residual stream.
-\MT{why say residual stream? it's just the final features no?}
-Late fusion achieves comparable steerability (93.4) and better preserves FG-CLS (86.5 vs.\ 77.0),
-\MT{what do we train here? only adapter? then this looks pretty good to me! perhaps focus on differentiator that cannot do dense pred}
-but degrades performance on PODS by 10 points (45.3 vs.\ 55.3) when conditioning on descriptive text prompts.
-\MT{Early fusion also enables dense prediction tasks such as segmentation.}
-
-% This demonstrates that
-% Early fusion produces richer multimodal features: by conditioning intermediate layers, text reshapes how the ViT processes visual information rather than merely decorating the final representation. \MG{bleh}
-
-\subsubsection{Role of gating.}
-Each cross-attention block uses a zero-initialized tanh gate (\cref{eq:gated_ca}).
-Training starts as a frozen ViT at initialization and gradually incorporates text.
-Removing gating collapses both steerability (28.4, below the frozen baseline of 43.5) and FG-CLS (36.2), confirming that unconstrained cross-attention catastrophically interferes with frozen features.
-
-\subsubsection{Language projector.}
-A two-layer MLP projects RoBERTa embeddings into the ViT's feature space prior to cross-attention (\cref{sec:arch}).
-Replacing it with a linear projector degrades FG-CLS by 5.5 points and PODS by 3.8 points while steerability remains comparable (94.2 vs.\ 93.4).
-The MLP's additional expressivity aids representation alignment, allowing the cross-attention layers to focus on contextualizing visual features with text rather than bridging the modality gap.
-\MG{fair statement?} \MT{seems ok}
+% \cref{tab:arch_ablation} isolates the contribution of each architectural component by modifying one design choice at a time from the full \model{} configuration.
+\model{} has three design choices:
+early fusion of text within the ViT,
+tanh-gated CA layers, and
+MLP text projector.
+\cref{tab:arch_ablation} ablates each component.
 
 
-\subsubsection{Role of FFN.}
-Each gated cross-attention block includes a similarly gated feed-forward network applied after cross-attention (\cref{eq:gated_ca}).
-Removing FFN yields comparable steerability (95.9) and ADE20k (55.1) performance, with a modest drop on PODS (53.4 vs.\ 55.3).
-We retain FFN because it provides consistent gains on fine-grained discrimination; as shown in \cref{tab:cross_backbone}, this gap widens for backbone families with weaker self-supervised features. \MG{to do}
-\MT{this can probably be just moved to supplement}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\textit{Early vs.\ late fusion.}
+We interleave gated cross-attention within ViT layers (early fusion).  
+Late fusion (\cref{tab:arch_ablation}, row 3) adds text only after the final ViT layer.  
+While late fusion achieves similar steerability (93.4) and higher FG-CLS (86.5 vs.\ 77.0\JR{either this or the number in the table is incorrect}), it reduces PODS performance by 10 points\JR{potentially incorrect} (45.3 vs.\ 55.3\JR{same here}) with descriptive prompts.  
+With coarse supercategory prompts, the gap disappears, indicating early fusion is important for fine-grained vision–language modeling.
 
-\subsubsection{Layer Placement.}
-We insert gated cross-attention at every third ViT block starting from block 2 (blocks 2, 5, 8, 11 for ViT-B/14; \cref{sec:arch}).
-To understand which layers benefit most from text conditioning, we compare four alternative insertion patterns: early only (blocks 1, 3), early+mid (blocks 1, 3, 5, 7), mid+late (blocks 5, 7, 9), and late only (blocks 7, 9).
-\MT{this can probably be just moved to supplement}
+\textit{Role of gating.}
+Each cross-attention block uses a zero-initialized tanh gate (\cref{eq:gated_ca}), starting training from a frozen ViT and gradually incorporating text.  
+Removing gating (row 4) collapses steerability and FG-CLS by 15.1 and 52.8 points below our frozen baseline (row 1), showing that ungated cross-attention disrupts frozen features.
+
+\textit{Language projector.}
+A two-layer MLP projects RoBERTa embeddings to the ViT feature space (\cref{sec:arch}).  
+Replacing it with a linear projector (row 5) lowers FG-CLS by 5.5 and PODS by 3.8 points, indicating that the MLP better aligns modalities.
+
+% \paragraph{Early vs.\ late fusion.}
+% Our method interleaves gated cross-attention blocks within the ViT layers (early fusion).
+% The alternative, late fusion (row 3 of \cref{tab:arch_ablation}), appends them after the final ViT layer adding text information to the ViT output features.
+% Late fusion achieves comparable steerability (93.4) and better preserves FG-CLS (86.5 vs.\ 77.0),
+% % \MT{what do we train here? only adapter? then this looks pretty good to me! perhaps focus on differentiator that cannot do dense pred}
+% but degrades performance on PODS by 10 points (45.3 vs.\ 55.3) when conditioning on descriptive text prompts.
+% On PODS with coarse supercategory prompts, however, we find the gap between early and late fusion vanishes, indicating that early fusion is necessary for fine-grained vision-language modeling.
+
+
+% \paragraph{Role of gating.}
+% Each cross-attention block uses a zero-initialized tanh gate (\cref{eq:gated_ca}).
+% Training starts as a frozen ViT at initialization and gradually incorporates text.
+% Removing gating (row 4) collapses both steerability and FG-CLS by 28.4 and 52.8 points below the frozen baseline respectively. This confirms that unconstrained cross-attention catastrophically interferes with frozen features.
+
+% \paragraph{Language projector.}
+% A two-layer MLP projects RoBERTa embeddings into the ViT's feature space prior to cross-attention (\cref{sec:arch}).
+% Replacing it with a linear projector (row 5) degrades FG-CLS by 5.5 points and PODS by 3.8 points.
+% This illustrates that MLP's additional expressivity aids representation alignment, allowing the cross-attention layers to focus on contextualizing visual features with text rather than bridging the modality gap. \textbf{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% while steerability remains comparable (94.2 vs.\ 93.4).
+
+
+% \MT{this can probably be just moved to supplement}
 
 % TODO: insert results and interpretation once numbers are ready, e.g.:
 % Our default spread-out placement achieves the best PODS (XX.X),
@@ -59,19 +71,39 @@ To understand which layers benefit most from text conditioning, we compare four 
 % suggesting that text conditioning in early layers is necessary for reshaping
 % intermediate representations rather than merely modulating the final output.
 
+
+
+
 % ------------------------------------------------------------------
-\subsection{Training Signal}
-\label{subsec:training_signal}
+\paragraph{Generalization Across Pretrained Backbones.}
+\label{subsec:cross_backbone}
 
-Patch-level localization admits two natural supervision strategies: \textbf{pointing}, via a Gaussian heatmap centered on the bounding-box midpoint ($\sigma{=}1.1$), and \textbf{segmenting}, via the tokenized object mask used in our objective (\cref{sec:objective}).
-% TODO: add quantitative comparison once numbers are ready (e.g., PODS, steerability, or a pmass metric).
-% Placeholder: ``Switching from Gaussian to mask supervision improves PODS by X points and steerability by Y points.''
-The mask signal produces a notable emergent behavior: when multiple instances of the queried class appear in an image, the model activates on all matching regions simultaneously, despite training annotations labeling only one referent per sample.
-This arises because the mask target teaches the cross-attention layers to identify \textit{which tokens match the text} rather than \textit{where the most likely centre is}, thus any token whose content matches the query receives high activation regardless of instance count.
-The Gaussian-trained model, by contrast, collapses to a single peak, consistent with its unimodal supervision.
-We provide further discussion and qualitative examples of this emergence in \cref{app:training_signal}.
-\MT{numbers pending; can also go to supplement}
+\input{tables/cross_backbone_table}
 
+To validate that our approach generalizes beyond DINOv2, we apply \model{} to two additional ViTs: SigLIP~\cite{zhai2023_siglip}
+% (contrastive vision-language pretraining)
+and MAE~\cite{he2022mae}.
+% (masked autoencoding).
+\cref{tab:cross_backbone} compares vanilla, late fusion, and early fusion (\model{}) variants for each backbone.
+
+
+Early fusion consistently outperforms late fusion across all three ViT families.
+The advantage is most pronounced for MAE, where early fusion nearly doubles late-fusion steerability (62.6 vs.\ 35.5) and improves PODS by 5.3 points.
+For SigLIP, early fusion boosts steerability by 7.4 points (90.9\JR{table says 90.8} vs.\ 83.5) and PODS by 8.3 points (23.0 vs.\ 14.7).
+On MVTech anomaly detection, an out-of-distribution task absent from training, early fusion outperforms late fusion for every backbone, confirming that the richer multimodal representations from early fusion transfer better to novel domains.
+DINOv2 produces the strongest steerable representations overall, consistent with its richer self-supervised features; SigLIP and MAE both benefit from text conditioning but start from weaker baselines.
+In fact, we find that steering enriches MAE's visual features, as illustrated in \cref{fig:gate_factor}.
+\newline\newline
+We include detailed results for anomaly segmentation,
+results on other tasks for different backbones,
+impact of model sizes (ViT-S/B/L, RoBERTa-L/B),
+progression across training iterations, and
+impact of proxy training task (segmentation vs.\ Gaussian heatmap)
+in the supplementary material.
+
+ 
+
+\begin{comment}
 % ------------------------------------------------------------------
 \subsection{Training Duration}
 \label{subsec:training_duration}
@@ -84,32 +116,53 @@ and RefCOCOg from 58.8 to 71.5,
 even as steerability saturates by 300k iterations at 92.5\%.
 This pattern holds for both early and late fusion (late-fusion PODS: 39.1 at 300k vs.\ 45.3 at 500k), suggesting that longer training instills richer multimodal representations rather than merely teaching the model to route attention.
 We adopt 500k iterations for all final models.
+\end{comment}
+
+
+
+
+
+
+\begin{comment}
+% ------------------------------------------------------------------
+\subsection{Training Signal}
+\label{subsec:training_signal}
+
+% Patch-level localization admits two natural supervision strategies: \textbf{pointing}, via a Gaussian heatmap centered on the bounding-box midpoint ($\sigma{=}1.1$), and \textbf{segmenting}, via the tokenized object mask used in our objective (\cref{sec:objective}).
+% Segmentation-mask supervision outperforms the Gaussian alternative across all evaluation metrics (full comparison in \cref{app:training_signal}).
+% Beyond raw performance, the mask signal produces a notable emergent behavior: when multiple instances of the queried class appear in an image, the model activates on all matching regions simultaneously, despite training annotations labeling only one referent per sample.
+% This arises because the mask target teaches the cross-attention layers to identify \textit{which tokens match the text} rather than \textit{where the most likely centre is}, thus any token whose content matches the query receives high activation regardless of instance count.
+% The Gaussian-trained model, by contrast, collapses to a single peak, consistent with its unimodal supervision.
+% We provide further discussion and qualitative examples of this emergence in \cref{app:training_signal}.
+% \MT{numbers pending; can also go to supplement}
+
+Patch-level localization admits two supervision strategies: \textbf{pointing} 
+% (Gaussian heatmap at the bounding-box center, $\sigma{=}1.1$) 
+and \textbf{segmenting}
+% (tokenized object mask, \cref{sec:objective}).
+We find that segmentation-mask supervision, at the ViT feature map level,  outperforms pointing across all metrics.
+It also produces a striking emergent behavior: the mask-trained model localizes \emph{all} instances of a queried class simultaneously, despite training annotations labeling only a single referent per sample.
+This arises because the mask signal encourages
+% cross-attention layers 
+identifying \textit{which tokens match the text} rather than \textit{where the most likely centre is}.  
+We provide further discussion and qualitative examples in \cref{app:training_signal}.
+\end{comment}
+
+
+
+
+
 
 % ------------------------------------------------------------------
-\subsection{Generalization Across ViT Families}
-\label{subsec:cross_backbone}
-
-To validate that our approach generalizes beyond DINOv2, we apply \model{} to two additional ViT families: SigLIP~\cite{zhai2023_siglip} (contrastive vision-language pretraining) and MAE~\cite{he2022mae} (masked autoencoding).
-\cref{tab:cross_backbone} compares early and late fusion for each backbone.
-
-\input{tables/cross_backbone_table}
-
-Early fusion consistently outperforms late fusion across all three ViT families. \MG{TO DO}
-The advantage is most pronounced for MAE, where early fusion more than doubles late-fusion steerability (62.6 vs.\ 35.5) and improves PODS by 5.3 points.
-\MT{not double, not 72}
-For SigLIP, early fusion boosts steerability by 7.4 points (90.9 vs.\ 83.5) and PODS by 8.3 points (23.0 vs.\ 14.7).
-On MVTech anomaly detection, an out-of-distribution task absent from training, early fusion outperforms late fusion for every backbone, confirming that the richer multimodal representations from early fusion transfer better to novel domains.
-DINOv2 produces the strongest steerable representations overall, consistent with its richer self-supervised features; SigLIP and MAE both benefit from text conditioning but start from weaker baselines.
-
-% ------------------------------------------------------------------
+\begin{comment}
 \subsection{Scaling}
 \label{subsec:scaling}
 
-\input{tables/scaling_table}
+% \input{tables/scaling_table}
 \MT{TODO numbers. TODO description; do it briefly, perhaps as a single paragraph.}
 
 
-\subsubsection{Visual Encoder.}
+\paragraph{Visual Encoder.}
 We scale the frozen DINOv2 backbone from ViT-S through ViT-B to ViT-L, and the SigLIP backbone from ViT-B to ViT-L.
 % TODO: fill in numbers and interpretation once results are ready. Expected framing:
 % Larger backbones improve both FG-CLS and steerability, with DINOv2 ViT-L achieving
@@ -118,10 +171,12 @@ We scale the frozen DINOv2 backbone from ViT-S through ViT-B to ViT-L, and the S
 % This confirms that \model{}'s cross-attention layers benefit from richer
 % frozen features without requiring retraining of the adapter.
 
-\subsubsection{Text Encoder.}
-We compare RoBERTa-Base (125M parameters) against RoBERTa-Large (355M) as the frozen text encoder.
+\paragraph{Text Encoder.}
+We compare RoBERTa-Base (125M parameters) against RoBERTa-Large (355M) as the frozen text encoder. \MG{move to supplementary; don't have results for different roberta baseline}
 % TODO: fill in numbers and interpretation once results are ready. Expected framing:
 % RoBERTa-Large improves PODS by X points, consistent with the finding
 % that downstream text understanding benefits from richer language representations.
 % Steerability is comparable, suggesting that the basic ability to route attention
 % does not require a large language model.
+\end{comment}
+
