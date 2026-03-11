@@ -3,32 +3,31 @@
 \footnotesize
 \setlength{\tabcolsep}{6pt}
 \begin{threeparttable}
-\caption{%
-Scaling the visual and text encoders.
-Larger ViT backbones and a larger text encoder both improve downstream performance, with the strongest gains on tasks requiring fine-grained text understanding (PODS).
+\caption{
+Ablating the role of having gated FFN blocks along with the gated cross attention blocks for different model families (DinoV2 and MAE) on performance across different benchmarks. 
 }
-\label{tab:scaling}
+\label{tab:ffn_ablation}
 \begin{tabular}{@{}l l
                 S[table-format=2.1]
                 S[table-format=2.1]
                 S[table-format=2.1]
                 S[table-format=2.1]@{}}
 \toprule
-{Component} & {Scale}
+{Backbone} & {Scale}
   & {FG-CLS $\uparrow$}
   & {Steer.\ $\uparrow$}
   & {ADE20k $\uparrow$}
   & {PODS $\uparrow$} \\
 \midrule
-DINOv2 & ViT-S & {XX.X} & {XX.X} & {50.4} & {45.5} \\
+DINOv2 & \xmark & {XX.X} & {XX.X} & {50.4} & {45.5} \\
 \rowcolor{\methodcolor}
-DINOv2 & \textbf{ViT-B (ours)} & \textbf{76.2} & \textbf{94.9} & \textbf{55.1} & \textbf{50.6} \\
-DINOv2 & ViT-L & {XX.X} & {XX.X} & {XX.X} & {XX.X} \\
+DINOv2 & \cmark & \textbf{76.2} & \textbf{94.9} & \textbf{55.1} & \textbf{50.6} \\
 \addlinespace
 % SigLIP & ViT-B & 64.3 & 90.9 & {--} & 23.0 \\
 % SigLIP & ViT-L & {XX.X} & {XX.X} & {XX.X} & {XX.X} \\
 % \addlinespace
-RoBERTa & Base & {\color{red}{72.7}} & {94.8} & {54.8} &  {\color{red} {27}} \\
+MAE & \xmark & {\color{red}{72.7}} & {94.8} & {54.8} &  {\color{red} {27}} \\
+MAE & \cmark & {\color{red}{72.7}} & {94.8} & {54.8} &  {\color{red} {27}} \\
 \rowcolor{\methodcolor}
 % RoBERTa & \textbf{Large (ours)} & \textbf{77.0} & \textbf{93.4} & \textbf{55.3} & \textbf{55.3} \\
 \bottomrule
