@@ -213,13 +213,11 @@ We compare RoBERTa-Base (125M parameters) against RoBERTa-Large (355M) as the fr
 
 \subsubsection{Role of FFN.}
 \input{tables/ffn_ablation}
-% MAE results really good without FFN. FFN doesn't really add much in dino as well (2% in PODs)
-
 % Each gated cross-attention block includes a similarly gated feed-forward network applied after cross-attention (\cref{eq:gated_ca}).
-% Removing FFN yields comparable steerability (95.9)
-% % and ADE20k (55.1)
-% performance, with a modest drop on PODS (53.4 vs.\ 55.3).
-% We retain FFN because it provides consistent gains on fine-grained discrimination; as shown in \cref{tab:cross_backbone}, this gap widens for backbone families with weaker self-supervised features (MAE scores 14.2)
+
+% Fine-grained visual classification (FG-CLS) is comparable for both with and without FFN  - slightly better performance with FFN for DinoV2, slightly worse with FFN for MAE
+% Interestingly, steerability performance on CORE is consistently better without FFN (11.2 points better for MAE without FFN vs with FFN)
+% Performance on OOD domains is substantially better without FFN - 15.1 points improvement for MAE and 4 points improvement for DinoV2
 
 
 
