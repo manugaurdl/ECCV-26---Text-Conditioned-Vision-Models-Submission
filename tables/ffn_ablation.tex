@@ -1,34 +1,75 @@
-\begin{table}[h!]
+\begin{table}[ht]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{6pt}
 \begin{threeparttable}
 \caption{%
 \textbf{Role of FFN.}
-Removing the gated feed-forward network from each cross-attention block yields comparable or better performance.
-The effect is most pronounced on MAE, where adding FFN degrades steerability and zero-shot transfer substantially.
+Removing the gated FFN from each cross-attention block yields comparable or better performance.
+The effect is prominent on MAE, where adding FFN degrades steerability and zero-shot transfer substantially.
 }
 \label{tab:ffn_ablation}
-\begin{tabular}{@{}l c
+\begin{tabular}{l c
                 S[table-format=2.1]
                 S[table-format=2.1]
-                S[table-format=2.1]@{}}
+                S[table-format=2.1]
+                S[table-format=2.1]
+                S[table-format=2.1]}
 \toprule
-{Backbone} & {FFN}
+\rowcolor{white}{Backbone} & {FFN}
   & {FG-CLS $\uparrow$}
-  & {Steer.\ $\uparrow$}
+  & {ADE20k $\uparrow$}
+  & {CORE\ $\uparrow$}
+  & {PODS.\ $\uparrow$}
   & {MVTech $\uparrow$} \\
 \midrule
-DINOv2 & \xmark & 76.2 & \textbf{95.0} & \textbf{82.9} \\
-DINOv2 & \cmark & \textbf{77.0} & 93.4 & 78.9 \\
+\rowcolor{\methodcolor}DINOv2 & \xmark & 76.2 & 55.1 & \textbf{95.0} & 50.6 & \textbf{82.9} \\
+DINOv2 & \cmark & \textbf{77.0} & \textbf{55.3} & 93.4 & \textbf{55.3} & 78.9 \\
 \addlinespace
-MAE & \xmark & \textbf{54.3} & \textbf{62.6} & \textbf{74.1} \\
-MAE & \cmark & 52.6 & 51.4 & 59.0 \\
+\rowcolor{\methodcolor}MAE & \xmark & \textbf{54.3} & \textbf{37.8} & \textbf{62.6} & \textbf{14.2} & \textbf{74.1} \\
+MAE & \cmark & 52.6 & 34.9 & 51.4 & 13.0 & 59.0 \\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}[flushleft]\footnotesize
-\item All models use ViT-B with RoBERTa-Large, trained for 500k iterations on the full data mixture.
-MVTech PRO measures zero-shot anomaly segmentation, a domain absent from training.
-\end{tablenotes}
+% \begin{tablenotes}[flushleft]\footnotesize
+% % \item All models use ViT-B with RoBERTa-Large, trained for 500k iterations on the full data mixture.
+% % MVTech PRO measures zero-shot anomaly segmentation, a domain absent from training.
+% \end{tablenotes}
 \end{threeparttable}
 \end{table}
+
+
+% \begin{table}[ht]
+% \centering
+% \footnotesize
+% \setlength{\tabcolsep}{6pt}
+% \begin{threeparttable}
+% \caption{%
+% \textbf{Role of FFN.}
+% Removing the gated FFN from each cross-attention block yields comparable or better performance.
+% The effect is prominent on MAE, where adding FFN degrades steerability and zero-shot transfer substantially.
+% }
+% \label{tab:ffn_ablation}
+% \begin{tabular}{l c
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]}
+% \toprule
+% \rowcolor{white}{Backbone} & {FFN}
+%   & {FG-CLS $\uparrow$}
+%   & {ADE20k $\uparrow$}
+%   & {Steer.\ $\uparrow$}
+%   & {MVTech $\uparrow$} \\
+% \midrule
+% \rowcolor{\methodcolor}DINOv2 & \xmark & 76.2 & \textbf{95.0} & \textbf{82.9} \\
+% DINOv2 & \cmark & \textbf{77.0} & 93.4 & 78.9 \\
+% \addlinespace
+% \rowcolor{\methodcolor}MAE & \xmark & \textbf{54.3} & \textbf{62.6} & \textbf{74.1} \\
+% MAE & \cmark & 52.6 & 51.4 & 59.0 \\
+% \bottomrule
+% \end{tabular}
+% % \begin{tablenotes}[flushleft]\footnotesize
+% % % \item All models use ViT-B with RoBERTa-Large, trained for 500k iterations on the full data mixture.
+% % % MVTech PRO measures zero-shot anomaly segmentation, a domain absent from training.
+% % \end{tablenotes}
+% \end{threeparttable}
+% \end{table}
