@@ -1,4 +1,5 @@
 .DS_Store/
+ablation.png
 main.bbl
 context/
 %OUTDIR%/
@@ -12,3 +13,5 @@ main.synctex.gz
 main.synctex(busy)
 main.fls
 main.out
+.DS_Store
+paper_draft.pdf

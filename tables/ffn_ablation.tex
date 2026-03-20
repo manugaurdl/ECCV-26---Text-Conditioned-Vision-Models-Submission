@@ -1,41 +1,75 @@
-\begin{table}[h!]
+\begin{table}[ht]
 \centering
 \footnotesize
 \setlength{\tabcolsep}{6pt}
 \begin{threeparttable}
-\caption{
-Ablating the role of having gated FFN blocks along with the gated cross attention blocks for different model families (DinoV2 and MAE) on performance across different benchmarks. 
+\caption{%
+\textbf{Role of the FFN.}
+Removing the gated FFN from each cross-attention block yields comparable or better performance.
+The effect is prominent for MAE, where adding FFN degrades steerability and zero-shot transfer substantially.
 }
 \label{tab:ffn_ablation}
-\begin{tabular}{@{}l l
+\begin{tabular}{l c
                 S[table-format=2.1]
                 S[table-format=2.1]
                 S[table-format=2.1]
-                S[table-format=2.1]@{}}
+                S[table-format=2.1]
+                S[table-format=2.1]}
 \toprule
-{Backbone} & {Scale}
+\rowcolor{white}{Backbone} & {FFN}
   & {FG-CLS $\uparrow$}
-  & {Steer.\ $\uparrow$}
   & {ADE20k $\uparrow$}
-  & {PODS $\uparrow$} \\
+  & {CORE\ $\uparrow$}
+  & {PODS\ $\uparrow$}
+  & {MVTec $\uparrow$} \\
 \midrule
-DINOv2 & \xmark & {XX.X} & {XX.X} & {50.4} & {45.5} \\
-\rowcolor{\methodcolor}
-DINOv2 & \cmark & \textbf{76.2} & \textbf{94.9} & \textbf{55.1} & \textbf{50.6} \\
+\rowcolor{\methodcolor}DINOv2 & \xmark & 76.2 & 55.1 & \textbf{95.0} & 50.6 & \textbf{82.9} \\
+DINOv2 & \cmark & \textbf{77.0} & \textbf{55.3} & 93.4 & \textbf{55.3} & 78.9 \\
 \addlinespace
-% SigLIP & ViT-B & 64.3 & 90.9 & {--} & 23.0 \\
-% SigLIP & ViT-L & {XX.X} & {XX.X} & {XX.X} & {XX.X} \\
-% \addlinespace
-MAE & \xmark & {\color{red}{72.7}} & {94.8} & {54.8} &  {\color{red} {27}} \\
-MAE & \cmark & {\color{red}{72.7}} & {94.8} & {54.8} &  {\color{red} {27}} \\
-\rowcolor{\methodcolor}
-% RoBERTa & \textbf{Large (ours)} & \textbf{77.0} & \textbf{93.4} & \textbf{55.3} & \textbf{55.3} \\
+\rowcolor{\methodcolor}MAE & \xmark & \textbf{54.3} & \textbf{37.8} & \textbf{62.6} & \textbf{14.2} & \textbf{74.1} \\
+MAE & \cmark & 52.6 & 34.9 & 51.4 & 13.0 & 59.0 \\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}[flushleft]\footnotesize
-\item ViT scaling keeps RoBERTa-Large fixed; RoBERTa scaling keeps DINOv2 ViT-B fixed.
-All models trained for 500k iterations on the full data mixture.
-PODS uses descriptive text prompts.
-\end{tablenotes}
+% \begin{tablenotes}[flushleft]\footnotesize
+% % \item All models use ViT-B with RoBERTa-Large, trained for 500k iterations on the full data mixture.
+% % MVTech PRO measures zero-shot anomaly segmentation, a domain absent from training.
+% \end{tablenotes}
 \end{threeparttable}
 \end{table}
+
+
+% \begin{table}[ht]
+% \centering
+% \footnotesize
+% \setlength{\tabcolsep}{6pt}
+% \begin{threeparttable}
+% \caption{%
+% \textbf{Role of FFN.}
+% Removing the gated FFN from each cross-attention block yields comparable or better performance.
+% The effect is prominent on MAE, where adding FFN degrades steerability and zero-shot transfer substantially.
+% }
+% \label{tab:ffn_ablation}
+% \begin{tabular}{l c
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]}
+% \toprule
+% \rowcolor{white}{Backbone} & {FFN}
+%   & {FG-CLS $\uparrow$}
+%   & {ADE20k $\uparrow$}
+%   & {Steer.\ $\uparrow$}
+%   & {MVTech $\uparrow$} \\
+% \midrule
+% \rowcolor{\methodcolor}DINOv2 & \xmark & 76.2 & \textbf{95.0} & \textbf{82.9} \\
+% DINOv2 & \cmark & \textbf{77.0} & 93.4 & 78.9 \\
+% \addlinespace
+% \rowcolor{\methodcolor}MAE & \xmark & \textbf{54.3} & \textbf{62.6} & \textbf{74.1} \\
+% MAE & \cmark & 52.6 & 51.4 & 59.0 \\
+% \bottomrule
+% \end{tabular}
+% % \begin{tablenotes}[flushleft]\footnotesize
+% % % \item All models use ViT-B with RoBERTa-Large, trained for 500k iterations on the full data mixture.
+% % % MVTech PRO measures zero-shot anomaly segmentation, a domain absent from training.
+% % \end{tablenotes}
+% \end{threeparttable}
+% \end{table}

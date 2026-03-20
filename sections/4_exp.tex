@@ -232,7 +232,7 @@ The \texttt{[CLS]}-to-patch attention scores in the final self-attention block h
 \centering
 \includegraphics[width=0.8\textwidth]{figures/mosaic_attention_maps.png}
 \vspace{-3mm}
-\caption{\textbf{Text enables targeted attention.} Attention maps on a four-image mosaic demonstrate that text conditioning with \colorbox{\methodcolor}{\model{}} redirects self-attention to the queried concept whereas \colorbox{visionblue}{DINOv2} attends to the most prominent objects. % (``pony'' and ``airplane'').
+\caption{\textbf{Text enables targeted attention.} Attention maps on a four-image mosaic demonstrate that text conditioning with \colorbox{\methodcolor}{\model{}} redirects self-attention to the queried concept whereas \colorbox{visionblue}{DINOv2} attends to the most prominent objects. Note that the \texttt{[CLS]}-token of \model{} was not directly optimized for targeted attention and remains frozen in its original state. 
 }
 \vspace{-4mm}
 \label{fig:steer_attn}
@@ -427,10 +427,10 @@ We evaluate this aspect in a hard out-of-distribution setting: industrial anomal
 
 % \paragraph{Anomaly Segmentation: Extreme OOD Domain Transfer.}
 In addition to generalizing to novel tasks like PODS (shown in Sec.~\ref{subsec:text_density_exp}), we showcase \model{}'s adaptability by performing anomaly segmentation (AS) on the MVTec~AD~\cite{bergmann_mvtech} dataset containing industrial images never seen during training with the goal of identifying subtle manufacturing defects or irregularities.
-Here, models are conditioned on an ensemble of ten prompts in the style of \texttt{``the anomaly in the <object>''} and anomaly maps are derived by upsampling the heatmap produced by the learned linear segmentation head. We compare to other segmentation models as well as dedicated AS methods using \textit{Per-Region-Overlap} (PRO).
+Here, models are conditioned on prompts in the style of \texttt{``the anomaly in the <object>''} and anomaly maps are derived by upsampling the heatmaps produced by the learned linear segmentation head. We compare \model{} to other segmentation models and dedicated AS methods using \textit{Per-Region-Overlap} (PRO).
 More details and extended results are provided in the supplement. 
 As shown in Table~\ref{tab:anomaly_detection_small}, \model{} again matches dedicated zero-shot methods despite the extreme OOD setting.
-These results reinforce the pattern of text-driven steering unlocking capabilities already present in the frozen ViT and transferring them to domains beyond the training distribution. \MG{ensemble part unclear + add examples}
+These results reinforce the pattern of text-driven steering unlocking capabilities already present in the frozen ViT and transferring them to domains beyond the training distribution. \MG{add examples}
 
 % Having established OOD generalization on natural images, we escalate the domain gap to industrial anomaly detection. It requires localizing subtle manufacturing defects in factory inspection imagery.
 % , a domain entirely absent from our training data.

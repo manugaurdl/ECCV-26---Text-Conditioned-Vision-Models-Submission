@@ -22,11 +22,17 @@
 \definecolor{lightyellow}{rgb}{1, 0.95, 0.85}
 
 
+\newcommand{\grayrow}{\rowfont{\color{gray!70}}}
+\newcommand{\blackrow}{\rowfont{}} % reset
+\newcommand{\methodcolor}[0]{green!20}
+\newcommand{\model}{SteerViT}
+
 
 \definecolor{visionblue}{RGB}{214,233,253}
 \definecolor{textred}{RGB}{248,214,201}
 \definecolor{dullYellow}{RGB}{250, 240, 190}
-\sethlcolor{dullYellow}
+% \sethlcolor{dullYellow}
+\sethlcolor{\methodcolor}
 \newcommand{\shade}[1]{\hl{#1}}
 
 
@@ -46,18 +52,14 @@
 \usepackage{booktabs}
 
 \newcommand{\sceneheader}[1]{\textbf{#1}\par\vspace{1pt}}
-\newcommand{\promptitem}[2]{\scriptsize\textbf{#1:} {\scriptsize\ttfamily ``#2''}\par}
+\newcommand{\promptitem}[2]{\scriptsize\scriptsize\ttfamily ``#2''\par}
+% \newcommand{\promptitem}[2]{\scriptsize\textbf{#1:} {\scriptsize\ttfamily ``#2''}\par}
 
 \sisetup{
   detect-weight=true,
   detect-inline-weight=math,
   table-number-alignment=center
 }
-
-\newcommand{\grayrow}{\rowfont{\color{gray!70}}}
-\newcommand{\blackrow}{\rowfont{}} % reset
-\newcommand{\methodcolor}[0]{green!20}
-\newcommand{\model}{SteerViT}
 
 \newcommand{\MG}[1]{{\color{blue} {\bf MG:} #1}}
 \newcommand{\JR}[1]{{\color{brown} {\bf JR:} #1}}
