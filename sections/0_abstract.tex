@@ -8,7 +8,7 @@ Multimodal LLMs can be tailored to textual prompts, but the resulting representa
 To address this, we introduce
 % \MG{Steerable ViT?}
 \textbf{\model{}}, a framework that equips any ViT with the ability to steer both its global and local visual representations with natural language.
-While most multimodal models tend to late-fuse visual encoders with text features (e.g., CLIP), \model{} \textit{early}-fuses textual information into layers of the visual encoder using lightweight cross-attention.
+While most multimodal models tend to late-fuse visual encoders with text features (e.g., CLIP), \model{} \textit{early}-fuses textual information into layers of the visual encoder using lightweight cross-attention. 
 We demonstrate that our steerable visual features can focus on arbitrary objects in an image while preserving 
 % \MG{\sout{the ability to perform generic visual tasks}}
 the underlying representation quality, demonstrated by
@@ -24,11 +24,21 @@ on anomaly detection and personalized object discrimination, exhibiting zero-sho
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=1.0\linewidth]{figures/heatmaps_alt.pdf}
+\includegraphics[width=1.0\linewidth]{figures/figure1.pdf}
 \vspace{-6mm}
 \caption{
-\textbf{\model{} encourages self-attention routing to visual tokens corresponding to the text prompt.}
-For the same image, we show multiple attention heatmaps for different prompts resulting in steered visual representations.
+% \textbf{Text-conditioning vision steers local attention and global semantics.}
+% \textbf{\model{}: Language steers where vision looks and what it represents.} 
+% \textbf{Language steers where vision models look and what they represent.} 
+\textbf{Using language to steer visual representations.} 
+% \textbf{Steering where vision models look and what they represent via language.} 
+% \textbf{Language steers where vision looks and what it represents.}
+% We propose \model{}, which interleaves lightweight cross-attention blocks into a frozen ViT. % to early-fuse text into visual features.
+While {\setlength{\fboxsep}{2pt}\colorbox{gray!40}{DINOv2}} produces a query-agnostic representation dominated by the salient cat, 
+% \colorbox{\methodcolor}\model{} adds language understanding to the same ViT, redirecting attention to prompt-relevant regions and shifting the global embedding toward the queried concept.
+% Thus, prompts can steer the same \model{} model to represent different concepts in the same scene. 
+{\setlength{\fboxsep}{2pt}\colorbox{\methodcolor}\model{}} redirects attention to relevant regions and shifts the global embedding toward the queried concept.
+Thus, the same input can map to different concepts in the scene depending on the prompt.
 }
 \vspace{-12mm}
 \label{fig:heatmap_teaser}

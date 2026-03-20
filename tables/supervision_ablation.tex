@@ -4,7 +4,8 @@
 \setlength{\tabcolsep}{6pt}
 \begin{threeparttable}
 \caption{%
-\textbf{Role of supervision signal.} Pointing to bounding box centers (Gaussian Centroid) during training is inferior to the segmentation objective across all downstream evaluations. Segmentation provides \model{} with better semantic awareness and tighter multimodal coupling, as evidenced by the much improved fine-grained language understanding on PODS. 
+\textbf{Role of supervision signal.} 
+Segmentation is a superior training objective compared to pointing (Gaussian kernel at bounding box center) across all downstream evaluations, resulting in improved visual and multimodal understanding.
 }
 \label{tab:supervision}
 \begin{tabular}{@{} l
@@ -13,15 +14,15 @@
                 S[table-format=2.1]
                 S[table-format=2.1]@{}}
 \toprule
-{Supervision Signal}
+{Train Objective}
   & {FG-CLS $\uparrow$}
   & {ADE20k $\uparrow$}
   & {CORE\ $\uparrow$}
   & {PODS $\uparrow$} \\
 \midrule
-Gaussian Centroid & {61.8} & {49.8} & {94.3} & {37.6} \\
+Pointing & {61.8} & {49.8} & {94.3} & {37.6} \\
 \rowcolor{\methodcolor}
-Segmentation Mask & \textbf{76.2}  & \textbf{{55.1}} & \textbf{94.9} & \textbf{50.6} \\
+Segmentation & \textbf{76.2}  & \textbf{{55.1}} & \textbf{94.9} & \textbf{50.6} \\
 \rowcolor{\methodcolor}
 % 5 & RoBERTa & \textbf{Large (ours)} & \textbf{77.0} & \textbf{93.4} & \textbf{55.3} & \textbf{55.3} \\
 \bottomrule
@@ -34,3 +35,113 @@ Segmentation Mask & \textbf{76.2}  & \textbf{{55.1}} & \textbf{94.9} & \textbf{5
 % \end{tablenotes}
 \end{threeparttable}
 \end{table}
+
+
+
+
+% ------------------------ BCE LOSS --------------------
+% \begin{table}[t]
+% \centering
+% \footnotesize
+% \setlength{\tabcolsep}{6pt}
+% \begin{threeparttable}
+% \caption{%
+% \textbf{Role of supervision signal.} Segmentation
+% % to bounding box centers 
+% % (Gaussian Centroid)
+% % during training is inferior to the segmentation objective 
+% is a superior training objective compared to pointing
+% across all downstream evaluations,
+% % Segmentation 
+% % provides \model{} with 
+% resulting in improved visual 
+% % task performance
+% % better semantic awareness and tighter multimodal coupling,
+% and multimodal understanding.
+% % as evidenced by the much improved fine-grained language understanding on PODS. 
+% }
+% \label{tab:supervision}
+% \begin{tabular}{@{} l
+%                 l
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]@{}}
+% \toprule
+% {Task}
+%   & {Loss}
+%   & {FG-CLS $\uparrow$}
+%   & {ADE20k $\uparrow$}
+%   & {MVTech}
+%   & {CORE\ $\uparrow$}
+%   & {PODS $\uparrow$} \\
+% \midrule
+% Pointing & softCE & {61.8} & {49.8} & 77.6 & {94.3} & {37.6} \\
+% Segmentation & BCE & \textbf{82.3}  & \textbf{55.2} & 15.0 & 93.8 & 45.6 \\
+% \rowcolor{\methodcolor}
+% Segmentation & softCE & 76.2  & 55.1 & \textbf{82.9} & \textbf{94.9} & \textbf{50.6} \\
+% \rowcolor{\methodcolor}
+% % 5 & RoBERTa & \textbf{Large (ours)} & \textbf{77.0} & \textbf{93.4} & \textbf{55.3} & \textbf{55.3} \\
+% \bottomrule
+% \end{tabular}
+% % \begin{tablenotes}[flushleft]\footnotesize
+% % \scriptsize
+% % \item ViT scaling w/ RoBERTa-Large; RoBERTa scaling w/ DINOv2 ViT-B.
+% % % All models trained for 500k iterations on the full data mixture.
+% % % PODS uses descriptive text prompts.
+% % \end{tablenotes}
+% \end{threeparttable}
+% \end{table}\begin{table}[t]
+% \centering
+% \footnotesize
+% \setlength{\tabcolsep}{6pt}
+% \begin{threeparttable}
+% \caption{%
+% \textbf{Role of supervision signal.} Segmentation
+% % to bounding box centers 
+% % (Gaussian Centroid)
+% % during training is inferior to the segmentation objective 
+% is a superior training objective compared to pointing
+% across all downstream evaluations,
+% % Segmentation 
+% % provides \model{} with 
+% resulting in improved visual 
+% % task performance
+% % better semantic awareness and tighter multimodal coupling,
+% and multimodal understanding.
+% % as evidenced by the much improved fine-grained language understanding on PODS. 
+% }
+% \label{tab:supervision}
+% \begin{tabular}{@{} l
+%                 l
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]
+%                 S[table-format=2.1]@{}}
+% \toprule
+% {Task}
+%   & {Loss}
+%   & {FG-CLS $\uparrow$}
+%   & {ADE20k $\uparrow$}
+%   & {MVTech}
+%   & {CORE\ $\uparrow$}
+%   & {PODS $\uparrow$} \\
+% \midrule
+% Pointing & softCE & {61.8} & {49.8} & 77.6 & {94.3} & {37.6} \\
+% Segmentation & BCE & \textbf{82.3}  & \textbf{55.2} & 15.0 & 93.8 & 45.6 \\
+% \rowcolor{\methodcolor}
+% Segmentation & softCE & 76.2  & 55.1 & \textbf{82.9} & \textbf{94.9} & \textbf{50.6} \\
+% \rowcolor{\methodcolor}
+% % 5 & RoBERTa & \textbf{Large (ours)} & \textbf{77.0} & \textbf{93.4} & \textbf{55.3} & \textbf{55.3} \\
+% \bottomrule
+% \end{tabular}
+% % \begin{tablenotes}[flushleft]\footnotesize
+% % \scriptsize
+% % \item ViT scaling w/ RoBERTa-Large; RoBERTa scaling w/ DINOv2 ViT-B.
+% % % All models trained for 500k iterations on the full data mixture.
+% % % PODS uses descriptive text prompts.
+% % \end{tablenotes}
+% \end{threeparttable}
+% \end{table}

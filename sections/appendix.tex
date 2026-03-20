@@ -1,8 +1,22 @@
 \newpage
 \appendix
-\section{Appendix}
 
-\subsection{Parallels to Human Image Perception}
+\begin{center}
+\textbf{\Large{Steerable Vision Transformers}} \\
+\textsc{Supplementary Material}
+\end{center}
+
+
+In the following, we discuss the inspiration of our work from human image perception (\cref{apdx:motivation}),
+additional qualitative and quantitative results on CORE, MOSAIC, and anomaly segmentation (\cref{apdx:more_results}),
+additional ablations (\cref{apdx:more_ablations}), and
+details of experimental setup such as training dataset and feature extraction process (\cref{apdx:exp_details}).
+
+
+
+
+\section{Motivation: Parallels to Human Image Perception}
+\label{apdx:motivation}
 
 % Instead, inspired by neuroscience evidence that suggests that humans fundamentally parse images differently based on the textual prompt.
 % % For those
@@ -13,9 +27,13 @@
 
 \begin{figure}[h!]
 \centering
-\includegraphics[width=0.8\textwidth]{figures/gaze_cogsci.png}
+\includegraphics[width=0.4\textwidth]{figures/gaze_clean.png}
+\caption{\textbf{Human gaze patterns.} Eye movement patterns differ when observers are instructed to locate a person looking out of a window in the tower (green) versus when no contextual instruction is provided (red). Adapted from~\cite{buswell1935people}.
+}
 \label{fig:gaze_cogsci}
+\vspace{-4mm}
 \end{figure}
+
 
 % \subsection{Caption Length and Localization}
 
@@ -26,59 +44,19 @@
 % \label{fig:ref4_token_len}
 % \end{figure}
 
-\subsection{Training Data}
-\label{apdx:data}
+\section{Additional Qualitative and Quantitative Results}
+\label{apdx:more_results}
 
-We train on a mixture of referential segmentation and grounding datasets to ensure diversity in both visual domains and textual expression styles:
-
-\noindent \textbf{RefCOCO, RefCOCO+, RefCOCOg}~\cite{kazemzadeh2014referitgame, yu2016refcocog} provide referring expressions grounded in COCO images.
-RefCOCO+ excludes spatial language (e.g., ``left of''), encouraging the model to rely on appearance cues, while RefCOCOg contains longer, more descriptive expressions that exercise the model's capacity for detailed textual understanding.
-
-\noindent \textbf{Visual Genome}~\cite{krishna2017visual} (preprocessed following MDeTr~\cite{kamath2021mdetr}) contributes region descriptions paired with bounding boxes across densely annotated scenes.
-These descriptions span a broader vocabulary and more complex spatial relationships than the RefCOCO family, increasing the diversity of text conditioning signals.
-We use SAM2~\cite{ravi2024sam2} to convert bounding boxes to binary segmentation masks.
-
-\noindent \textbf{Mapillary Vistas}~\cite{neuhold2017mapillary} provides street-level imagery with fine-grained panoptic annotations.
-Including this dataset expands the visual domain beyond COCO
-% \MT{\st{COCO's indoor and object-centric bias toward outdoor, driving, and urban scenes,}} 
-improving out-of-distribution generalization.
-We adopt Describe Anything's~\cite{lian2025describeanything} synthetic
-referential expressions along with accompanying segmentation masks.
-
-Overall, our combined dataset of 133k unique images and 1.91M image-text pairs exposes the model to varied scene complexities (from single objects to dense urban panoramas), expression lengths (from two-word labels to multi-sentence descriptions), and visual domains (indoor, outdoor, street-level), encouraging robust steered representations. \MG{Would be nice to have a sunburst chart}
-
-\subsection{Baseline Feature Extraction}
-\label{app:baseline_extraction}
-
-This section provides more details of how we extract text-conditioned (or text-fused) visual features from each baseline family evaluated in \cref{sec:experiments}.
-For all baselines, global feature aggregation follows the convention of the base method (e.g., \texttt{[CLS]} token or mean pooling) unless stated otherwise.
-
-\paragraph{Cross-Modal Encoders (CLIP \cite{radford2021_clip}, SigLIP \cite{zhai2023_siglip}).}
-Images and language inputs are embedded independently by their respective encoders.
-We combine the resulting visual and text feature vectors via element-wise addition (late fusion), the simplest form of post-hoc multimodal interaction.
-
-\paragraph{MLLMs (InternVL3~\cite{zhu2025internvl3}, Qwen3-VL~\cite{Qwen3-VL}).}
-% \sout{We concatenate the user prompt~$X_t$ followed by the image~$X_v$ into a single multimodal input sequence and extract the last-language-block hidden states at image-token positions as dense, text-contextualized visual features. For global features, we adapt the last-token pooling approach of E5-V~\cite{Jiang2024E5VUE}: a postfix is appended instructing the model to summarize the image contents in one word while focusing on the aspect specified by~$X_t$.}
-We feed the text prompt~$X_t$ and image~$X_v$ as a single multimodal input sequence and extract hidden states from the last LLM layer.
-For dense features, we take the hidden state at each image-token position.
-For global features, following E5-V~\cite{Jiang2024E5VUE}, we append an instruction asking the model to summarize the image in one word in addition to the initial text prompt $X_t$
-% while focusing on the visual concept specified in ~$X_t$ 
-and extract the last-token hidden state.
-
-\paragraph{Open-Vocabulary Localization (SAM3~\cite{carion2025_sam3}, GroundingDINO\cite{liu2023groundingdino}).}
-We ignore decoder outputs and extract intermediate features from the multimodal encoder.
-For SAM3, we take the patch-level outputs of the \textit{Fusion Encoder} and apply mean pooling to obtain global image features.
-For GroundingDINO, we use the outputs of the cross-modal \textit{Feature Enhancer} layer.
-Because features are available at multiple spatial scales, we first interpolate them to a common intermediate resolution before averaging to obtain dense pseudo-patch-level features which are optionally mean-pooled to yield global image-level embeddings.
+This section provides further details about the employed evaluations, provides qualitative examples and reports additional results. 
 
 \subsection{Assessing Representational Steerability with CORE}
 \label{apdx:CORE}
 
-For our \textit{COnditional REtrieval} (CORE) benchmark introduced in \cref{subsec:cond_ret_exp}, we select select 100 base images for each of six scenes (three indoor and three outdoor environments) from SUN397~\cite{Herranz2016_SUNdataset}. For each image, we create five separate instances by inpainting a scene-relevant background object (for e.g., an ``olive oil bottle'' in ``kitchen'') using FLUX.2 [dev] \cite{flux-2-2025}, resulting in a total of 500 images per scene. 
-The selected scenes, the corresponding give objects added to each scene and the text-conditioning prompts are reported in Table~\ref{tab:core_object_prompts}.
+For our \textit{COnditional REtrieval} (CORE) benchmark introduced in \cref{subsec:cond_ret_exp}, we select 100 base images for each of six scenes (three indoor and three outdoor environments) from SUN397~\cite{Herranz2016_SUNdataset}. For each image, we create five separate instances by inpainting a scene-relevant background object (for e.g., an ``olive oil bottle'' in ``kitchen'') using FLUX.2 [dev] \cite{flux-2-2025}, resulting in a total of 500 images per scene. 
+The selected scenes, the corresponding five objects added to each scene and the text-conditioning prompts are reported in Table~\ref{tab:core_object_prompts}.
 
 % With each image as a query and the remaining rest 499 as the retrieval database, we frame the problem as one-vs-all image retrieval. This evaluates the visual encoder's ability to steer its global representation using the text prompt in order to retrieve the images comprising the objects specified in the prompt
-To test the ability of visual encoders to steer their global representations in order to retrieve images relevant to a specified prompts, we frame the problem as one-vs-all retrieval. 
+To test the ability of visual encoders to steer their global representations in order to retrieve images relevant to a specified prompt, we frame the problem as one-vs-all retrieval. 
 For each image $X_v^\Omega$ containing object $\Omega$, the objective is to retrieve other instances including $\Omega$. Here, all images (query and gallery instances) are encoded with the same object-specific prompt $X_t^\Omega$ (cf.~\cref{tab:core_object_prompts}). For a given query image, the gallery is comprised of 495 variations with non-identical base images of the same scene. The steerability score is calculated using top-1 retrieval accuracy and averaged across query images and object types.
 
 \input{tables/core_prompts}
@@ -91,17 +69,17 @@ This confirms that text actively shapes the visual representation in \model{}, u
 
 Figure \ref{apdx_fig:core_qual} illustrates qualitatively how retrievals differ for a prompt-agnostic generic vision model like DINOv2 (blue) and our prompt-aware \model{} (green) for one indoor and outdoor scene each. 
 Whereas DINOv2 mostly encodes scene-level appearance and retrieves visually similar images, \model{} focuses on the objects specified in the prompt and retrieves images containing those.
-Despite many of the inpainted object being very small and in the background, the global features incorporate them sufficiently to allow for highly accurate retrievals. 
+Despite many of the inpainted objects being very small and in the background, the global features incorporate them sufficiently to allow for highly accurate retrievals. 
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=1.0\textwidth]{figures/core_qualitative_retrieval_comparison_kitchen_anot.pdf}
 \includegraphics[width=1.0\textwidth]{figures/core_qualitative_retrieval_comparison_park_anot.pdf}
-\vspace{-3mm}
-\caption{\textbf{Qualitative image retrieval results on CORE benchmark.} White circles highlights the inpainted object. \colorbox{OliveGreen}{\color{white}Green}/\colorbox{BrickRed}{\color{white}red} border indicates whether image contains queried object of interest. \colorbox{visionblue}{DINOv2} retrieves images mostly based on global scene similarity with little regard for the object of interest. In contrast, \colorbox{\methodcolor}{\model{}} effectively considers the task prompt and ranks images with the correct object highest, despite their innocuous background placement and comparably small size.
+\vspace{-5mm}
+\caption{\textbf{Qualitative image retrieval results on CORE benchmark.} White circles highlight the inpainted object. \colorbox{OliveGreen}{\color{white}Green}/\colorbox{BrickRed}{\color{white}red} border indicates whether image contains queried object of interest. \colorbox{visionblue}{DINOv2} retrieves images mostly based on global scene similarity with little regard for the object of interest. In contrast, \colorbox{\methodcolor}{\model{}} effectively considers the task prompt and ranks images with the correct object highest, despite their innocuous background placement and comparably small size.
 % Despite the innocuous background placement of objects and their comparably small size, our text-conditioned model robustly identifies other occurrences.
 }
-\vspace{-4mm}
+\vspace{-2mm}
 \label{apdx_fig:core_qual}
 \end{figure}
 
@@ -134,22 +112,6 @@ We discuss this emergent multi-localization property of our method in ~\cref{app
 \label{apdx_fig:steer_attn}
 \end{figure}
 
-\subsection{Assessing Visual Representation Quality}
-
-In addition to the steerability of vision representations, we also evaluate their quality for common computer vision downstream tasks. 
-
-\noindent\textbf{Fine-grained image classification} tests whether representations capture sufficient details to perform accurate categorization within specialized domains. Namely, we train a linear probe (300 epochs, LR: $1e^{-3}$, BS: 128) on frozen features extracted from the ImageWoof~\cite{Howard_Imagewoof_2019}, Waterbirds~\cite{Sagawa2020_waterbirds}, and StanfordCars~\cite{stanford_cars} datasets. 
-Here, prompt-aware models are conditioned on \texttt{``the dog''}, \texttt{``the bird''}, and \texttt{``the car''}, respectively. 
-
-\noindent\textbf{Binary object-of-interest segmentation} tests the semantic quality of patch-level features using the ADE20k~\cite{zhou2017scene} dataset.
-We apply the training-free OpenHummingBird~\cite{pariza2024hbird} evaluation methodology where patch-class pairs are precomputed for the training split and patch-wise segmentation is performed at inference via nearest-neighbor retrieval from the reference bank. Each class is evaluated separately (i.e., binary class/non-class segmentation objective) and features are conditioned on the object of interest's original class name (e.g., ``the chair''). 
-
-
-
-% \subsection{Gate Steering}
-% \JR{Additional gate steering results (>1.0) + (<0.0 -> emerging ignoring behavior)?}
-% \JR{Yuki: qualitative results may suffice}
-
 \subsection{Anomaly Segmentation}
 
 \begin{figure}[ht]
@@ -173,40 +135,107 @@ Performance of existing training- and adaptation-free AS baselines is reported a
 
 \model{} again matches dedicated methods on this extreme OOD setting.
 As shown in Table~\ref{tab:mvtec_visa}, \model{} reaches 79.8 PRO on MVTec~AD, substantially outperforming off-the-shelf segmentation-based approaches (SAM3 at 54.5, CLIPseg at 34.6) and closing much of the gap to specialist methods such as FADE (84.5).
-On VisA, \model{} surpasses FADE on $\text{ROC}_P$ (90.2 vs. 91.5) and ties at 79.3 PRO, indicating robust transfer to a harder, more diverse inspection setting.
-Qualitative examples of \model{}'s predictions on a subset of object types and defect categories are provided in Figure \ref{apdx_fig:anomaly_detection_examples}. Whereas the predicted heatmaps are especially accurate for texture-based inputs, the zero-shot setting makes it impossible to accurately predict certain defects (e.g., flipped metal nut), as no training on non-anomalous instances and no other visible defects (e.g., scratch) are present. 
+On VisA, \model{} surpasses FADE in $\text{ROC}_P$ (92.0 vs. 91.5) and ties at 79.3 PRO, indicating robust transfer to a harder, more diverse inspection setting.
+Qualitative examples of \model{}'s predictions on a subset of object types and defect categories are provided in \cref{apdx_fig:anomaly_detection_examples}.
+While the predicted heatmaps are especially accurate for texture-based inputs, the zero-shot setting makes it impossible to accurately predict certain defects (e.g., flipped metal nut), as no training on non-anomalous instances and no other visible defects (e.g., scratch) are present. 
 
-\subsection{Additional Analysis on Training Design Choices}
 
-In the following, we further analyze important design choices involved in the training of \model{}. To gauge model performance, we report the preservation of representation quality, as measured by fine-grained linear classification probes (FG-CLS) and binary object of interest segmentatino (ADE20k), using the previously introduced methodology. Models' steerability and textual understanding are assessed using the CORE and PODS benchmarks. 
+
+
+\section{Additional Analysis on Training Design Choices}
+\label{apdx:more_ablations}
+
+Below, we further analyze important design choices involved in the training of \model{}. To gauge model performance, we report the preservation of representation quality, as measured by fine-grained linear classification probes (FG-CLS) and binary object of interest segmentation (ADE20k), using the previously introduced methodology. Models' steerability and textual understanding are assessed using the CORE and PODS benchmarks. We also evaluate referential grounding on RefCOCOg by computing IoU between the predicted patch-level segmentation mask and the ground-truth mask.
+
+\subsection{Training Objective: Pointing vs.\ Segmenting}
+\label{app:training_signal}
+
+% The choice of patch-level supervision during training encode different inductive biases that shape what the model learns about localization and how well textual clues are incorporated.
+% As discussed in \cref{sec:ablations}, the choice of patch-level supervision signal---a Gaussian point heatmap versus a tokenized segmentation mask---encodes fundamentally different inductive biases that shape what the model learns about localization.
+Our goal is to instill language understanding into a frozen ViT via a simple, scalable proxy task.
+Referential localization serves this purpose: given a text prompt, the model must 
+% identify which spatial locations correspond to
+ground
+the described object.
+To avoid the complexity of a pixel-level decoder, we operate entirely in the ViT's $n \times n$ patch-token grid.
+
+% \paragraph{Inductive Bias Analysis.}
+% As some of the utilized training datasets only provide annotated bounding boxes, one method of generating dense supervision signals is to place a single peak at image patch corresponding to the center of the bounding box and to apply a 
+% % fixed blur 
+% gaussian kernel
+% ($\sigma{=}1.1$). This indicates the principal location of the referred object within the image and provides a
+% % small
+% smooth gradient towards the true center.
+% However, these Gaussian centroid heatmaps produce a target that is invariant to object shape and size, incentivizing the model to collapse its attention to a single spatial location and rewarding centered predictions over holistic region understanding. 
+% Alternatively, we generate pixel-level segmentation masks using SAM2~\cite{ravi2024sam2} conditioned on the ground-truth bounding boxes and interpolate them into a ViT's patch-wise grid.
+% This target, by contrast, distributes probability uniformly across all tokens that overlap the object of interest. This encourages region-aware token-level matching where the model must determine all tokens depicting the object rather than simply estimating the center location. 
+
+\paragraph{Pointing.}
+The simplest formulation assigns a hard target (1 at the center patch, 0 elsewhere), but we find this unstable to optimize in practice for both classification and regression.
+Instead, we pass a Gaussian kernel ($\sigma{=}1.1$) at the bounding-box center and train with soft cross-entropy, which provides a smooth gradient towards the object center.
+However, this target is invariant to object shape and size, collapsing supervision to a single spatial location.
+
+\paragraph{Segmenting.}
+Consequently, we generate segmentation masks using SAM2~\cite{ravi2024sam2} conditioned on ground-truth bounding boxes and project them onto the patch grid.
+Unlike pointing, this target activates all tokens overlapping the object, teaching content-matching: each patch must determine whether it depicts the described object, not merely how close it is to the center.
+
+\input{tables/supervision_ablation}
+
+% As \model{}'s training can primarily be regarded as a proxy task to distill language understanding into the ViT, both alternative supervision signals are permissible in principle. However, they evoke distinct model behaviors, resulting in notable differences in the downstream tasks of interest as shown in Table~\ref{tab:supervision}. Training on segmentation masks, despite their synthetic creation, results in consistent and significant gains across all downstream task. Especially on PODS where fine-grained language understanding is necessary, we see a 13 point improvement over a model trained with Gaussian centroids.%, making this form of supervision more amiable to 
+As shown in \cref{tab:supervision}, segmentation consistently outperforms pointing across all metrics.
+The largest gains appear on FG-CLS (+14.4) and PODS (+13.0): pointing teaches the model \textit{where} an object is, whereas segmentation also teaches \textit{what} the object looks like, producing features that better encode object extent and appearance.
+
+% The Gaussian heatmap places a single peak at the bounding-box centre and applies a fixed-width blur ($\sigma{=}1.1$), producing a unimodal target that is invariant to object size and shape.
+% This trains the model to collapse attention to a single spatial location, rewarding centre prediction over region understanding.
+% The segmentation-mask target, by contrast, distributes probability uniformly across all tokens that overlap the referent.
+% This teaches token-level region matching: the model must determine \emph{which} tokens belong to the object rather than simply \emph{where} its centre lies.
+
+% \paragraph{Emergent Multi-Instance Localization.}
+% Because the mask signal rewards activating every overlapping token, the cross-attention layers learn a content-matching function: given a text query, each visual token independently receives high activation if its content matches the description.
+% At inference, this generalizes to multiple instances---when four apples appear in a scene and the query is ``apple,'' all four regions activate simultaneously, even though training annotations label only a single referent per sample.
+% The Gaussian-trained model lacks this capability: its unimodal supervision explicitly discourages distributed activations, so it consistently highlights only one instance.
+% \MG{Results pending}
+% TODO: add qualitative figure showing multi-instance activation maps for mask vs. Gaussian models.
+% \begin{figure}[t]
+% \centering
+% \includegraphics[width=\linewidth]{figures/multi_instance_qual.pdf}
+% \caption{Multi-instance localization. Given the query ``apple,'' the mask-trained model (right) activates on all instances, while the Gaussian-trained model (left) collapses to a single peak.}
+% \label{fig:multi_instance}
+% \end{figure}
 
 % ------------------------------------------------------------------
-\subsubsection{Training Duration.}
+\subsection{Training Duration}
 \label{subsec:training_duration}
-\JR{add figure}
-\JR{update numbers}
-Steerability emerges rapidly: within 50k iterations, CORE accuracy reaches 93.6\%
+
+Steerability emerges rapidly: within 50k iterations of training, CORE accuracy reaches 93.6\%
 % 85.5 --> FFN compute hungry
 (vs.\ 43.5 for frozen DINOv2), 
-while FG-CLS degrades only modestly to 88.7 (vs.\ 89.2 for frozen DinoV2).
+while FG-CLS degrades only modestly to 88.7 (vs.\ 89.2 for frozen DINOv2).
 However, tasks that require deeper language understanding continue improving with longer training: between 50k and 450k iterations, 
 PODS improves from 48.1 to 54.6 
 % 35.0 to 55.3
 %(+58\%)
-and RefCOCOg from 63.5 to 69.5 
+and RefCOCOg from 63.5 to 69.5.
 % 58.8 to 71.5 --> FFN is compute hungry
 %(+25\%)
 % even as steerability saturates by 300k iterations at 92.5\%.
 This pattern holds for both early and late fusion (late-fusion PODS: 39.1 at 300k vs.\ 45.3 at 500k), suggesting that longer training instills richer multimodal representations rather than merely teaching the model to route attention.
-\MG{Fig. illustrates this...}
+% \MG{Fig. illustrates this...}x
 We adopt 500k iterations for all final models.
 
 % ----------------------------------------------------------------
-\subsubsection{Scaling.}
+\subsection{Scaling}
 \label{subsec:scaling}
 \input{tables/scaling_table}
 
-As shown in Table~\ref{tab:scaling}, scaling the vision backbone from ViT-S through ViT-B to ViT-L generally leads to improvements in both representational quality as well as textual understanding. In contrast, positive scaling behavior of similar magnitude cannot be observed with regards to the language encoder. Replacing RoBERTa-Large RoBERTa-Large (355M) with RoBERTa-Base (125M parameters) causes mostly modest performance drops and even improves overall performance on PODS. This demonstrates considerable robustness against the employed text backbone of the \model{} architecture. 
+As shown in Table~\ref{tab:scaling}, scaling the vision backbone from ViT-S through ViT-B to ViT-L generally leads to improvements in both representational quality as well as textual understanding. 
+% In contrast, positive scaling behavior of similar magnitude cannot be observed with regards to the language encoder. 
+Interestingly, scaling the text encoder from RoBERTa-Base (125M parameters) to  RoBERTa-Large (355M) also improves performance on visual tasks. 
+This suggests that rich embeddings of the larger text encoder add more semantic structure to the ViT's residual stream,
+% that doesn't perturb the ViT's residual stream as much
+resulting in improved scores on FG-CLS and ADE20k (row 4 vs row 5).
+The smaller text encoder however, improves performance on PODS by 3.3 points, suggesting better generalization to detailed, manually curated text prompts used at evaluation.
+% robustness against the employed text backbone of the \model{} architecture. 
 % \paragraph{Visual Encoder.}
 % We scale the frozen DINOv2 backbone from ViT-S through ViT-B to ViT-L.
 % TODO: fill in numbers and interpretation once results are ready. Expected framing:
@@ -226,7 +255,7 @@ As shown in Table~\ref{tab:scaling}, scaling the vision backbone from ViT-S thro
 
 % --------------------------------------------------------------------------------------------------------------------------------
 
-\subsubsection{Role of FFN.}
+\subsection{Role of FFN}
 
 \input{tables/ffn_ablation}
 % Each gated cross-attention block includes a similarly gated feed-forward network applied after cross-attention (\cref{eq:gated_ca}).
@@ -235,10 +264,92 @@ As shown in Table~\ref{tab:scaling}, scaling the vision backbone from ViT-S thro
 % Interestingly, steerability performance on CORE is consistently better without FFN (11.2 points better for MAE without FFN vs with FFN)
 % Performance on OOD domains is substantially better without FFN - 15.1 points improvement for MAE and 4 points improvement for DinoV2
 
-Each gated cross-attention block may optionally include a similarly gated feed-forward network (FFN).
-As shown in \cref{tab:ffn_ablation}, removing the FFN has little effect on the feature quality, but helps improves steerability and out-of-distribution transfer on MVTech AD.
-The gap is most pronounced for MAE, where inclusing a FFN degrades CORE by 11.2 points and MVTech PRO by 15.1 points (row 3 vs row 4)
-We therefore omit FFN in our final architecture.
+\model{} inverts the gated cross-attention formulation introduced by the Flamingo~\cite{alayrac2022flamingo} VLM. However, it forgoes secondary gated feed-forward networks (FFN) following the cross-attention operations in the original architecture. As shown in \cref{tab:ffn_ablation}, including the FFN brings little to no benefit in representation quality, while consistently hurting steerability and out-of-distribution transfer. The effect is especially pronounced for MAE, where adding the FFN reduces CORE by 11.2 points and MVTec PRO by 15.1 points (row 3 vs.\ row 4). At the same time, the FFN substantially increases the parameter count of the adapter, growing the cross-attention module from 21.2M additional parameters without a FFN to 35.4M with FFN (\mbox{+67\%}). Since the FFN is both expensive and empirically dispensable, we omit it in the final architecture.
+
+
+\section{Further Details on Experimental Setup}
+\label{apdx:exp_details}
+
+
+\subsection{Training Data}
+\label{apdx:data}
+
+We train on a mixture of referential segmentation and grounding datasets to ensure diversity in both visual domains and textual expression styles:
+
+
+
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\centering
+% \vspace{-10mm}
+\includegraphics[width=\linewidth]{figures/training_data_composition.pdf}
+% \vspace{-5mm}
+\caption{\textbf{Training data composition.} The inner ring shows unique images per source while the outer ring shows associated referring expressions. The mixture is intended to combine fine-grained object supervision, diverse referring expressions, and broad visual domain coverage.}
+% \vspace{-15mm}
+\label{fig:arch_training}
+\end{wrapfigure}
+
+\noindent \textbf{RefCOCO, RefCOCO+, RefCOCOg}~\cite{kazemzadeh2014referitgame, yu2016refcocog} provide referring expressions grounded in COCO images.
+RefCOCO+ excludes spatial language (e.g., ``left of''), encouraging the model to rely on appearance cues, while RefCOCOg contains longer, more descriptive expressions that exercise the model's capacity for detailed textual understanding.
+
+
+\noindent \textbf{LVIS}~\cite{gupta2019lvis} uses the same underlying COCO images but also considers fine-grained and long-tail object categories. 
+
+\noindent \textbf{Visual Genome}~\cite{krishna2017visual} (preprocessed following MDeTr~\cite{kamath2021mdetr}) contributes region descriptions paired with bounding boxes across densely annotated scenes.
+These descriptions span a broader vocabulary and more complex spatial relationships than the RefCOCO family, increasing the diversity of text conditioning signals.
+We use SAM2~\cite{ravi2024sam2} to convert bounding boxes to binary segmentation masks.
+
+\noindent \textbf{Mapillary Vistas}~\cite{neuhold2017mapillary} provides street-level imagery with fine-grained panoptic annotations.
+Including this dataset expands the visual domain beyond COCO,
+% \MT{\st{COCO's indoor and object-centric bias toward outdoor, driving, and urban scenes,}} 
+improving out-of-distribution generalization.
+We adopt Describe Anything's~\cite{lian2025describeanything} synthetic
+referential expressions along with accompanying segmentation masks.
+
+Overall, our combined dataset of 162k unique images and 2.28M image-text pairs exposes the model to varied scene complexities (from single objects to dense urban panoramas), expression lengths (from two-word labels to multi-sentence descriptions), and visual domains (indoor, outdoor, street-level), encouraging robust steered representations.
+
+\subsection{Baseline Feature Extraction}
+\label{app:baseline_extraction}
+
+This section provides more details on how we extract text-conditioned (or text-fused) visual features from each baseline family evaluated in \cref{sec:experiments}.
+For all baselines, global feature aggregation follows the convention of the base method (e.g., \texttt{[CLS]} token or mean pooling) unless stated otherwise.
+
+\paragraph{Cross-Modal Encoders (CLIP \cite{radford2021_clip}, SigLIP \cite{zhai2023_siglip}).}
+Images and language inputs are embedded independently by their respective encoders.
+We combine the resulting visual and text feature vectors via element-wise addition (late fusion), the simplest form of post-hoc multimodal interaction.
+
+\paragraph{MLLMs (InternVL3~\cite{zhu2025internvl3}, Qwen3-VL~\cite{Qwen3-VL}).}
+% \sout{We concatenate the user prompt~$X_t$ followed by the image~$X_v$ into a single multimodal input sequence and extract the last-language-block hidden states at image-token positions as dense, text-contextualized visual features. For global features, we adapt the last-token pooling approach of E5-V~\cite{Jiang2024E5VUE}: a postfix is appended instructing the model to summarize the image contents in one word while focusing on the aspect specified by~$X_t$.}
+We feed the text prompt~$X_t$ and image~$X_v$ as a single multimodal input sequence and extract hidden states from the last LLM layer.
+For dense features, we take the hidden state at each image-token position.
+For global features, following E5-V~\cite{Jiang2024E5VUE}, we append an instruction asking the model to summarize the image in one word in addition to the initial text prompt $X_t$
+% while focusing on the visual concept specified in ~$X_t$ 
+and extract the last-token hidden state.
+
+\paragraph{Open-Vocabulary Localization (SAM3~\cite{carion2025_sam3}, GroundingDINO\cite{liu2023groundingdino}).}
+We ignore decoder outputs and extract intermediate features from the multimodal encoder.
+For SAM3, we take the patch-level outputs of the \textit{Fusion Encoder} and apply mean pooling to obtain global image features.
+For GroundingDINO, we use the outputs of the cross-modal \textit{Feature Enhancer} layer.
+Because features are available at multiple spatial scales, we first interpolate them to a common intermediate resolution before averaging to obtain dense pseudo-patch-level features which are optionally mean-pooled to yield global image-level embeddings.
+
+
+\subsection{Assessing Visual Representation Quality}
+
+In addition to the steerability of vision representations, we also evaluate their quality for common computer vision downstream tasks. 
+
+\noindent\textbf{Fine-grained image classification} tests whether representations capture sufficient details to perform accurate categorization within specialized domains. Namely, we train a linear probe (300 epochs, LR: $1e^{-3}$, BS: 128) on frozen features extracted from the ImageWoof~\cite{Howard_Imagewoof_2019}, Waterbirds~\cite{Sagawa2020_waterbirds}, and StanfordCars~\cite{stanford_cars} datasets. 
+Here, prompt-aware models are conditioned on \texttt{``the dog''}, \texttt{``the bird''}, and \texttt{``the car''}, respectively. 
+
+\noindent\textbf{Binary object-of-interest segmentation} tests the semantic quality of patch-level features using the ADE20k~\cite{zhou2017scene} dataset.
+We apply the training-free OpenHummingBird~\cite{pariza2024hbird} evaluation methodology where patch-class pairs are precomputed for the training split and patch-wise segmentation is performed at inference via nearest-neighbor retrieval from the reference bank. Each class is evaluated separately (i.e., binary class/non-class segmentation objective) and features are conditioned on the object of interest's original class name (e.g., \texttt{``the chair''}). 
+
+
+
+% \subsection{Gate Steering}
+% \JR{Additional gate steering results (>1.0) + (<0.0 -> emerging ignoring behavior)?}
+% \JR{Yuki: qualitative results may suffice}
+
+
 
 % \subsubsection{Layer Placement.}
 % We insert gated cross-attention at every third ViT block starting from block 2 (blocks 2, 5, 8, 11 for ViT-B/14; \cref{sec:arch}).
@@ -247,37 +358,3 @@ We therefore omit FFN in our final architecture.
 
 % --------------------------------------------------------------------------------------------------------------------------------
 
-\subsection{Training Signal: Pointing vs.\ Segmenting}
-\label{app:training_signal}
-
-The choice of patch-level supervision during training encode different inductive biases that shape what the model learns about localization and how well textual clues are incorporated.
-% As discussed in \cref{sec:ablations}, the choice of patch-level supervision signal---a Gaussian point heatmap versus a tokenized segmentation mask---encodes fundamentally different inductive biases that shape what the model learns about localization.
-
-% \paragraph{Inductive Bias Analysis.}
-As some of the utilized training datasets only provide annotated bounding boxes, one method of generating dense supervision signals is to place a single peak at image patch corresponding to the center of the bounding box and to apply a fixed blur ($\sigma{=}1.1$). This indicates the principal location of the referred object within the image and provides a small smooth gradient towards the true center.
-These Gaussian centroid heatmaps produce a target that is invariant to object size and shape, training the model to collapse attention to a single spatial location and rewarding centered predictions over holistic region understanding. 
-Alternatively, we generate pixel-level segmentation masks using SAM2~\cite{ravi2024sam2} conditioned on the ground-truth bounding boxes and interpolate them into a patch-wise grid. 
-This target, by contrast, distributes probability uniformly across all tokens that overlap the object of interest. This encourages region-aware token-level matching where the model must determine all tokens depicting the object rather than simply estimating the center location. 
-
-\input{tables/supervision_ablation}
-
-As \model{}'s training can primarily be regarded as a proxy task to distill language understanding into the ViT, both alternative supervision signals are permissible in principle. However, they evoke distinct model behaviors, resulting in notable differences in the downstream tasks of interest as shown in Table~\ref{tab:supervision}. Training on segmentation masks, despite their synthetic creation, results in consistent and significant gains across all downstream task. Especially on PODS where fine-grained language understanding is necessary, we see a 13 point improvement over a model trained with Gaussian centroids.%, making this form of supervision more amiable to 
-
-
-% The Gaussian heatmap places a single peak at the bounding-box centre and applies a fixed-width blur ($\sigma{=}1.1$), producing a unimodal target that is invariant to object size and shape.
-% This trains the model to collapse attention to a single spatial location, rewarding centre prediction over region understanding.
-% The segmentation-mask target, by contrast, distributes probability uniformly across all tokens that overlap the referent.
-% This teaches token-level region matching: the model must determine \emph{which} tokens belong to the object rather than simply \emph{where} its centre lies.
-
-% \paragraph{Emergent Multi-Instance Localization.}
-% Because the mask signal rewards activating every overlapping token, the cross-attention layers learn a content-matching function: given a text query, each visual token independently receives high activation if its content matches the description.
-% At inference, this generalizes to multiple instances---when four apples appear in a scene and the query is ``apple,'' all four regions activate simultaneously, even though training annotations label only a single referent per sample.
-% The Gaussian-trained model lacks this capability: its unimodal supervision explicitly discourages distributed activations, so it consistently highlights only one instance.
-% \MG{Results pending}
-% TODO: add qualitative figure showing multi-instance activation maps for mask vs. Gaussian models.
-% \begin{figure}[t]
-% \centering
-% \includegraphics[width=\linewidth]{figures/multi_instance_qual.pdf}
-% \caption{Multi-instance localization. Given the query ``apple,'' the mask-trained model (right) activates on all instances, while the Gaussian-trained model (left) collapses to a single peak.}
-% \label{fig:multi_instance}
-% \end{figure}

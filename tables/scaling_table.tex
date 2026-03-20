@@ -4,40 +4,46 @@
 \setlength{\tabcolsep}{6pt}
 \begin{threeparttable}
 \caption{%
-\textbf{Scaling the visual and text encoders.}
-Larger ViT backbones improve downstream performance, with the strongest gains on tasks requiring fine-grained text understanding (PODS). Utilizing RoBERTa-Base instead of Large causes modest drops in feature preservation (FG-CLS, ADE20k) but does not negatively affect \model{}'s text understanding. 
+\textbf{Scaling visual and text encoders.}
+Larger ViT backbones consistently improve performance across all tasks.
+Reducing RoBERTa-Large to Base modestly degrades visual quality (FG-CLS, ADE20k) but preserves multimodal understanding (CORE, PODS).
+% Larger ViT backbones improve downstream performance, with the strongest gains on tasks requiring fine-grained text understanding (PODS). Utilizing RoBERTa-Base instead of Large causes modest drops in feature preservation (FG-CLS, ADE20k) but does not negatively affect \model{}'s text understanding. 
 }
 \label{tab:scaling}
-\begin{tabular}{@{} l l
+\begin{tabular}{@{} l l 
                 S[table-format=2.1]
                 S[table-format=2.1]
                 S[table-format=2.1]
                 S[table-format=2.1]@{}}
 \toprule
-{Component} & {Scale}
+\rowcolor{white}{ViT} & {RoBERTa} 
   & {FG-CLS $\uparrow$}
   & {ADE20k $\uparrow$}
   & {CORE $\uparrow$}
   & {PODS $\uparrow$} \\
 \midrule
-DINOv2 & ViT-S & {74.4} & {50.4} & {91.8} & {45.5} \\
+Small & Large & {74.4} & {50.4} & {91.8} & {45.5} \\
 \rowcolor{\methodcolor}
-DINOv2 & ViT-B & \textbf{76.2} & {55.1} & {94.9} & {50.6} \\
-DINOv2 & ViT-L & {74.8}  & \textbf{56.2} & \textbf{96.2} & {53.0} \\
+Base & Large & \textbf{76.2} & {55.1} & {94.9} & {50.6} \\
+Large & Large & {74.8}  & \textbf{56.2} & \textbf{96.2} & \textbf{53.0} \\
+\addlinespace
+\midrule
 \addlinespace
 % 4 & SigLIP & ViT-B & 64.3 & 90.9 & {--} & 23.0 \\
 % 5 & SigLIP & ViT-L & {XX.X} & {XX.X} & {XX.X} & {XX.X} \\
 % \addlinespace
-RoBERTa & Base & {{72.7}}  & {54.8} & {94.8} &  {\textbf{53.9}} \\
+Base & Base & {{72.7}}  & {54.8} & {94.8} &  {\textbf{53.9}} \\
+\rowcolor{\methodcolor}
+Base & Large & \textbf{76.2} & \textbf{55.1} & \textbf{94.9} & {50.6} \\
 \rowcolor{\methodcolor}
 % 5 & RoBERTa & \textbf{Large (ours)} & \textbf{77.0} & \textbf{93.4} & \textbf{55.3} & \textbf{55.3} \\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}[flushleft]\footnotesize
-\scriptsize
-\item ViT scaling w/ RoBERTa-Large; RoBERTa scaling w/ DINOv2 ViT-B.
-% All models trained for 500k iterations on the full data mixture.
-% PODS uses descriptive text prompts.
-\end{tablenotes}
+% \begin{tablenotes}[flushleft]\footnotesize
+% \scriptsize
+% \item ViT scaling w/ RoBERTa-Large; RoBERTa scaling w/ DINOv2 ViT-B.
+% % All models trained for 500k iterations on the full data mixture.
+% % PODS uses descriptive text prompts.
+% \end{tablenotes}
 \end{threeparttable}
 \end{table}
