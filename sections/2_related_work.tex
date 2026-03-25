@@ -4,13 +4,13 @@
 
 
 \paragraph{Visual representation families.}
-We summarize popular approaches against our desiderata in \cref{tab:method_comparison} while their architectures are compared in \cref{fig:arch_comparison}.
+We summarize popular approaches against our desiderata in \cref{tab:method_comparison} and compare their architectures in \cref{fig:arch_comparison}.
 % \cref{tab:method_comparison} summarizes how existing approaches match up against our desiderata, and \cref{fig:arch_comparison} contrasts their architectures.
-Unimodal self-supervised encoders (DINOv2~\cite{dinov2}, MAE~\cite{he2022mae}) learn rich visual features but are entirely query-agnostic.
+Unimodal self-supervised encoders (DINOv2~\cite{dinov2}, MAE~\cite{he2022mae}) learn rich visual features but are inherently query-agnostic.
 Cross-modal encoders (CLIP~\cite{radford2021_clip}, SigLIP~\cite{zhai2023_siglip}, CoCoOp~\cite{zhou2022_cocoop}) use text to provide training supervision; the visual encoder still cannot be steered with text.
 % Open-vocabulary localization models (SAM3~\cite{carion2025_sam3}, GroundingDINO~\cite{liu2023groundingdino}) accept text queries but produce task-specific features that sacrifice downstream transfer quality.
-MLLMs come closest to satisfying all three desiderata: they achieve early vision-language fusion (within the LLM) and moderate steerability.
-However, they condition language on vision, the resulting representations are in language (LLM) space, and require billions of parameters.
+MLLMs come closest to satisfying all three desiderata: they achieve early vision-language fusion \JR{is early fusion something you "achieve"? It's more of an explicit design choice} (within the LLM) and moderate steerability.
+However, they condition language on vision \JR{vision tokens can also attend to language tokens in the MLLM architectures we used}, the resulting representations are in language (LLM) space, and require billions of parameters.
 \model{} inverts this paradigm: we condition vision on language, add only ${\sim}$20M trainable parameters to a frozen ViT, while yielding stronger visual features (\cref{fig:teaser}).
 % Refer Table 1; don't reiterate intro; maybe tl;dr of differences? 
 % % unimodal

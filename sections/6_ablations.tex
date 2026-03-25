@@ -4,9 +4,9 @@
 
 We ablate the key architectural and training decisions in \model{} to isolate the contribution of each component.
 Unless stated otherwise, all experiments use DINOv2 ViT-B/14 as the frozen visual backbone and RoBERTa-Large as the text encoder, trained at $336{\times}336$ resolution with batch size 12 for 500k iterations (${\sim}$96 H100 GPU-hours) on the full data mixture (\cref{sec:data}), using AdamW with a cosine schedule that warms up to $3{\times}10^{-4}$ over 5k steps, decays to $3{\times}10^{-5}$ by 40k steps, and remains constant thereafter.
-The default gate $\alpha_l = 1$.
+The default gate $\alpha_l = 1$\JR{shouldn't the initial gate value be 0?}.
 % \MT{what is the default CA gate value during inference. also, indicate if this is pre/post tanh}\JR{it is the learned one. If we do, then we just vary the learned weights by a certain factor} \MT{not true? then why does fig 1 star appear at $\alpha_l = 1$?}\JR{since a factor of 1.0 is essentially not doing any changes -> default setup. Only if for != 1.0 we change model behavior. }
-We evaluate on four metrics: fine-grained classification probe accuracy (FG-CLS), text steerability via CORE retrieval (\cref{subsec:cond_ret_exp}), semantic segmentation mIoU on ADE20k, and personalized object discrimination PR-AUC on PODS with descriptive text prompts (\cref{subsec:text_density_exp}).
+We evaluate on four metrics: fine-grained classification probe accuracy (FG-CLS; \cref{subsec:pareto}), text steerability via CORE retrieval (\cref{subsec:cond_ret_exp}), and personalized object discrimination PR-AUC on PODS with descriptive text prompts (\cref{subsec:text_density_exp}).
 % \MG{should we keep class, supercat?} 
 % \MT{no, at least obj name / description}
 
@@ -17,7 +17,7 @@ We evaluate on four metrics: fine-grained classification probe accuracy (FG-CLS)
 
 
 % \cref{tab:arch_ablation} isolates the contribution of each architectural component by modifying one design choice at a time from the full \model{} configuration.
-\model{} has three design choices:
+\model{} has three design choices \JR{there are many more design choices -> maybe ``principal design choices''; perhaps ``dimensions/components'' is better than choices}:
 early fusion of text within the ViT,
 tanh-gated CA layers, and
 MLP text projector.
@@ -90,9 +90,9 @@ and MAE~\cite{he2022mae}.
 Early fusion consistently outperforms late fusion across all three ViT families.
 The advantage is most pronounced for MAE, where early fusion nearly doubles late-fusion steerability (62.6 vs.\ 35.5) and improves PODS by 5.3 points.
 For SigLIP, early fusion boosts steerability by 7.4 points (90.9\JR{table says 90.8} vs.\ 83.5) and PODS by 8.3 points (23.0 vs.\ 14.7).
-On MVTech anomaly detection, an out-of-distribution task absent from training, early fusion outperforms late fusion for every backbone, confirming that the richer multimodal representations from early fusion transfer better to novel domains.
+On MVTech anomaly segmentation, an out-of-distribution task absent from training, early fusion outperforms late fusion for every backbone, confirming that the richer multimodal representations from early fusion transfer better to novel domains.
 DINOv2 produces the strongest steerable representations overall, consistent with its richer self-supervised features; SigLIP and MAE both benefit from text conditioning but start from weaker baselines.
-In fact, we find that steering enriches MAE's visual features, as illustrated in \cref{fig:gate_factor}.
+In fact, we find that steering enriches \JR{vague} MAE's visual features, as illustrated in \cref{fig:gate_factor}.
 \newline\newline
 We include detailed results for anomaly segmentation,
 results on other tasks for different backbones,

@@ -2,19 +2,29 @@
 
 \begin{abstract}
 Pretrained Vision Transformers (ViTs) such as DINOv2 and MAE provide generic image features that can be applied to a variety of downstream tasks such as retrieval, classification, and segmentation.  
-However, such representations tend to focus on the most prominent object in the image, and so, are difficult to adapt to other visual concepts.
+However, such representations tend to focus on the most prominent object in the image, 
+% and so, are difficult to adapt to other visual concepts.
+\MG{and cannot be steered toward specific visual concepts of interest.}
 % \MG{\sout{Multimodal models such as CLIP  and MLLMs}} 
-Multimodal LLMs can be tailored to textual prompts, but the resulting representations tend to be language-centric and lose their effectiveness for generic visual tasks.
+Multimodal LLMs can be 
+tailored to \MG{guided with?} textual prompts,
+% \MG{can be steered with natural language,}
+but the resulting representations tend to be language-centric and lose their effectiveness for generic visual tasks.
 To address this, we introduce
 % \MG{Steerable ViT?}
-\textbf{\model{}}, a framework that equips any ViT with the ability to steer both its global and local visual representations with natural language.
-While most multimodal models tend to late-fuse visual encoders with text features (e.g., CLIP), \model{} \textit{early}-fuses textual information into layers of the visual encoder using lightweight cross-attention. 
-We demonstrate that our steerable visual features can focus on arbitrary objects in an image while preserving 
-% \MG{\sout{the ability to perform generic visual tasks}}
-the underlying representation quality, demonstrated by
-fine-grained retrieval, classification, and segmentation performance.
-% \MT{fine-grained retrieval is not generic visual task?}
-\model{} also matches or outperforms dedicated approaches
+% \textbf{\model{}}, a framework 
+\textit{Steerable Visual Representations}, a new class of visual representations, whose global and local features can be steered with natural language.
+% While most multimodal models tend to late-fuse visual encoders with text features (e.g., CLIP), \model{} \textit{early}-fuses textual information into layers of the visual encoder using lightweight cross-attention. 
+\MG{While most vision-language models (e.g., CLIP) fuse text with visual features after encoding (\textit{late} fusion), we inject text directly into the layers of the visual encoder (\textit{early} fusion) via lightweight cross-attention. 
+}
+% We demonstrate that our steerable visual features can focus on arbitrary objects in an image while preserving 
+% % \MG{\sout{the ability to perform generic visual tasks}}
+% the underlying representation quality, demonstrated by
+% fine-grained retrieval, classification, and segmentation performance.
+\MG{We introduce \sout{fine-grained image retrieval and segmentation} benchmarks for measuring \textit{representational steerability}, and demonstrate that our steerable visual features can focus on arbitrary objects in an image while preserving the underlying representation quality.\textbf{}}
+\sout{\model{}}
+\MG{Our method} 
+also matches or outperforms dedicated approaches
 % \MG{\sout{on zero-shot}}
 on anomaly detection and personalized object discrimination, exhibiting zero-shot generalization to out-of-distribution domains without task-specific training.
 \vspace{-2mm}
@@ -30,15 +40,21 @@ on anomaly detection and personalized object discrimination, exhibiting zero-sho
 % \textbf{Text-conditioning vision steers local attention and global semantics.}
 % \textbf{\model{}: Language steers where vision looks and what it represents.} 
 % \textbf{Language steers where vision models look and what they represent.} 
-\textbf{Using language to steer visual representations.} 
+% \textbf{Using language to steer visual representations.} 
+\MG{\textbf{Steering visual representations with language.}}
 % \textbf{Steering where vision models look and what they represent via language.} 
 % \textbf{Language steers where vision looks and what it represents.}
 % We propose \model{}, which interleaves lightweight cross-attention blocks into a frozen ViT. % to early-fuse text into visual features.
-While {\setlength{\fboxsep}{2pt}\colorbox{gray!40}{DINOv2}} produces a query-agnostic representation dominated by the salient cat, 
+While 
+{\setlength{\fboxsep}{2pt}\colorbox{gray!40}{DINOv2}} 
+\MG{primarily encodes the salient object, producing a ``cat'' representation,}
+% produces a query-agnostic representation dominated by the salient cat, 
 % \colorbox{\methodcolor}\model{} adds language understanding to the same ViT, redirecting attention to prompt-relevant regions and shifting the global embedding toward the queried concept.
 % Thus, prompts can steer the same \model{} model to represent different concepts in the same scene. 
-{\setlength{\fboxsep}{2pt}\colorbox{\methodcolor}\model{}} redirects attention to relevant regions and shifts the global embedding toward the queried concept.
-Thus, the same input can map to different concepts in the scene depending on the prompt.
+{\setlength{\fboxsep}{2pt}\colorbox{\methodcolor}\model{}}
+% redirects attention to relevant regions and shifts the global embedding toward the queried concept.
+can be steered with text to shift its attention (a) and global feature semantics (b) towards the queried visual concept.
+\sout{Thus, the same input can map to different concepts in the scene depending on the prompt.}
 }
 \vspace{-12mm}
 \label{fig:heatmap_teaser}

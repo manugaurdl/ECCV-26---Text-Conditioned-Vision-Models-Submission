@@ -35,7 +35,7 @@
 \vspace{-5mm}
 \caption{\textbf{Steering any ViT using text conditioning.}
 Our method adds lightweight vision-to-language cross-attention layers within pretrained ViT blocks and applies a patch-level segmentation proxy objective to fuse prompt cues into patch tokens.
-We train with 1.91M image-text pairs composed from referential object localization datasets.
+We train with 2.28M image-text pairs composed from referential object localization datasets.
 % \YA{great job! maybe all RoBERTa-"L"? or "M"? and also add somewhere "pretrained ViT"? }
 }
 \vspace{-15mm}
@@ -64,7 +64,7 @@ As illustrated in \cref{fig:arch_training}, our \model{} consists of four compon
 
 \colorbox{visionblue}{\textbf{A. Visual encoder.}}
 For an image $X_v \in \mathbb{R}^{H \times W \times 3}$, a ViT produces a sequence of $N$ patch tokens $Z_v \in \mathbb{R}^{N \times d_v}$ and optionally a  \texttt{[CLS]} token ($d_v$ is the embedding dimension).
-All original ViT parameters remain frozen throughout training; new capacity enters exclusively through the interleaved cross-attention layers described below.
+All original ViT parameters remain frozen throughout training and new capacity results exclusively through the interleaved cross-attention layers described below.
 While most experiments adopt DINOv2 ViT-B/14~\cite{dinov2} as our backbone, we show that our approach also improves steerability of SigLIP and MAE.
 
 
@@ -74,8 +74,8 @@ We adopt a frozen, pretrained text encoder (RoBERTa-Large~\cite{liu2019roberta})
 % We $\ell_2$-normalize these embeddings before passing them to the multimodal adapter.
 
 \colorbox{textred}{\textbf{C. Multimodal adapter.}}
-Each text embedding $Z_t^i$ is $\ell_2$-normalized and fed through a trainable two-layer MLP that projects the sequence into visual-aligned embedding space, $H_t \in \mathbb{R}^{L \times d_v}$.
-We add learnable positional encoding to $H_t$ to preserve token order before injecting them into the ViT through the gated cross-attention mechanism. \JR{According to the code we don't add an extra pos-enc.}
+Each text embedding $Z_t^i$ is $\ell_2$-normalized and fed through a trainable two-layer MLP that projects the sequence into a visual-aligned embedding space $H_t \in \mathbb{R}^{L \times d_v}$.
+% We add learnable positional encoding to $H_t$ to preserve token order before injecting them into the ViT through the gated cross-attention mechanism. \JR{According to the code we don't add an extra pos-enc.}
 % \YA{I think it wouldn't hurt to describe the steps you're doing with math.. including actually the L2 normalisation earlier etc. }
 
 
@@ -120,7 +120,7 @@ Thus, $\alpha_\ell$ can move away from zero during optimization, gradually activ
 
 \subsection{Training Objective}
 \label{sec:objective}
-In order to encourage the vision encoder to leverage and incorporate language clues, we design a pretext task requiring consideration of the prompt to be solved. We select referential segmentation for this purpose, where, given an image $X_v$ and a prompt $X_t$ referring to a target object, the model predicts which patches correspond to the referred object.
+In order to encourage the vision encoder to leverage and incorporate language clues, we design a pretext task requiring consideration of the prompt to be solved. We select referential segmentation for this purpose, where, given an image $X_v$ and a prompt $X_t$ referring to a target object or entity, the model predicts which patches correspond to the referred region.
 
 
 The ground-truth $y_i$ is the fraction of foreground pixels of a pixel-wise binary segmentation mask that is patchified to match the ViT's $n \times n$ grid.
@@ -150,4 +150,4 @@ Performing segmentation on a patch- rather than pixel-level reduces the training
 \subsection{Training Data}
 \label{sec:data}
 We train on a mixture of referential segmentation and grounding datasets spanning diverse visual domains and textual expression styles, comprising 162k unique images and 2.28M image-text pairs. Specifically, we use RefCOCO/+/g~\cite{kazemzadeh2014referitgame, yu2016refcocog}, Visual Genome~\cite{krishna2017visual}, and Mapillary Vistas~\cite{neuhold2017mapillary}.
-Details are in the supplement.
+Details are in supplement \ref{apdx:data}.
