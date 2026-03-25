@@ -249,24 +249,33 @@ Instead, with Steerable Visual Representations (\model{}), we \textit{invert} th
 % To do so, we introduce \model{}.
 Specifically, we \textit{early-fuse language} in frozen ViT layers by interleaving trainable cross-attention layers~\cite{alayrac2022flamingo} that attend to text prompts.
 This allows the \sout{final image representation} \sout{visual representation learning} visual encoding process to be heavily influenced or ``steered'' by text.
-%rather than conditioning language on vision, we introduce \model{} that conditions a pretrained ViT on text to produce text-conditioned visual features.
-% \model{} introduces this paradigm by 
-%Our framework
-%interleaves lightweight tanh-gated cross-attention layers~\cite{alayrac2022flamingo} within a frozen ViT, injecting text directly into the visual encoding process.
-%Rather than complex multi-task objectives, \model{} we adopt patch-level referential segmentation, operating entirely within the ViT's feature space and discarding it at inference.
-Our method preserves the richness of unimodal training by freezing both the visual and text encoders,  adding only 20M parameters for multimodal training (two orders of magnitude cheaper than MLLMs, see \cref{tab:method_comparison}).
-We adopt referential image segmentation as the training objective as we find it to be the simplest pretext task for encouraging vision-language alignment.
-% Cross-attention layers are trained on a standard multimodal task that encourages early-layer vision-language alignment.
-% Specifically, we adopt referential image segmentation on off-the-shelf datasets such as RefCOCO and VisualGenome as a learning signal for \model{}.
-%We find it to be the simplest pretext task for encouraging vision-language alignment \MG{alt:text-steerability} that scales naturally with data.
-We initialize the
+\sout{We initialize the
 % influence of 
 cross-attention blocks to be zero, ensuring that \model{} 
 % defaults
 recovers
 % to 
-the original pretrained ViT at initialization.
+the original pretrained ViT at initialization.}
+We adopt referential image segmentation as the training objective as we find it to be the simplest pretext task for encouraging vision-language alignment.
+
 %hence the model recovers the original ViT at initialization, preserving representation quality by construction.
+
+%rather than conditioning language on vision, we introduce \model{} that conditions a pretrained ViT on text to produce text-conditioned visual features.
+% \model{} introduces this paradigm by 
+%Our framework
+%interleaves lightweight tanh-gated cross-attention layers~\cite{alayrac2022flamingo} within a zfrozen ViT, injecting text directly into the visual encoding process.
+%Rather than complex multi-task objectives, \model{} we adopt patch-level referential segmentation, operating entirely within the ViT's feature space and discarding it at inference.
+Our method achieves a Pareto improvement over prior approaches (\cref{fig:teaser}),
+producing visual features that are steerable with text while preserving the
+underlying representation quality.
+This is accomplished by freezing both the visual and text encoders and adding
+only 20M trainable parameters via cross-attention — two orders of magnitude
+fewer than MLLMs (\cref{tab:method_comparison}).
+
+% Cross-attention layers are trained on a standard multimodal task that encourages early-layer vision-language alignment.
+% Specifically, we adopt referential image segmentation on off-the-shelf datasets such as RefCOCO and VisualGenome as a learning signal for \model{}.
+%We find it to be the simplest pretext task for encouraging vision-language alignment \MG{alt:text-steerability} that scales naturally with data.
+
 
 %%% Option B (drop challenge):
 % We take the inverse approach: rather than conditioning language on vision, we condition a frozen ViT on text, producing text-conditioned visual features that retain the richness of unimodal pretraining.
