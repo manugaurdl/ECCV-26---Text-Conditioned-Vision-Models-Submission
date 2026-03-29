@@ -1,5 +1,15 @@
 \newpage
 \appendix
+\appendix
+\setcounter{secnumdepth}{3}   % number down to \subsubsection
+\setcounter{tocdepth}{3}      % include in TOC if relevant
+
+\makeatletter
+\renewcommand\subsubsection{\@startsection{subsubsection}{3}{\z@}%
+  {-1.25ex\@plus -0.5ex \@minus -0.2ex}%
+  {0.8ex \@plus 0.2ex}%
+  {\normalfont\normalsize\bfseries}}
+\makeatother
 
 \begin{center}
 \textbf{\Large{Steerable Vision Transformers}} \\
@@ -49,7 +59,9 @@ details of experimental setup such as training dataset and feature extraction pr
 
 This section provides further details about the employed evaluations, provides qualitative examples and reports additional results. 
 
-\subsection{Assessing Representational Steerability with CORE}
+\subsection{Assessing Representational Steerability}
+
+\subsubsection{Controlled Prompt-Conditional Retrieval on CORE}
 \label{apdx:CORE}
 
 For our \textit{COnditional REtrieval} (CORE) benchmark introduced in \cref{subsec:cond_ret_exp}, we select 100 base images for each of six scenes (three indoor and three outdoor environments) from SUN397~\cite{Herranz2016_SUNdataset}. For each image, we create five separate instances by inpainting a scene-relevant background object (for e.g., an ``olive oil bottle'' in ``kitchen'') using FLUX.2 [dev] \cite{flux-2-2025}, resulting in a total of 500 images per scene. 
@@ -62,7 +74,7 @@ For each image $X_v^\Omega$ containing object $\Omega$, the objective is to retr
 \input{tables/core_prompts}
 We report detailed quantitative results on a per-scene basis in Table \ref{tab:knn_exp_quant_full}. 
 % \model{} consistently boasts the best performance across all environments, demonstrating how its global image representations get shaped and steered by the language input. When prompted with an incorrect description of a randomly chosen different object (\xmark), performance drops drastically, indicating the tight integration and important role of the textual inputs. Cross-modal vision encoders (blue), on the other hand, see negligible changes in this setting. 
-\model{} (green) consistently outperforms query-agnostic ViTs (blue), MLLMs (red), and OV localization models (yellow) across all indoor and outdoor scenes, surpassing the underlying DINOv2 by an average of 52.4 points.
+\model{} (green) consistently outperforms query-agnostic ViTs (blue), MLLMs (red), and OV localization models (yellow) across all indoor and outdoor scenes, surpassing the underlying DINOv2 by an average of 52.5 points.
 When conditioned on a randomly chosen incorrect object (\xmark), \model{}'s accuracy drops drastically, whereas cross-modal encoders (CLIP and SigLIP) see negligible changes.
 This confirms that text actively shapes the visual representation in \model{}, unlike cross-modal encoders where no cross-modal interaction influencing the nature of the vision features occurs.
 \input{tables/knn_exp_apdx}
@@ -82,6 +94,54 @@ Despite many of the inpainted objects being very small and in the background, th
 \vspace{-2mm}
 \label{apdx_fig:core_qual}
 \end{figure}
+
+\subsubsection{Layer-wise Effects of Text Conditioning}
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+\centering
+% \vspace{-10mm}
+\includegraphics[width=\linewidth]{figures/steervit_basevit_divergence_global.pdf}
+% \vspace{-5mm}
+\caption{
+% \textbf{Incremental divergence across layers.} 
+\textbf{Cosine divergence between intermediate \model{} and vanilla ViT representations} grows throughout visual processing, indicating text conditioning progressively reshapes internal features.}
+% \vspace{-15mm}
+\label{fig:feature_divergence}
+\end{wrapfigure}
+To further analyze how text conditioning reshapes the global image representation, we measure the divergence ($1-\cos(Z_v^{(\ell)}, \tilde{Z}_v^{(\ell)})$) between intermediate representations produced by \model{} ($Z_v$) and its underlying vanilla ViT ($\tilde{Z}_v$) after each transformer block $\ell$. Divergence is averaged across all COCO validation images conditioned on a randomly selected object present in the scene.
+As illustrated in Figure~\ref{fig:feature_divergence}, divergence is already non-zero in the early-to-mid layers, indicating that the text signal is incorporated throughout the encoding process. It grows most strongly in later blocks, consistent with the view that earlier ViT layers primarily encode lower-level visual structure while later layers capture higher-level semantics \cite{ghiasi2022visiontransformerslearnvisual}. 
+\sout{At the same time, divergence remains moderate over much of the network, suggesting that \model{} largely preserves the backbone’s visual processing while steering late representations toward a distinct prompt-aware semantic space.}
+However, the exact divergence profile is backbone-dependent and while SteerDINOv2 remains close to the base model until the final blocks and then departs sharply, SteerMAE and SteerSigLIP exhibit a more gradual shift across layers.
+
+\subsubsection{Conditional Visual Similarity on GeneCIS}
+
+\begin{wraptable}{r}{0.4\textwidth}
+\centering
+\footnotesize
+\tabcolsep=1.2mm
+\vspace{-12mm}
+\caption{%
+\textbf{GeneCIS benchmark.}
+\model{} outperforms DINOv2 and specialized methods in challenging real-world conditional similarity benchmark.
+}
+\label{tab:cross_backbone}
+\begin{tabular}{l ccc}
+\toprule
+\multirow{2}{*}{Method} & \multicolumn{3}{c}{Focus Object $\uparrow$} \\
+& R@1 & R@2 & R@3 \\
+\midrule
+DINOv2 & 9.6 & 19.5 & 28.4 \\
+\rowcolor{\methodcolor}\textbf{\model{}} & \textbf{25.4} & \textbf{39.1} & \textbf{49.9} \\
+\color{gray}Specialized & \color{gray}18.7 & \color{gray}30.3 & \color{gray}37.4 \\
+\bottomrule
+\end{tabular}
+\vspace{-6mm}
+\end{wraptable}
+In addition to the proposed CORE benchmark, we also evaluate \model{} on the ``Focus Object'' split of GeneCIS~\cite{vaze2023gen}, a zero-shot benchmark for conditional image retrieval in real images. Whereas CORE explicitly controls object presence and scene context through synthetic inpainting, GeneCIS requires models to retrieve the image that matches the reference scene while also containing the queried object. The gallery from which to retrieve is intentionally challenging, containing distractors with a similar scenes but without the queried object, as well as distractors that contain the queried object but come from a different scene. Following the original protocol, we report R@\{1,2,3\}. 
+Despite this substantially noisier and less controlled setting, \model{} transfers strongly in zero-shot evaluation, achieving a R@1 of 25.4\% and outperforming generic frozen backbones (DINOv2: 9.6\%) as well as the benchmark’s task-specific open-vocabulary object baseline (18.7\%).
+These results complement the evidence from CORE and show that language-based representational steering also remains effective in a more challenging and realistic setting.
+
+
 
 \subsection{MOSAIC Benchmark}
 
@@ -135,12 +195,10 @@ Performance of existing training- and adaptation-free AS baselines is reported a
 \input{tables/anomaly_detection_table}
 
 \model{} again matches dedicated methods on this extreme OOD setting.
-As shown in Table~\ref{tab:mvtec_visa}, \model{} reaches 79.8 PRO on MVTec~AD, substantially outperforming off-the-shelf segmentation-based approaches (SAM3 at 54.5, CLIPseg at 34.6) and closing much of the gap to specialist methods such as FADE (84.5).
-On VisA, \model{} surpasses FADE in $\text{ROC}_P$ (92.0 vs. 91.5) and ties at 79.3 PRO, indicating robust transfer to a harder, more diverse inspection setting.
+As shown in Table~\ref{tab:mvtec_visa}, \model{} reaches 82.1 PRO on MVTec~AD, substantially outperforming off-the-shelf segmentation-based approaches (SAM3 at 54.5, CLIPseg at 34.6) and closing much of the gap to specialist methods such as FADE (84.5).
+On VisA, \model{} surpasses FADE in $\text{ROC}_P$ (92.1 vs. 91.5) and PRO (82.0 vs. 79.3), indicating robust transfer to a harder, more diverse inspection setting.
 Qualitative examples of \model{}'s predictions on a subset of object types and defect categories are provided in \cref{apdx_fig:anomaly_detection_examples}.
-While the predicted heatmaps are especially accurate for texture-based inputs, the zero-shot setting makes it impossible to accurately predict certain defects (e.g., flipped metal nut), as no training on non-anomalous instances and no other visible defects (e.g., scratch) are present. 
-
-
+While the predicted heatmaps are especially accurate for texture-based inputs, the zero-shot setting makes it impossible to accurately predict certain defects (e.g., flipped metal nut), as no training on non-anomalous instances occurs and no visible defects (e.g., scratches) are present. 
 
 
 \section{Additional Analysis on Training Design Choices}
@@ -156,8 +214,7 @@ Below, we further analyze important design choices involved in the training of \
 Our goal is to instill language understanding into a frozen ViT via a simple, scalable proxy task.
 Referential localization serves this purpose: given a text prompt, the model must 
 % identify which spatial locations correspond to
-ground
-the described object.
+ground the described object.
 To avoid the complexity of a pixel-level decoder, we operate entirely in the ViT's $n \times n$ patch-token grid.
 
 % \paragraph{Inductive Bias Analysis.}
@@ -184,7 +241,7 @@ Unlike pointing, this target activates all tokens overlapping the object, teachi
 
 % As \model{}'s training can primarily be regarded as a proxy task to distill language understanding into the ViT, both alternative supervision signals are permissible in principle. However, they evoke distinct model behaviors, resulting in notable differences in the downstream tasks of interest as shown in Table~\ref{tab:supervision}. Training on segmentation masks, despite their synthetic creation, results in consistent and significant gains across all downstream task. Especially on PODS where fine-grained language understanding is necessary, we see a 13 point improvement over a model trained with Gaussian centroids.%, making this form of supervision more amiable to 
 As shown in \cref{tab:supervision}, segmentation consistently outperforms pointing across all metrics.
-The largest gains appear on FG-CLS (+14.4) and PODS (+13.0): pointing teaches the model \textit{where} an object is, whereas segmentation also teaches \textit{what} the object looks like, producing features that better encode object extent and appearance.
+The largest gains appear on feature quality preservation (FG-CLS: +7.3; ADE20k: +8.0) and PODS (+12.4). Pointing teaches the model \textit{where} an object is, whereas segmentation also teaches \textit{what} the object looks like, producing features that better encode object extent and appearance.
 
 % The Gaussian heatmap places a single peak at the bounding-box centre and applies a fixed-width blur ($\sigma{=}1.1$), producing a unimodal target that is invariant to object size and shape.
 % This trains the model to collapse attention to a single spatial location, rewarding centre prediction over region understanding.
@@ -208,19 +265,19 @@ The largest gains appear on FG-CLS (+14.4) and PODS (+13.0): pointing teaches th
 \subsection{Training Duration}
 \label{subsec:training_duration}
 
-Steerability emerges rapidly: within 50k iterations of training, CORE accuracy reaches 93.6\%
+Steerability emerges rapidly: within 50k iterations of training, CORE accuracy reaches 95.3\%
 % 85.5 --> FFN compute hungry
 (vs.\ 43.5 for frozen DINOv2), 
-while FG-CLS degrades only modestly to 88.7 (vs.\ 89.2 for frozen DINOv2).
+while FG-CLS remains nearly constant at 89.6 (vs.\ 89.2 for frozen DINOv2).
 However, tasks that require deeper language understanding continue improving with longer training: between 50k and 450k iterations, 
-PODS improves from 48.1 to 54.6 
+PODS improves from 49.9 to 58.1
 % 35.0 to 55.3
 %(+58\%)
-and RefCOCOg from 63.5 to 69.5.
+and RefCOCOg from 63.4 to 70.6, suggesting that longer training instills richer multimodal representations rather than merely teaching the model to route attention.
 % 58.8 to 71.5 --> FFN is compute hungry
 %(+25\%)
 % even as steerability saturates by 300k iterations at 92.5\%.
-This pattern holds for both early and late fusion (late-fusion PODS: 39.1 at 300k vs.\ 45.3 at 500k), suggesting that longer training instills richer multimodal representations rather than merely teaching the model to route attention.
+% This pattern holds for both early and late fusion (late-fusion PODS: 39.1 at 300k vs.\ 45.3 at 500k), suggesting that longer training instills richer multimodal representations rather than merely teaching the model to route attention. \JR{Since we report these numbers nowhere else, we should at least be consistent with the intervals we pick. Right now early fusion has 50k and 450k vs. 300k and 500k for late-fusion. So not very comparable.}
 % \MG{Fig. illustrates this...}x
 We adopt 500k iterations for all final models.
 
@@ -232,10 +289,10 @@ We adopt 500k iterations for all final models.
 As shown in Table~\ref{tab:scaling}, scaling the vision backbone from ViT-S through ViT-B to ViT-L generally leads to improvements in both representational quality as well as textual understanding. 
 % In contrast, positive scaling behavior of similar magnitude cannot be observed with regards to the language encoder. 
 Interestingly, scaling the text encoder from RoBERTa-Base (125M parameters) to  RoBERTa-Large (355M) also improves performance on visual tasks. 
-This suggests that rich embeddings of the larger text encoder add more semantic structure to the ViT's residual stream,
+This suggests that rich embeddings of the larger text encoder add more semantic structure to the ViT's residual stream (row 4 vs row 5).
 % that doesn't perturb the ViT's residual stream as much
-resulting in improved scores on FG-CLS and ADE20k (row 4 vs row 5).
-The smaller text encoder however, improves performance on PODS by 3.3 points, suggesting better generalization to detailed, manually curated text prompts used at evaluation.
+% resulting in improved scores on FG-CLS and ADE20k (row 4 vs row 5).
+% The smaller text encoder however, improves performance on PODS by 3.3 points, suggesting better generalization to detailed, manually curated text prompts used at evaluation.
 % robustness against the employed text backbone of the \model{} architecture. 
 % \paragraph{Visual Encoder.}
 % We scale the frozen DINOv2 backbone from ViT-S through ViT-B to ViT-L.
@@ -265,8 +322,7 @@ The smaller text encoder however, improves performance on PODS by 3.3 points, su
 % Interestingly, steerability performance on CORE is consistently better without FFN (11.2 points better for MAE without FFN vs with FFN)
 % Performance on OOD domains is substantially better without FFN - 15.1 points improvement for MAE and 4 points improvement for DinoV2
 
-\model{} inverts the gated cross-attention formulation introduced by the Flamingo~\cite{alayrac2022flamingo} VLM. However, it forgoes secondary gated feed-forward networks (FFN) following the cross-attention operations in the original architecture. As shown in \cref{tab:ffn_ablation}, including the FFN brings little to no benefit in representation quality, while consistently hurting steerability and out-of-distribution transfer. The effect is especially pronounced for MAE, where adding the FFN reduces CORE by 11.2 points and MVTec PRO by 15.1 points (row 3 vs.\ row 4). At the same time, the FFN substantially increases the parameter count of the adapter, growing the cross-attention module from 21.2M additional parameters without a FFN to 35.4M with FFN (\mbox{+67\%}). Since the FFN is both expensive and empirically dispensable, we omit it in the final architecture.
-
+\model{} inverts the gated cross-attention formulation introduced by the Flamingo MLLM~\cite{alayrac2022flamingo}. However, it forgoes secondary gated feed-forward networks (FFN) following the cross-attention operations in the original architecture. As shown in \cref{tab:ffn_ablation}, including the FFN brings little to no benefit in representation quality, while consistently hurting steerability and out-of-distribution transfer. The effect is especially pronounced for MAE, where adding the FFN reduces CORE by 7.2 points and MVTec PRO by 3.4 points (row 5 vs.\ row 6). At the same time, the FFN substantially increases the parameter count of the adapter, growing the cross-attention module from 21.2M additional parameters without a FFN to 35.4M with FFN (\mbox{+67\%}). Since the FFN is both expensive and empirically dispensable, we omit it in the final architecture.
 
 \section{Further Details on Experimental Setup}
 \label{apdx:exp_details}

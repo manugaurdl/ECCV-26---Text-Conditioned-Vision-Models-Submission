@@ -1,6 +1,6 @@
 \section{Conclusion}
 We introduced \model{}, the first \textit{vision-centric} multimodal model \JR{model vs. framework} that equips any frozen Vision Transformer with text-steerable visual representations via tanh-gated cross-attention while adding only ${\sim}$20M parameters. 
-\model{} steers both global and local features while preserving the base ViT's representation quality, with gating enabling continuous control over the steerability--quality trade-off.  
+\model{} steers both global and local features while preserving the base ViT's representation quality, with gating enabling continuous control over the steerability--quality trade-off. 
 Across personalized object discrimination and industrial anomaly segmentation, it matches or surpasses billion-parameter MLLMs \JR{we don't include result for MLLMs on either of those two tasks} and task-specific methods without target-domain training, generalizing across multiple ViT backbones.  
 These results show that conditioning vision on language offers a lightweight post-hoc paradigm for multimodal representation learning that preserves strong unimodal encoders while extending their generalization through text.
 

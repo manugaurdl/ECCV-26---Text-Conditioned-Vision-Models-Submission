@@ -41,20 +41,20 @@ on anomaly detection and personalized object discrimination, exhibiting zero-sho
 % \textbf{\model{}: Language steers where vision looks and what it represents.} 
 % \textbf{Language steers where vision models look and what they represent.} 
 % \textbf{Using language to steer visual representations.} 
-\MG{\textbf{Steering visual representations with language.}}
+\textbf{Steering visual representations with language.}
 % \textbf{Steering where vision models look and what they represent via language.} 
 % \textbf{Language steers where vision looks and what it represents.}
 % We propose \model{}, which interleaves lightweight cross-attention blocks into a frozen ViT. % to early-fuse text into visual features.
 While 
 {\setlength{\fboxsep}{2pt}\colorbox{gray!40}{DINOv2}} 
-\MG{primarily encodes the salient object, producing a ``cat'' representation,}
+primarily encodes the salient object, producing a ``cat'' representation,
 % produces a query-agnostic representation dominated by the salient cat, 
 % \colorbox{\methodcolor}\model{} adds language understanding to the same ViT, redirecting attention to prompt-relevant regions and shifting the global embedding toward the queried concept.
 % Thus, prompts can steer the same \model{} model to represent different concepts in the same scene. 
 {\setlength{\fboxsep}{2pt}\colorbox{\methodcolor}\model{}}
 % redirects attention to relevant regions and shifts the global embedding toward the queried concept.
-can be steered with text to shift its attention (a) and global feature semantics (b) towards the queried visual concept.
-\sout{Thus, the same input can map to different concepts in the scene depending on the prompt.}
+can be steered with text to shift its attention (middle) and global feature semantics (right) towards the queried visual concept.
+% \sout{Thus, the same input can map to different concepts in the scene depending on the prompt.}
 }
 \vspace{-12mm}
 \label{fig:heatmap_teaser}

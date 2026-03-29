@@ -9,8 +9,9 @@ We summarize popular approaches against our desiderata in \cref{tab:method_compa
 Unimodal self-supervised encoders (DINOv2~\cite{dinov2}, MAE~\cite{he2022mae}) learn rich visual features but are inherently query-agnostic.
 Cross-modal encoders (CLIP~\cite{radford2021_clip}, SigLIP~\cite{zhai2023_siglip}, CoCoOp~\cite{zhou2022_cocoop}) use text to provide training supervision; the visual encoder still cannot be steered with text.
 % Open-vocabulary localization models (SAM3~\cite{carion2025_sam3}, GroundingDINO~\cite{liu2023groundingdino}) accept text queries but produce task-specific features that sacrifice downstream transfer quality.
-MLLMs come closest to satisfying all three desiderata: they achieve early vision-language fusion \JR{is early fusion something you "achieve"? It's more of an explicit design choice} (within the LLM) and moderate steerability.
-However, they condition language on vision \JR{vision tokens can also attend to language tokens in the MLLM architectures we used}, the resulting representations are in language (LLM) space, and require billions of parameters.
+MLLMs come closest, offering moderate steerability and visual quality, but their representations reside in language space and require billions of parameters.
+% MLLMs come closest to satisfying all three desiderata: they achieve early vision-language fusion \JR{is early fusion something you "achieve"? It's more of an explicit design choice} (within the LLM) and moderate steerability.
+% However, they condition language on vision \JR{vision tokens can also attend to language tokens in the MLLM architectures we used}, the resulting representations are in language (LLM) space, and require billions of parameters.
 \model{} inverts this paradigm: we condition vision on language, add only ${\sim}$20M trainable parameters to a frozen ViT, while yielding stronger visual features (\cref{fig:teaser}).
 % Refer Table 1; don't reiterate intro; maybe tl;dr of differences? 
 % % unimodal
@@ -31,19 +32,15 @@ However, they condition language on vision \JR{vision tokens can also attend to 
 % -------------------------------------------------------------------------------
 
 \paragraph{Text-conditioned visual features.}
-% To our knowledge, no prior work produces visual features that simultaneously satisfy text steerability and representation quality preservation---this family essentially does not exist.
-To our knowledge, \textit{no prior work} preserves the base visual encoder's feature quality while using text as a mechanism for steering feature semantics.
 
-The closest attempt is FLAIR~\cite{xiao2025flair}, which adopts SigLIP's cross-modal training, adding text-conditioned attention pooling over the learned features. 
-However, FLAIR achieves moderate steerability and also underperforms unimodal encoders on standard vision benchmarks, perhaps due to late fusion (see \cref{fig:teaser}).
-% \MT{just delete below .. not place for philosophy!}
-% This can partly be attributed to vision-language interaction occurring outside the visual encoder (late fusion), but we further posit that training joint encoders from scratch on limited high-quality paired data is itself a bottleneck. Instead, one should inject language conditioning into strong unimodal vision encoders while preserving the representational depth learned from each modality independently.
-% The challenge then becomes one of \textit{quality-steerability tradeoff}: how to merge two unimodal experts into an early-fused encoder without degrading either modality's representations.
-% \model{} addresses this through zero-initialized tanh gating (\cref{sec:arch}): the model starts as the frozen ViT and smoothly opens to text conditioning as training progresses.
-% The learned gates also provide continuous post-hoc control over the quality-steerability tradeoff---by scaling the gate values at inference, one can interpolate between the original ViT and the fully text-conditioned state, tracing the Pareto frontier visible in \cref{fig:teaser}.
-
+To our knowledge, \textit{no prior work} steers a visual encoder effectively with text while preserving its representation quality.
+The closest attempt, FLAIR~\cite{xiao2025flair}, applies text-conditioned attention pooling over a frozen SigLIP encoder (late fusion), resulting in suboptimal steerability and underperforming unimodal encoders on standard vision benchmarks (\cref{fig:teaser}).
+% To our knowledge, \textit{no prior work} preserves the base visual encoder's feature quality while using text as a mechanism for steering feature semantics.
+% The closest attempt is FLAIR~\cite{xiao2025flair}, which adopts SigLIP's cross-modal training, adding text-conditioned attention pooling over visual encoder's output.. 
+% However, FLAIR achieves moderate steerability and also underperforms unimodal encoders on standard vision benchmarks, perhaps due to late fusion (see \cref{fig:teaser}).
 Concurrent works condition visual features on text but target narrow pipelines.
-TIE~\cite{thirukovalluru2025tie} injects query tokens into the image encoder, optimizing for VQA with MLLMs.
+% TIE~\cite{thirukovalluru2025tie} injects query tokens into the image encoder, optimizing for VQA with MLLMs.
+TIE~\cite{thirukovalluru2025tie} injects query tokens into the image encoder to reduce visual tokens in MLLMs, optimizing for document understanding.
 % to reduce the number of visual tokens needed for document and chart understanding, optimizing for VQA within a fixed VLM pipeline.
 ELIP~\cite{zhan2025elip} prepends text in the ViT to improve text-to-image retrieval re-ranking.
 In contrast, \model{} is a general framework for producing steerable visual representations that transfer across a wide variety of tasks.

@@ -3,13 +3,11 @@
 \label{sec:ablations}
 
 We ablate the key architectural and training decisions in \model{} to isolate the contribution of each component.
-Unless stated otherwise, all experiments use DINOv2 ViT-B/14 as the frozen visual backbone and RoBERTa-Large as the text encoder, trained at $336{\times}336$ resolution with batch size 12 for 500k iterations (${\sim}$96 H100 GPU-hours) on the full data mixture (\cref{sec:data}), using AdamW with a cosine schedule that warms up to $3{\times}10^{-4}$ over 5k steps, decays to $3{\times}10^{-5}$ by 40k steps, and remains constant thereafter.
-The default gate $\alpha_l = 1$\JR{shouldn't the initial gate value be 0?}.
+Unless stated otherwise, all experiments use DINOv2 ViT-B/14 as the frozen visual backbone and RoBERTa-Large as the text encoder, trained at $336{\times}336$ resolution with batch size 12 for 500k iterations (${\sim}$84 H100 GPU-hours) on the full data mixture (\cref{sec:data}), using AdamW with a cosine schedule that warms up to $3{\times}10^{-4}$ over 5k steps, decays to $3{\times}10^{-5}$ by 40k steps, and remains constant thereafter.
+The default gate $\alpha_l = 1$
+\JR{shouldn't the initial gate value be 0?}.\MG{initialization is zero; alpha = 1} \JR{Sorry for the confusion, but $\alpha_l$ is the learnable parameter itself, no? So if initialization is zero, then alpha = 0.}
 % \MT{what is the default CA gate value during inference. also, indicate if this is pre/post tanh}\JR{it is the learned one. If we do, then we just vary the learned weights by a certain factor} \MT{not true? then why does fig 1 star appear at $\alpha_l = 1$?}\JR{since a factor of 1.0 is essentially not doing any changes -> default setup. Only if for != 1.0 we change model behavior. }
-We evaluate on four metrics: fine-grained classification probe accuracy (FG-CLS; \cref{subsec:pareto}), text steerability via CORE retrieval (\cref{subsec:cond_ret_exp}), and personalized object discrimination PR-AUC on PODS with descriptive text prompts (\cref{subsec:text_density_exp}).
-% \MG{should we keep class, supercat?} 
-% \MT{no, at least obj name / description}
-
+We evaluate in three domains: fine-grained classification probe accuracy (FG-CLS; \cref{subsec:pareto}), text steerability via CORE retrieval (\cref{subsec:cond_ret_exp}), and personalized object discrimination PR-AUC on PODS with descriptive text prompts (\cref{subsec:text_density_exp}).
 
 % ------------------------------------------------------------------
 \paragraph{Architecture Choices.}\input{tables/arch_ablation_table}
@@ -29,16 +27,16 @@ MLP text projector.
 \textit{Early vs.\ late fusion.}
 We interleave gated cross-attention within ViT layers (early fusion).  
 Late fusion (\cref{tab:arch_ablation}, row 3) adds text only after the final ViT layer.  
-While late fusion achieves similar steerability (93.4) and higher FG-CLS (86.5 vs.\ 77.0\JR{either this or the number in the table is incorrect}), it reduces PODS performance by 10 points\JR{potentially incorrect} (45.3 vs.\ 55.3\JR{same here}) with descriptive prompts.  
-With coarse supercategory prompts, the gap disappears, indicating early fusion is important for fine-grained vision–language modeling.
+While late fusion also achieves high steerability (93.3) and higher FG-CLS (91.8 vs.\ 87.7), it reduces PODS performance dramatically (36.6 vs.\ 58.1).  
+With coarse supercategory prompts, the gap lessens (26.5 vs. 27.9), suggesting that early fusion is important for fine-grained vision–language modeling.
 
 \textit{Role of gating.}
 Each cross-attention block uses a zero-initialized tanh gate (\cref{eq:gated_ca}), starting training from a frozen ViT and gradually incorporating text.  
-Removing gating (row 4) collapses steerability and FG-CLS by 15.1 and 52.8 points below our frozen baseline (row 1), showing that ungated cross-attention disrupts frozen features.
+Removing gating (row 4) reduces FG-CLS and steerability by 4.2 and 1.4 points below our frozen baseline (row 1), showing that ungated cross-attention disrupts frozen features more.
 
 \textit{Language projector.}
 A two-layer MLP projects RoBERTa embeddings to the ViT feature space (\cref{sec:arch}).  
-Replacing it with a linear projector (row 5) lowers FG-CLS by 5.5 and PODS by 3.8 points, indicating that the MLP better aligns modalities.
+Replacing it with a linear projector (row 5) lowers FG-CLS by 1.0 and PODS by 1.7 points, indicating that the MLP better aligns modalities.
 
 % \paragraph{Early vs.\ late fusion.}
 % Our method interleaves gated cross-attention blocks within the ViT layers (early fusion).
@@ -86,7 +84,7 @@ and MAE~\cite{he2022mae}.
 % (masked autoencoding).
 \cref{tab:cross_backbone} compares vanilla, late fusion, and early fusion (\model{}) variants for each backbone.
 
-
+\JR{TODO: update numbers once training finished}
 Early fusion consistently outperforms late fusion across all three ViT families.
 The advantage is most pronounced for MAE, where early fusion nearly doubles late-fusion steerability (62.6 vs.\ 35.5) and improves PODS by 5.3 points.
 For SigLIP, early fusion boosts steerability by 7.4 points (90.9\JR{table says 90.8} vs.\ 83.5) and PODS by 8.3 points (23.0 vs.\ 14.7).
