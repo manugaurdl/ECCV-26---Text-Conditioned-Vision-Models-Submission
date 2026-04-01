@@ -30,16 +30,16 @@
 
 \begin{wrapfigure}{r}{0.4\textwidth}
 \centering
-\vspace{-10mm}
+\vspace{-12mm}
 \includegraphics[width=\linewidth]{figures/training_architecture.pdf}
-\vspace{-5mm}
+\vspace{-4mm}
 \caption{\textbf{Steering any ViT using text conditioning.}
-Our method adds lightweight vision-to-language cross-attention layers within pretrained ViT blocks and applies a patch-level segmentation proxy objective to fuse prompt cues into patch tokens.
-We train with 2.28M image-text pairs composed from referential object localization datasets.
+Our method adds lightweight 
+\colorbox{visionblue}{\textbf{vision}}-to-\colorbox{textred}{\textbf{language}} cross-attention layers within pretrained ViT blocks and applies a patch-level segmentation proxy objective to fuse prompt cues into patch tokens.
+% We train with 2.28M image-text pairs composed from referential object localization datasets.
 % \YA{great job! maybe all RoBERTa-"L"? or "M"? and also add somewhere "pretrained ViT"? }
-}
-\vspace{-15mm}
-\label{fig:arch_training}
+\label{fig:arch_training}}
+\vspace{-6mm}
 \end{wrapfigure}
 
 Next, we describe the architectural modifications and post-training to obtain steerable representations from a pretrained ViT.

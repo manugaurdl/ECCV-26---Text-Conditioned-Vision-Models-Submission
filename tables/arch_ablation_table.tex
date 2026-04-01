@@ -83,7 +83,7 @@
 \vspace{-9mm}
 \caption{%
 Architecture ablations on DINOv2 ViT-B/14.
-\model{} combines three design choices; each ablation row toggles exactly one (marked \xmark).
+\model{} combines three principal design choices; each ablation row toggles exactly one (marked \xmark).
 }
 \vspace{-5mm}
 \label{tab:arch_ablation}
@@ -121,13 +121,11 @@ Architecture ablations on DINOv2 ViT-B/14.
   & 56.4 \\
 \bottomrule
 \end{tabular}
-% \begin{tablenotes}[flushleft]\footnotesize
-Top gray row: frozen DINOv2 baseline (no adapter \JR{in Sec. 3, we call the MLP adapter; might be better to use other term here.}).
+% \begin{tablenotes}[flushleft]\footnotesizeTop gray row: frozen DINOv2 baseline (no adapter \JR{in Sec. 3, we call the MLP adapter; might be better to use other term here.}).
 \xmark\ in Early Fusion means late fusion. %(cross-attention appended after the final ViT layer).
 \xmark\ in Tanh Gate means ungated cross-attention.
-\xmark\ in MLP Proj.\ means single linear layer instead of two. % replacing the two-layer MLP.
-PODS uses descriptive text prompts.
-Frozen DINOv2 baseline with no adapter (top row, gray) cannot use text. \JR{merge with first sentence}
+\xmark\ in MLP Proj.\ means single linear layer. % replacing the two-layer MLP.
+Vanilla DINOv2 baseline (top row, gray) does not consider text.
 % \end{tablenotes}
 \end{threeparttable}
 \vspace{-6mm}

@@ -1,13 +1,12 @@
 
-
+\vspace{-5mm}
 \begin{abstract}
 Pretrained Vision Transformers (ViTs) such as DINOv2 and MAE provide generic image features that can be applied to a variety of downstream tasks such as retrieval, classification, and segmentation.  
 However, such representations tend to focus on the most prominent object in the image, 
 % and so, are difficult to adapt to other visual concepts.
 \MG{and cannot be steered toward specific visual concepts of interest.}
 % \MG{\sout{Multimodal models such as CLIP  and MLLMs}} 
-Multimodal LLMs can be 
-tailored to \MG{guided with?} textual prompts,
+Multimodal LLMs can be guided with textual prompts,
 % \MG{can be steered with natural language,}
 but the resulting representations tend to be language-centric and lose their effectiveness for generic visual tasks.
 To address this, we introduce
@@ -15,20 +14,23 @@ To address this, we introduce
 % \textbf{\model{}}, a framework 
 \textit{Steerable Visual Representations}, a new class of visual representations, whose global and local features can be steered with natural language.
 % While most multimodal models tend to late-fuse visual encoders with text features (e.g., CLIP), \model{} \textit{early}-fuses textual information into layers of the visual encoder using lightweight cross-attention. 
-\MG{While most vision-language models (e.g., CLIP) fuse text with visual features after encoding (\textit{late} fusion), we inject text directly into the layers of the visual encoder (\textit{early} fusion) via lightweight cross-attention. 
-}
+While most vision-language models (e.g., CLIP) fuse text with visual features after encoding (\textit{late} fusion), we inject text directly into the layers of the visual encoder (\textit{early} fusion) via lightweight cross-attention. 
 % We demonstrate that our steerable visual features can focus on arbitrary objects in an image while preserving 
 % % \MG{\sout{the ability to perform generic visual tasks}}
 % the underlying representation quality, demonstrated by
 % fine-grained retrieval, classification, and segmentation performance.
-\MG{We introduce \sout{fine-grained image retrieval and segmentation} benchmarks for measuring \textit{representational steerability}, and demonstrate that our steerable visual features can focus on arbitrary objects in an image while preserving the underlying representation quality.\textbf{}}
-\sout{\model{}}
-\MG{Our method} 
-also matches or outperforms dedicated approaches
+We introduce benchmarks for measuring \textit{representational steerability}, and demonstrate that our steerable visual features can focus on 
+% \JR{\st{arbitrary}
+any desired objects in an image while preserving the underlying representation quality.\textbf{}
+Our method also matches or outperforms dedicated approaches
 % \MG{\sout{on zero-shot}}
-on anomaly detection and personalized object discrimination, exhibiting zero-shot generalization to out-of-distribution domains without task-specific training.
-\vspace{-2mm}
-\keywords{Visual Representation \and Semantic Steering \and Text-Conditioning}
+on anomaly detection and personalized object discrimination, exhibiting zero-shot generalization to out-of-distribution tasks.
+\vspace{1mm}
+% \keywords{Visual Representation \and Semantic Steering \and Text-Conditioning}
+
+\textbf{Project Website:} 
+\href{https://jonaruthardt.github.io/project/SteerViT/}{jonaruthardt.github.io/project/SteerViT}
+% \url{https://jonaruthardt.github.io/project/SteerViT/}
 \vspace{-13mm}
 \end{abstract}
 
@@ -53,10 +55,10 @@ primarily encodes the salient object, producing a ``cat'' representation,
 % Thus, prompts can steer the same \model{} model to represent different concepts in the same scene. 
 {\setlength{\fboxsep}{2pt}\colorbox{\methodcolor}\model{}}
 % redirects attention to relevant regions and shifts the global embedding toward the queried concept.
-can be steered with text to shift its attention (middle) and global feature semantics (right) towards the queried visual concept.
+can be steered with text to shift its attention (middle) and global feature semantics (right) towards the queried visual concept (e.g.,~``bookshelf'' or ``remote control'').
 % \sout{Thus, the same input can map to different concepts in the scene depending on the prompt.}
 }
-\vspace{-12mm}
+\vspace{-6mm}
 \label{fig:heatmap_teaser}
 \end{figure}
 
@@ -73,60 +75,3 @@ can be steered with text to shift its attention (middle) and global feature sema
 % \vspace{-6mm}
 % \label{fig:heatmap_teaser}
 % \end{figure}
-
-
-
-
-\begin{comment}
-\begin{abstract}
-% \MT{Needs update after finishing paper}
-Pretrained Vision Transformers %exhibit a \textit{saliency bias}: \YA{if we name it, it feels like we need to measure it (e.g is MAE less saliency bias compared to CLIP etc...) .. maybe rather say they that all these pretrained models aim at getting a \_generic\_ representation of the image, and that tends to be the most prominent object. } their global representation collapses toward the most prominent objects in a scene, ignoring task-relevant details.
-such as DINOv2 and MAE aim to provide a generic representation of an image that can be applied to a variety of downstream tasks such as retrieval, classification, and segmentation.  
-%which tends to be the most prominent object in the image.
-%Existing approaches either produce rich but query-agnostic \YA{don't introduce "query" or "query-agnostic" without explanation! Rather: "Tailoring representations is not possible with generic vision backbones like DINOv2, and only limited with multimodal ones like CLIP or MLLMs or SAM..?} representations (e.g.,~DINOv2) or accept text queries but produce task-specific representations that lack the generality for downstream transfer (e.g.,~SAM3, GroundingDINO).
-However, such representations tend to focus on the most prominent object in the image, and so are difficult to tailor to other visual concepts.
-%Tailoring such visual representations to specific tasks or concepts is difficult. 
-Multimodal models such as CLIP and MLLMs can be tailored to textual prompts, but the resulting representations tend to be language-centric and loose their effectiveness for generic visual tasks.
-To address this, we introduce \model{}, a framework
-% \YA{method or framework? I prefer the latter} 
-that equips any Vision Transformer with the ability to steer both its global and local visual features with natural language. While most multimodal models tend to late-fuse visual encoders with text features (e.g., CLIP), \model{} {\it early}-fuses textual information into early layers of the visual encoder using cross-attention.
-%models after feature extraction,
-%Our \YA{early-fusion / PEFT / .. based/inspired} approach dynamically routes attention to task-relevant visual concepts, enabling us to guide the semantics of the visual representation with text while preserving their downstream transfer.
-We demonstrate that our steerable visual representations can focus on arbitrary objects in an image while preserving the ability to perform generic visual tasks, such as fine-grained multimodal retrieval and referential segmentation. \model{} also matches or outperforms state-of-the-art baselines on zero-shot anomaly detection and personalized object discrimination, generalizing to out-of-distribution domains without task-specific training.
-% Because \model{} preserves the rich visual structure of the frozen encoder, natural language can steer these features to out-of-distribution domains more effectively than supervised fine-tuning: on personalized object discrimination, zero-shot text-conditioned features outperform a fine-tuned DINOv2 baseline (54.4 vs.\ 48.0 PR-AUC), and on industrial anomaly detection our general-purpose model matches dedicated methods without any target-domain training.
-  \keywords{Visual Representation \and Semantic Steering \and Text-Conditioning}
-\end{abstract}
-\end{comment}
-
-
-
-
-
-
-% Pretrained Vision Transformers exhibit a \textit{saliency bias}: their representation collapse toward the most prominent objects in a scene, ignoring task-relevant details.
-% Existing approaches either produce rich but query-agnostic representations (e.g., DINOv2) or achieve text-relevant steering but at the cost of degraded feature quality (e.g., SAM2, GroundingDINO).
-% To address this, we introduce \model{}, a method that equips any Vision Transformer with the ability to steer both its global and dense visual features with natural language.
-% % SHIFT achieves a Pareto improvement over prior work: across three ViT families (DINOv2, SigLIP, MAE), it consistently outperforms query-agnostic baselines on conditional retrieval, dense prediction, and personalized object discrimination, and generalizes zero-shot to out-of-distribution domains, reaching 64.2 AuPRO on MVTec anomaly detection (vs.\ 34.0 for state-of-the-art baselines and 48.2 for SAM2).\\
-% % General purpose visual encoders have a \textit{saliency} bias, where they effectively encode the image 
-% % % through salient visual concepts
-% % through the loudest visual concepts in the scene.
-% % To address this, we introduce \model{}, a method that equips any Vision Transformer with the ability to steer 
-% % the semantics of
-% % its features with text. 
-% Our approach dynamically routes attention to task-relevant 
-% % visual concepts 
-% visual concepts,
-% % achieving a Pareto improvement in text steerability
-% enabling us to guide the semantics of the visual representation with text
-% while preserving their 
-% % quality of the underlying representation.
-% downstream transfer.
-% % (unlike SAM3/GroundingDino??).
-% % Through extensive experiments, we show that \model{} can guide the semantics of its visual features with  text.
-% % It consistently outperforms query-agnostic ViT baselines across model families (DinoV2, SigLIP, MAE) on fine-grained dense prediction and retrieval tasks, exhibiting strong generalization to out-of-distribution domains. 
-% We demonstrate that our steerable visual representations enable a wide class of applications that are difficult to address with prior state-of-the-art models, such as fine-grained multimodal retrieval and dense prediction.
-% Our method also outperforms state-of-the-art baselines on anomaly detection and personalized object discrimination, demonstrating the effectiveness of natural language in steering features that generalize to out-of-distribution domains.
-
-% % “Our work learns a joint representation of images and text, which we call a steerable vision transformer.  Prior work in this space such as cross-modal embeddings (e.g., CLIP)  and autoregressive vision-language models (e.g., LAVA) tend to be language-centric, often making use of vision embeddings that are frozen or only slightly updated during joint learning. 
-% % Instead, inspired by neuroscience evidence that suggests that humans fundamentally parse images differently based on the textual prompt [1], we use text to steer patch transformations in early layers of a visual encoder,
-% % We demonstrate that our steerable visual representations enable a wide class of applications that are difficult to address with prior state-of-the-art models, such as multimodal retrieval, fine-grained classification, and XX.” (edited)

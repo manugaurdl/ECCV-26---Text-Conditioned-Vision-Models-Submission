@@ -12,7 +12,7 @@ Cross-modal encoders (CLIP~\cite{radford2021_clip}, SigLIP~\cite{zhai2023_siglip
 MLLMs come closest, offering moderate steerability and visual quality, but their representations reside in language space and require billions of parameters.
 % MLLMs come closest to satisfying all three desiderata: they achieve early vision-language fusion \JR{is early fusion something you "achieve"? It's more of an explicit design choice} (within the LLM) and moderate steerability.
 % However, they condition language on vision \JR{vision tokens can also attend to language tokens in the MLLM architectures we used}, the resulting representations are in language (LLM) space, and require billions of parameters.
-\model{} inverts this paradigm: we condition vision on language, add only ${\sim}$20M trainable parameters to a frozen ViT, while yielding stronger visual features (\cref{fig:teaser}).
+\model{} inverts this paradigm: we condition vision on language, add only ${\sim}$21M trainable parameters to a frozen ViT, while yielding stronger visual features (\cref{fig:teaser}).
 % Refer Table 1; don't reiterate intro; maybe tl;dr of differences? 
 % % unimodal
 % Unimodal encoders (DINOv2~\cite{oquab2024dinov2}, MAE~\cite{he2022mae}) learn rich visual representations via self-supervised objectives but produce entirely query-agnostic features.

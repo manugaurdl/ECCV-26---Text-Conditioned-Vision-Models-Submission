@@ -4,8 +4,7 @@
 
 We ablate the key architectural and training decisions in \model{} to isolate the contribution of each component.
 Unless stated otherwise, all experiments use DINOv2 ViT-B/14 as the frozen visual backbone and RoBERTa-Large as the text encoder, trained at $336{\times}336$ resolution with batch size 12 for 500k iterations (${\sim}$84 H100 GPU-hours) on the full data mixture (\cref{sec:data}), using AdamW with a cosine schedule that warms up to $3{\times}10^{-4}$ over 5k steps, decays to $3{\times}10^{-5}$ by 40k steps, and remains constant thereafter.
-The default gate $\alpha_l = 1$
-\JR{shouldn't the initial gate value be 0?}.\MG{initialization is zero; alpha = 1} \JR{Sorry for the confusion, but $\alpha_l$ is the learnable parameter itself, no? So if initialization is zero, then alpha = 0.}
+% The default gate $\alpha_l = 1$
 % \MT{what is the default CA gate value during inference. also, indicate if this is pre/post tanh}\JR{it is the learned one. If we do, then we just vary the learned weights by a certain factor} \MT{not true? then why does fig 1 star appear at $\alpha_l = 1$?}\JR{since a factor of 1.0 is essentially not doing any changes -> default setup. Only if for != 1.0 we change model behavior. }
 We evaluate in three domains: fine-grained classification probe accuracy (FG-CLS; \cref{subsec:pareto}), text steerability via CORE retrieval (\cref{subsec:cond_ret_exp}), and personalized object discrimination PR-AUC on PODS with descriptive text prompts (\cref{subsec:text_density_exp}).
 
@@ -15,7 +14,8 @@ We evaluate in three domains: fine-grained classification probe accuracy (FG-CLS
 
 
 % \cref{tab:arch_ablation} isolates the contribution of each architectural component by modifying one design choice at a time from the full \model{} configuration.
-\model{} has three design choices \JR{there are many more design choices -> maybe ``principal design choices''; perhaps ``dimensions/components'' is better than choices}:
+\model{} has three principal design choices:
+% \JR{there are many more design choices -> maybe ``principal design choices''; perhaps ``dimensions/components'' is better than choices}:
 early fusion of text within the ViT,
 tanh-gated CA layers, and
 MLP text projector.
@@ -27,13 +27,14 @@ MLP text projector.
 \textit{Early vs.\ late fusion.}
 We interleave gated cross-attention within ViT layers (early fusion).  
 Late fusion (\cref{tab:arch_ablation}, row 3) adds text only after the final ViT layer.  
-While late fusion also achieves high steerability (93.3) and higher FG-CLS (91.8 vs.\ 87.7), it reduces PODS performance dramatically (36.6 vs.\ 58.1).  
-With coarse supercategory prompts, the gap lessens (26.5 vs. 27.9), suggesting that early fusion is important for fine-grained vision–language modeling.
+While late fusion (row 3) also achieves high steerability (93.3) and higher FG-CLS (91.8 vs.\ 87.7), it reduces PODS performance dramatically (36.6 vs.\ 58.1).
+This illustrates the importance of early fusion for fine-grained vision–language modeling, with the gap vanishing (26.5 vs. 27.9) when conditioning on coarse supercategory prompts.
+% With coarse supercategory prompts, the gap vanishes , suggesting that early fusion is important for 
 
 \textit{Role of gating.}
 Each cross-attention block uses a zero-initialized tanh gate (\cref{eq:gated_ca}), starting training from a frozen ViT and gradually incorporating text.  
-Removing gating (row 4) reduces FG-CLS and steerability by 4.2 and 1.4 points below our frozen baseline (row 1), showing that ungated cross-attention disrupts frozen features more.
-
+Removing gating (row 4) reduces FG-CLS, CORE, and PODS by 4.2, 1.4, and 11.0 points below \model{} (row 2), showing that ungated cross-attention disrupts frozen features.
+         
 \textit{Language projector.}
 A two-layer MLP projects RoBERTa embeddings to the ViT feature space (\cref{sec:arch}).  
 Replacing it with a linear projector (row 5) lowers FG-CLS by 1.0 and PODS by 1.7 points, indicating that the MLP better aligns modalities.
@@ -82,15 +83,19 @@ To validate that our approach generalizes beyond DINOv2, we apply \model{} to tw
 % (contrastive vision-language pretraining)
 and MAE~\cite{he2022mae}.
 % (masked autoencoding).
-\cref{tab:cross_backbone} compares vanilla, late fusion, and early fusion (\model{}) variants for each backbone.
+\cref{tab:cross_backbone} compares vanilla, late fusion, and early fusion (\model{}) variants for each backbone. %\JR{consider adding full ablation table}
 
-\JR{TODO: update numbers once training finished}
+Overall, DINOv2 produces the strongest steerable representations, consistent with its richer self-supervised features. SigLIP and MAE similarly benefit from text conditioning but start from weaker baselines.
 Early fusion consistently outperforms late fusion across all three ViT families.
-The advantage is most pronounced for MAE, where early fusion nearly doubles late-fusion steerability (62.6 vs.\ 35.5) and improves PODS by 5.3 points.
-For SigLIP, early fusion boosts steerability by 7.4 points (90.9\JR{table says 90.8} vs.\ 83.5) and PODS by 8.3 points (23.0 vs.\ 14.7).
-On MVTech anomaly segmentation, an out-of-distribution task absent from training, early fusion outperforms late fusion for every backbone, confirming that the richer multimodal representations from early fusion transfer better to novel domains.
-DINOv2 produces the strongest steerable representations overall, consistent with its richer self-supervised features; SigLIP and MAE both benefit from text conditioning but start from weaker baselines.
-In fact, we find that steering enriches \JR{vague} MAE's visual features, as illustrated in \cref{fig:gate_factor}.
+The advantage is more pronounced for MAE and SigLIP, where early fusion boosts steerability by 33.9 and 15.9 points, respectively. 
+These larger early-fusion gains compared to DINOv2 (2.7) align with our later layer-wise analysis (cf.~\cref{fig:feature_divergence}), where \model{} representations diverge earlier from their base ViTs for MAE and SigLIP backbones, suggesting that language injection is especially beneficial when the underlying visual features are less semantically mature.
+% The advantage is most pronounced for MAE, where early fusion nearly doubles late-fusion steerability (74.9 vs.\ 41.0).
+% For SigLIP, early fusion boosts steerability by 15.9 points from 75.4 to 91.3.
+% The advantage is most pronounced for MAE, where early fusion nearly doubles late-fusion steerability (74.9 vs.\ 41.0) and improves PODS by 15.7 points (23.8 vs.\ 8.1).
+% For SigLIP, early fusion boosts steerability by 15.9 points and PODS by 10.7 points (27.4 vs.\ 16.7).
+% On MVTech anomaly segmentation, an out-of-distribution task absent from training, early fusion outperforms late fusion for every backbone, confirming that the richer multimodal representations from early fusion transfer better to novel domains.
+% DINOv2 produces the strongest steerable representations overall, consistent with its richer self-supervised features. SigLIP and MAE similarly benefit from text conditioning but start from weaker baselines.
+% Notably, the larger early-fusion gains for MAE and SigLIP align with our later layer-wise analysis (cf.~\cref{fig:feature_divergence}), where these backbones diverge from their base ViTs earlier than DINOv2, suggesting that language injection is especially beneficial when the underlying visual features are less semantically mature.
 \newline\newline
 We include detailed results for anomaly segmentation,
 results on other tasks for different backbones,

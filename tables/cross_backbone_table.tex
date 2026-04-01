@@ -1,4 +1,3 @@
-
 % \begin{table}[t]
 \begin{wraptable}{r}{0.4\textwidth}
 \centering
@@ -18,103 +17,9 @@
 & Base & Late & \model{} \\
 \midrule
 DINOv2 & 43.5 & 93.3 & \textbf{96.0} \\
-SigLIP & 38.3 & TODO & \textbf{91.3} \\
-MAE    & 21.8 & TODO & \textbf{74.9} \\
+SigLIP & 38.3 & 75.4 & \textbf{91.3} \\
+MAE    & 21.8 & 41.0 & \textbf{74.9} \\
 \bottomrule
 \end{tabular}
 \vspace{-6mm}
 \end{wraptable}
-
-
-% \begin{tabular}{l cc cc}
-% \toprule
-% \multirow{2}{*}{Backbone} & \multicolumn{2}{c}{Original} & \multicolumn{2}{c}{\model{}} \\
-% & Steer. $\uparrow$ & PODS $\uparrow$ & Steer. $\uparrow$ & PODS $\uparrow$ \\
-% \midrule
-% DINOv2 & 43.5 & \textbf{93.4} & 28.6 & \textbf{55.3} \\
-% SigLIP & 38.3 & 16.4 & \textbf{90.9} & \textbf{23.0} \\
-% MAE    & 21.8 & \phantom{0}8.7 & \textbf{62.6} & \textbf{14.2} \\
-% \bottomrule
-% \end{tabular}
-
-
-
-
-
-
-
-
-% \begin{table}[t]
-% \centering
-% \footnotesize
-% \setlength{\tabcolsep}{5pt}
-% \begin{threeparttable}
-% \caption{%
-% Generalization across ViT pretrainings.
-% Early fusion (\model{}) consistently outperforms late fusion, with the largest gains on weaker self-supervised encoders.
-% MVTech PRO measures zero-shot anomaly segmentation, a domain absent from training.
-% }
-% \label{tab:cross_backbone}
-% \begin{tabular}{@{}l l
-%                 S[table-format=2.1]
-%                 S[table-format=2.1]
-%                 S[table-format=2.1]@{}}
-% \toprule
-% Backbone & Method
-%   & {Steer.\ $\uparrow$}
-%   & {PODS $\uparrow$}
-%   & {MVTech $\uparrow$} \\
-% \midrule
-% \textcolor{gray}{DINOv2}
-%   & \textcolor{gray}{Frozen}
-%   & \textcolor{gray}{43.5}
-%   & \textcolor{gray}{28.6}
-%   & {--} \\
-% \rowcolor{\methodcolor}
-% DINOv2 & \textbf{Early (ours)}
-%   & \textbf{93.4}
-%   & \textbf{55.3}
-%   & \textbf{79.8} \\
-% DINOv2 & Late
-%   & 93.4
-%   & 45.3
-%   & 65.9 \\
-% \addlinespace
-% \textcolor{gray}{SigLIP}
-%   & \textcolor{gray}{Frozen}
-%   & \textcolor{gray}{38.3}
-%   & \textcolor{gray}{16.4}
-%   & {--} \\
-% \rowcolor{\methodcolor}
-% SigLIP & \textbf{Early (ours)}
-%   & \textbf{90.9}
-%   & \textbf{23.0}
-%   & \textbf{77.3} \\
-% SigLIP & Late
-%   & 83.5
-%   & 14.7
-%   & 73.4 \\
-% \addlinespace
-% \textcolor{gray}{MAE}
-%   & \textcolor{gray}{Frozen}
-%   & \textcolor{gray}{21.8}
-%   & \textcolor{gray}{8.7}
-%   & {--} \\
-% \rowcolor{\methodcolor}
-% MAE & \textbf{Early (ours)}
-%   & \textbf{62.6}
-%   & \textbf{14.2}
-%   & \textbf{74.1} \\
-% MAE & Late
-%   & 35.5
-%   & 8.9
-%   & 65.1 \\
-% \bottomrule\end{tabular}
-% \begin{tablenotes}[flushleft]\footnotesize
-% \item All models use ViT-B with early or late gated cross-attention.
-% PODS uses descriptive text; frozen baselines use no text.
-% \MT{why not add this in the caption if at all}
-% \end{tablenotes}
-% \end{threeparttable}
-% \end{table}
-

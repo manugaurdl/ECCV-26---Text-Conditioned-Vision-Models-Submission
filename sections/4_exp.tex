@@ -130,7 +130,7 @@ While FLAIR's trained attention pooling offers greater steerability (81.3\%) tha
 
 MLLMs can moderately steer their visual features but at substantial computational cost.
 % InternVL3-1B scores only 47\%; scaling to 2B raises this to 76\%.
-\model{} outperforms both InternVL3-1B and InternVL3-2B by 49 and 20 percentage points, respectively, while only adding 20M parameters via cross-attention blocks compared to billion-parameter-scale LLMs (\cref{tab:method_comparison}).
+\model{} outperforms both InternVL3-1B and InternVL3-2B by 49 and 20 percentage points, respectively, while only adding 21M parameters via cross-attention blocks compared to billion-parameter-scale LLMs (\cref{tab:method_comparison}).
 Open-vocabulary localization models (GroundingDINO, SAM3) are highly steerable, with SAM3 nearly matching \model{}'s retrieval accuracy.
 However, their intermediate representations are optimized for localization and lack the generality needed for downstream transfer, as discussed in \cref{subsec:pareto}.
 
@@ -144,6 +144,33 @@ Doing this has no effect on CLIP and SigLIP performance, confirming their featur
 However, performance degrades drastically FLAIR and \model{} ($-29.4$ and $-47.7$ percentage points), indicating strong text-dependence and corroborating that steerability is primarily prompt-driven.
 OV models see similar large drops, consistent with their deep text integration.
 MLLMs show only mild sensitivity, with InternVL3-1B declining by $-7.6\%$.
+
+\paragraph{Steerability transfers to real-world conditional retrieval.}
+
+\begin{wraptable}{r}{0.38\textwidth}
+\centering
+\footnotesize
+\tabcolsep=1.2mm
+\vspace{-12mm}
+\caption{%
+\textbf{GeneCIS benchmark.}
+\model{} outperforms DINOv2 and specialized methods in challenging real-world conditional similarity benchmark.
+}
+\label{tab:geneCIS}
+\begin{tabular}{l ccc}
+\toprule
+\multirow{2}{*}{Method} & \multicolumn{3}{c}{Focus Object $\uparrow$} \\
+& R@1 & R@2 & R@3 \\
+\midrule
+DINOv2 & 9.6 & 19.5 & 28.4 \\
+\rowcolor{\methodcolor}\textbf{\model{}} & \textbf{25.4} & \textbf{39.1} & \textbf{49.9} \\
+\color{gray}Specialized & \color{gray}18.7 & \color{gray}30.3 & \color{gray}37.4 \\
+\bottomrule
+\end{tabular}
+\vspace{-6mm}
+\end{wraptable}
+
+To assess whether the behavior observed on CORE transfers beyond our controlled inpainting setup, we additionally evaluate on the \textit{Focus Object} split of GeneCIS~\cite{vaze2023gen}, a zero-shot benchmark for conditional image retrieval in real images. Unlike CORE, which explicitly controls object presence and scene context, GeneCIS requires identifying the image that matches the reference scene while also containing the queried object. The retrieval gallery contains distractors that either share the scene but omit the object or contain the object in a different scene. Despite this more challenging setting, \model{} transfers well in zero-shot evaluation, reaching 25.4\% R@1, compared to 9.6\% for DINOv2 and 18.7\% for the benchmark’s specialized baseline (cf.~\cref{tab:geneCIS}). These results complement CORE and show that language-based representational steering remains effective beyond a controlled synthetic benchmark.
 \newline\newline
 In summary, only \model{} and OV localization models can reliably be steered through text whereas standard ViTs collapse to salient concepts, with post-hoc late fusion providing no benefits. Although MLLMs offer moderate steerability, they bear significant computational cost and diminished visual feature quality. 
 
@@ -197,7 +224,7 @@ colframe=black, arc=4pt, boxsep=1pt]
 % Desideratum 3: 
 Preserving Visual Representation Quality while Steering}
 \label{subsec:pareto}
-While previous sections revealed steerability for \model{} and OV, this is only useful if it preserves the downstream transfer, an important property of good visual representations.
+While previous sections revealed steerability for \model{} and OV localization, this is only useful if it preserves the downstream transfer, an important property of good visual representations.
 A naïve solution that overwrites visual features with text yields perfect steerability but destroys the underlying representation. 
 % \JR{Since we always condition the entire dataset on the same prompt -> no GT leakage possible and using text features would result in random not perfect performance, right?} 
 
@@ -208,14 +235,34 @@ Here, promptable models are conditioned on the superclass (e.g., ``dog'' for Ima
 Additional details are in supplement~\ref{apdx:feature_quality}. 
 
 
+% ------------- FIGURE -----------------
+\begin{wrapfigure}{r}{0.375\textwidth}
+\centering
+\vspace{-10mm}
+\includegraphics[width=\linewidth]{figures/pareto_plot_gate_factor_inv.pdf}
+\vspace{-6mm}
+\caption{\textbf{Post-hoc steerability- visual quality modulation.} Scaling
+% learned
+CA gates $\alpha_\ell$ at inference allows continuous interpolation between vanilla ViT and \model{} characteristics. A factor of $0.6$ provides the optimal steerability-quality trade-off for SigLIP- and DINOv2-based models.
+\label{fig:gate_factor}}
+\vspace{-6mm}
+\end{wrapfigure}
+% ------------- FIGURE -----------------
+
 \paragraph{Steerability $\leftrightarrow$ Representation quality trade-off.}
 Figure~\ref{fig:teaser} (right) maps models along these two axes, revealing three regimes:
 (1)~\textbf{Open} \textbf{-vocabulary} \textbf{localization methods} (SAM3 and GroundingDINO) achieve high steerability but produce localization-specific features that score poorly on generic vision tasks.
 (2)~\textbf{MLLMs} perform reasonably on classification but falter on dense prediction tasks and require billions of parameters for moderate steerability.
 (3)~\textbf{Query-agnostic encoders} (DINOv2, SigLIP) produce rich transferable features but cannot be steered.
-\model{} bridges this gap, achieving both high steerability and strong downstream transfer. 
-However, a modest feature quality degradation (${\sim}5$ percentage points\JR{not true anymore. Update.}) relative to the vanilla DINOv2 baseline can be observed, raising the natural question: \textit{Can we control this trade-off?}
-\MG{We don't have degradation; the knob does achieve pareto optimal; motivate knob as a steerability knob; compress following para}
+\model{} bridges this gap, achieving
+% both 
+high steerability 
+% and strong downstream transfer. 
+% However, a modest feature quality degradation (${\sim}5$ percentage points\JR{not true anymore. Update.}) relative to the vanilla DINOv2 baseline can be observed, raising the natural question: \textit{Can we control this trade-off?}
+while fully preserving the representation quality of the underlying ViT.
+
+
+% \MG{We don't have degradation; the knob does achieve pareto optimal; motivate knob as a steerability knob; compress following para}
 % \subsection{Feature Quality vs.\ Steerability: A Pareto Analysis / Desideratum 3: Preserving Visual Representation Quality while Steering}
 % Steerability must not come at the cost of feature quality.
 % The primary purpose of visual representation learning is to produce features that transfer to downstream tasks such as classification and segmentation.
@@ -230,25 +277,20 @@ However, a modest feature quality degradation (${\sim}5$ percentage points\JR{no
 % also, do we need to put this sentence here if the first para is mostly about setup}
 
 
-\begin{wrapfigure}{r}{0.375\textwidth}
-\centering
-\vspace{-8mm}
-\includegraphics[width=\linewidth]{figures/pareto_plot_gate_factor_inv.pdf}
-\vspace{-5mm}
-\caption{\textbf{Post-hoc steerability- visual quality modulation.} Scaling 
-% learned
-CA gates $\alpha_\ell$ at inference allows continuous interpolation between vanilla ViT and \model{} characteristics. A factor of $0.6$ provides the optimal steerability-quality trade-off for SigLIP- and DINOv2-based models.
-}
-\vspace{-4mm}
-\label{fig:gate_factor}
-\end{wrapfigure}
+% \paragraph{Cross-attention gate as a continuous steerability knob.}
+\paragraph{Cross-attention gate as a continuous control knob between ViT and \model{}.}
+The tanh-gated cross-attention mechanism (\cref{eq:gated_ca}) provides an implicit control knob for
+text conditioning strength.
+% the quality-steerability trade-off. 
+At inference, we can scale the learned gating parameters $\alpha_\ell$ by a factor $\omega \in [0, 1]$ to smoothly interpolate between the unaltered ViT subspace and a fully text-conditioned state.
+Plotting this trajectory (\cref{fig:teaser}, \cref{fig:gate_factor}) reveals a clear Pareto frontier with an optimal operating point at a scaling factor of $\omega {=} 0.6$ for DINOv2 and SigLIP, where both slightly exceed the original ViT's representation quality while unlocking high steerability.
+Most strikingly, for MAE, 
+% whose pixel-reconstruction pretraining yields comparatively less semantic features, 
+representation quality monotonically improves as $\omega$ increases, rising from 40 at $\omega{=}0.0$ to 50 points at $\omega{=}0.6$.
+Text conditioning enriches MAE's features with semantic structure, making them more transferable.
 
-
-\paragraph{Cross-attention gate as a continuous steerability knob.}
-The tanh-gated cross-attention mechanism (\cref{eq:gated_ca}) provides an implicit control knob for the quality-steerability trade-off. At inference, we can scale the learned gating parameters $\alpha_\ell$ by a factor $\omega \in [0, 1]$ to smoothly interpolate between the unaltered ViT subspace and a fully text-conditioned state.
-Plotting this trajectory (\cref{fig:teaser}, \cref{fig:gate_factor}) reveals a clear Pareto frontier with an optimal operating point at a scaling factor of $\omega {=} 0.6$ where DINOv2's feature quality is preserved while unlocking high textual steerability, improving over all baselines across both dimensions.
-This knob is especially impactful when applying \model{} to SigLIP, where feature quality degrades sharply but can be recovered in large part by setting $\alpha_\ell' = \alpha_\ell * 0.6$ while retaining meaningful steerability as shown in the orange curve of \cref{fig:gate_factor} \JR{the quality degradation doesn't look much bigger for SigLIP than DINOv2}.
-This flexible post-hoc modulation allows \model{} models to be adapted to downstream requirements at no additional cost. 
+% This knob is especially impactful when applying \model{} to SigLIP, where feature quality degrades sharply but can be recovered in large part by setting $\alpha_\ell' = \alpha_\ell * 0.6$ while retaining meaningful steerability as shown in the orange curve of \cref{fig:gate_factor} \JR{the quality degradation doesn't look much bigger for SigLIP than DINOv2}.
+% This flexible post-hoc modulation allows \model{} models to be adapted to downstream requirements at no additional cost. 
 
 \iffindingbox
 \begin{tcolorbox}[colback=\findingcolor,
@@ -316,7 +358,8 @@ These results demonstrate that \model{} does not simply \textit{add} information
 \begin{tcolorbox}[colback=\findingcolor,
 colframe=black, arc=4pt, boxsep=1pt]
 \paragraph{\textbf{\textit{Finding 3}.}}
-The specificity of text conditioning directly controls the granularity of the \textit{steerable visual representations}.
+% \MT{can we explain specificity somehow? ``level of detail'' perhaps?}
+The level of detail in text conditioning directly controls the granularity of the \textit{steerable visual representations}.
 \end{tcolorbox}
 \fi
 
@@ -376,16 +419,60 @@ colframe=black, arc=4pt, boxsep=1pt]
 
 \subsection{Text Facilitates Zero-Shot Domain Transfer}
 \label{subsec:anomaly_detection}
-\input{tables/anomaly_detection_tiny}
+% \input{tables/anomaly_detection_tiny}
 
-The previous sections established that \model{} incorporates text to steer global features and route attention to queried objects, while preserving the representation quality of the underlying ViT. We now ask: \textit{Does this \shade{language-conditioned flexibility} translate into generalization to novel downstream tasks and unseen domains?} \JR{This is the only time in the paper something is colorfully highlighted. I would consider removing it or also highlighting important parts elsewhere in the same way (although the callout/finding boxes do a well job at that already).}
+The previous sections established that \model{} incorporates text to steer global features and route attention to queried objects, while preserving the representation quality of the underlying ViT. We now ask: \textit{Does this language-conditioned flexibility translate into generalization to novel downstream tasks and unseen domains?} 
+% \JR{This is the only time in the paper something is colorfully highlighted. I would consider removing it or also highlighting important parts elsewhere in the same way (although the callout/finding boxes do a well job at that already).}
 % We evaluate this aspect in two progressively harder out-of-distribution settings: personalized instance recognition via PODS and industrial anomaly segmentation.
-We evaluate this aspect in the hard out-of-distribution setting of industrial anomaly segmentation.
 
-% \paragraph{Personalized Object Discriminat
+\begin{figure}[t]
+    \centering
 
+    % left: figure
+    \begin{minipage}[t]{0.62\textwidth}
+        \vspace{0pt} % force top alignment
+        \centering
+        \includegraphics[width=\linewidth]{figures/anomaly_detection_grid_carpet.png}
+        \caption{\textbf{Anomaly segmentation heatmap produced by \model{}.}
+        Language-conditioning enables robust zero-shot generalization to this OOD task.}
+        \label{fig:myfig}
+    \end{minipage}
+    \hfill
+    % right: table
+    \begin{minipage}[t]{0.32\textwidth}
+        \vspace{0pt} % force top alignment
+        \centering
+        \captionsetup{type=table}
+        \footnotesize
+        \setlength{\tabcolsep}{4pt}
+        \renewcommand{\arraystretch}{1.05}
+
+        \begin{tabular}{@{}lc@{}}
+        \toprule
+        Method & PRO \\
+        \midrule
+        \textbf{MaskCLIP} \cite{zhou2022_maskclip} & 40.5 \\
+        \textbf{CLIPseg} \cite{lueddecke22_clipseg} & 34.6 \\
+        \textbf{SAM3} \cite{carion2025_sam3} & 54.5 \\
+        \addlinespace
+        \textcolor{gray}{\textbf{WinCLIP} \cite{WinCLIP_Jeong23CVPR}} & \textcolor{gray}{64.6} \\
+        \textcolor{gray}{\textbf{DIVAD} \cite{hicsonmez2026training}} & \textcolor{gray}{73.3} \\
+        \textcolor{gray}{\textbf{FADE} \cite{li2024_fade}} & \textcolor{gray}{84.5} \\
+        \addlinespace
+        \rowcolor{\methodcolor}\textbf{\model{}} & 82.1 \\
+        \bottomrule
+        \end{tabular}
+
+        \caption{\textbf{ZS anomaly segmentation (MVTec).} 
+        Dedicated methods in gray.}
+        \label{tab:anomaly_detection_small}
+    \end{minipage}
+\end{figure}
+
+
+% We evaluate this aspect in the hard out-of-distribution setting of industrial anomaly segmentation (AS) on MVTec~AD~\cite{bergmann_mvtech}.
 % \paragraph{Anomaly Segmentation: Extreme OOD Domain Transfer.}
-In addition to generalizing to novel tasks like PODS (shown in Sec.~\ref{subsec:text_density_exp}), we showcase \model{}'s adaptability by performing anomaly segmentation (AS) on the MVTec~AD~\cite{bergmann_mvtech} dataset containing industrial images never seen during training with the goal of identifying subtle manufacturing defects or irregularities.
+In addition to generalizing to novel tasks like PODS (shown in Sec.~\ref{subsec:text_density_exp}), we showcase \model{}'s adaptability to extreme out-of-distribution settings by performing anomaly segmentation (AS) on the industrial MVTec~AD~\cite{bergmann_mvtech} dataset.% containing industrial images never seen during training with the goal of identifying subtle manufacturing defects or irregularities.
 Here, models are conditioned on prompts in the style of ``the anomaly in the <object>'' and anomaly maps are derived by upsampling the heatmaps produced by the learned linear segmentation head. We compare \model{} to other segmentation models and dedicated AS methods using \textit{Per-Region-Overlap} (PRO).
 More details and extended results are provided in \cref{apdx:anomaly_segmentation}.
 As shown in Table~\ref{tab:anomaly_detection_small}, \model{} again matches dedicated zero-shot methods despite the extreme OOD setting.
@@ -395,8 +482,6 @@ These results reinforce the pattern of text-driven steering unlocking capabiliti
 \begin{tcolorbox}[colback=\findingcolor,
 colframe=black, arc=4pt, boxsep=1pt]
 \paragraph{\textbf{\textit{Finding 5}.}}
-\model{} can use natural language to transfer the rich 
-% representations of 
-unimodal vision encoders to OOD domains without task-specific training.
+\model{} can use natural language to transfer rich unimodal vision encoders to OOD domains without task-specific training.
 \end{tcolorbox}
 \fi

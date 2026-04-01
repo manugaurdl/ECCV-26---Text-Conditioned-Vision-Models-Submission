@@ -1,8 +1,19 @@
 \section{Conclusion}
-We introduced \model{}, the first \textit{vision-centric} multimodal model \JR{model vs. framework} that equips any frozen Vision Transformer with text-steerable visual representations via tanh-gated cross-attention while adding only ${\sim}$20M parameters. 
-\model{} steers both global and local features while preserving the base ViT's representation quality, with gating enabling continuous control over the steerability--quality trade-off. 
-Across personalized object discrimination and industrial anomaly segmentation, it matches or surpasses billion-parameter MLLMs \JR{we don't include result for MLLMs on either of those two tasks} and task-specific methods without target-domain training, generalizing across multiple ViT backbones.  
-These results show that conditioning vision on language offers a lightweight post-hoc paradigm for multimodal representation learning that preserves strong unimodal encoders while extending their generalization through text.
+\MG{pending}
+We introduced Steerable Visual Representations, the first \textit{vision-centric} multimodal paradigm that equips any pretrained Vision Transformer with text-steerable visual representations via lightweight tanh-gated cross-attention.  
+% --> visual rep. family ; i don't CA is important here
+% We introduced \model{}, the first \textit{vision-centric} multimodal model \JR{model vs. framework} that equips any frozen Vision Transformer with text-steerable visual representations via tanh-gated cross-attention while adding only ${\sim}$21M parameters. 
+Our \model{} model steers both global and local features while preserving the base ViT's representation quality and only adding ${\sim}$21M trainable parameters.
+% --> first class of visual representations
+% billion-parameter MLLMs
+% weave in finding 4
+Across personalized object discrimination and industrial anomaly segmentation, it matches or surpasses task-specific methods without target-domain training, generalizing across multiple ViT backbones.  
+% rewrite
+These results show that conditioning vision on language offers a lightweight post-hoc paradigm for multimodal representation learning that preserves strong unimodal encoders while extending their capabilities and generalization through text.
+% rewrite
+
+\section{Acknowledgements}
+The authors thankfully acknowledge the HPC resources provided by the Erlangen National High Performance Computing Center (NHR@FAU) of the Friedrich-Alexander Universität Erlangen-Nürnberg (FAU) under the BayernKI project v115be. BayernKI funding is provided by Bavarian state authorities. The authors also gratefully acknowledge the Gauss Centre for Supercomputing e.V. (www.gauss-centre.eu) for funding this project by providing computing time on the Supercomputer JUPITER at Jülich Supercomputing Centre (JSC). MT thanks Adobe Research.
 
 % \section{Conclusion}
 % We presented \model{}, a framework that equips any frozen Vision Transformer with text-steerable visual representations by interleaving tanh-gated cross-attention layers trained on referential segmentation, adding only ${\sim}$20M parameters.

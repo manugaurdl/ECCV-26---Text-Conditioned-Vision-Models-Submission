@@ -110,36 +110,14 @@ Despite many of the inpainted objects being very small and in the background, th
 \end{wrapfigure}
 To further analyze how text conditioning reshapes the global image representation, we measure the divergence ($1-\cos(Z_v^{(\ell)}, \tilde{Z}_v^{(\ell)})$) between intermediate representations produced by \model{} ($Z_v$) and its underlying vanilla ViT ($\tilde{Z}_v$) after each transformer block $\ell$. Divergence is averaged across all COCO validation images conditioned on a randomly selected object present in the scene.
 As illustrated in Figure~\ref{fig:feature_divergence}, divergence is already non-zero in the early-to-mid layers, indicating that the text signal is incorporated throughout the encoding process. It grows most strongly in later blocks, consistent with the view that earlier ViT layers primarily encode lower-level visual structure while later layers capture higher-level semantics \cite{ghiasi2022visiontransformerslearnvisual}. 
-\sout{At the same time, divergence remains moderate over much of the network, suggesting that \model{} largely preserves the backbone’s visual processing while steering late representations toward a distinct prompt-aware semantic space.}
-However, the exact divergence profile is backbone-dependent and while SteerDINOv2 remains close to the base model until the final blocks and then departs sharply, SteerMAE and SteerSigLIP exhibit a more gradual shift across layers.
+% \sout{At the same time, divergence remains moderate over much of the network, suggesting that \model{} largely preserves the backbone’s visual processing while steering late representations toward a distinct prompt-aware semantic space.}
+However, the divergence profile is backbone-dependent: SteerDINOv2 remains close to its base model until the final blocks and then departs sharply; SteerSigLIP diverges slowly and gradually throughout; while SteerMAE diverges strongly in intermediate layers but converges back toward the original MAE space in the final blocks, suggesting that text conditioning enriches MAE's features with semantic structure before returning them to the original representation space.
 
-\subsubsection{Conditional Visual Similarity on GeneCIS}
+% \subsubsection{Conditional Visual Similarity on GeneCIS}
 
-\begin{wraptable}{r}{0.4\textwidth}
-\centering
-\footnotesize
-\tabcolsep=1.2mm
-\vspace{-12mm}
-\caption{%
-\textbf{GeneCIS benchmark.}
-\model{} outperforms DINOv2 and specialized methods in challenging real-world conditional similarity benchmark.
-}
-\label{tab:cross_backbone}
-\begin{tabular}{l ccc}
-\toprule
-\multirow{2}{*}{Method} & \multicolumn{3}{c}{Focus Object $\uparrow$} \\
-& R@1 & R@2 & R@3 \\
-\midrule
-DINOv2 & 9.6 & 19.5 & 28.4 \\
-\rowcolor{\methodcolor}\textbf{\model{}} & \textbf{25.4} & \textbf{39.1} & \textbf{49.9} \\
-\color{gray}Specialized & \color{gray}18.7 & \color{gray}30.3 & \color{gray}37.4 \\
-\bottomrule
-\end{tabular}
-\vspace{-6mm}
-\end{wraptable}
-In addition to the proposed CORE benchmark, we also evaluate \model{} on the ``Focus Object'' split of GeneCIS~\cite{vaze2023gen}, a zero-shot benchmark for conditional image retrieval in real images. Whereas CORE explicitly controls object presence and scene context through synthetic inpainting, GeneCIS requires models to retrieve the image that matches the reference scene while also containing the queried object. The gallery from which to retrieve is intentionally challenging, containing distractors with a similar scenes but without the queried object, as well as distractors that contain the queried object but come from a different scene. Following the original protocol, we report R@\{1,2,3\}. 
-Despite this substantially noisier and less controlled setting, \model{} transfers strongly in zero-shot evaluation, achieving a R@1 of 25.4\% and outperforming generic frozen backbones (DINOv2: 9.6\%) as well as the benchmark’s task-specific open-vocabulary object baseline (18.7\%).
-These results complement the evidence from CORE and show that language-based representational steering also remains effective in a more challenging and realistic setting.
+% In addition to the proposed CORE benchmark, we also evaluate \model{} on the ``Focus Object'' split of GeneCIS~\cite{vaze2023gen}, a zero-shot benchmark for conditional image retrieval in real images. Whereas CORE explicitly controls object presence and scene context through synthetic inpainting, GeneCIS requires models to retrieve the image that matches the reference scene while also containing the queried object. The gallery from which to retrieve is intentionally challenging, containing distractors with a similar scenes but without the queried object, as well as distractors that contain the queried object but come from a different scene. Following the original protocol, we report R@\{1,2,3\}. 
+% Despite this substantially noisier and less controlled setting, \model{} transfers strongly in zero-shot evaluation, achieving a R@1 of 25.4\% and outperforming generic frozen backbones (DINOv2: 9.6\%) as well as the benchmark’s task-specific open-vocabulary object baseline (18.7\%).
+% These results complement the evidence from CORE and show that language-based representational steering also remains effective in a more challenging and realistic setting.
 
 
 
