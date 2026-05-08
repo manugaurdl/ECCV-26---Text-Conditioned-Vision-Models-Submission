@@ -12,7 +12,7 @@
 \makeatother
 
 \begin{center}
-\textbf{\Large{Steerable Vision Transformers}} \\
+\textbf{\Large{Steerable Visual Representations}} \\
 \textsc{Supplementary Material}
 \end{center}
 
@@ -64,7 +64,7 @@ This section provides further details about the employed evaluations, provides q
 \subsubsection{Controlled Prompt-Conditional Retrieval on CORE}
 \label{apdx:CORE}
 
-For our \textit{COnditional REtrieval} (CORE) benchmark introduced in \cref{subsec:cond_ret_exp}, we select 100 base images for each of six scenes (three indoor and three outdoor environments) from SUN397~\cite{Herranz2016_SUNdataset}. For each image, we create five separate instances by inpainting a scene-relevant background object (for e.g., an ``olive oil bottle'' in ``kitchen'') using FLUX.2 [dev] \cite{flux-2-2025}, resulting in a total of 500 images per scene. 
+For our \textit{COnditional REtrieval} (CORE) benchmark introduced in \cref{subsec:cond_ret_exp}, we select 100 base images for each of six scenes (three indoor and three outdoor environments) from SUN397~\cite{Herranz2016_SUNdataset}. For each image, we create five separate instances by inpainting a scene-relevant background object (e.g., an ``olive oil bottle'' in ``kitchen'') using FLUX.2 [dev] \cite{flux-2-2025}, resulting in a total of 500 images per scene. 
 The selected scenes, the corresponding five objects added to each scene and the text-conditioning prompts are reported in Table~\ref{tab:core_object_prompts}.
 
 % With each image as a query and the remaining rest 499 as the retrieval database, we frame the problem as one-vs-all image retrieval. This evaluates the visual encoder's ability to steer its global representation using the text prompt in order to retrieve the images comprising the objects specified in the prompt
@@ -95,30 +95,29 @@ Despite many of the inpainted objects being very small and in the background, th
 \label{apdx_fig:core_qual}
 \end{figure}
 
-\subsubsection{Layer-wise Effects of Text Conditioning}
 
 \begin{wrapfigure}{r}{0.4\textwidth}
 \centering
-% \vspace{-10mm}
+\vspace{-8mm}
 \includegraphics[width=\linewidth]{figures/steervit_basevit_divergence_global.pdf}
-% \vspace{-5mm}
+\vspace{-8mm}
 \caption{
 % \textbf{Incremental divergence across layers.} 
-\textbf{Cosine divergence between intermediate \model{} and vanilla ViT representations} grows throughout visual processing, indicating text conditioning progressively reshapes internal features.}
-% \vspace{-15mm}
+\textbf{
+Cosine divergence between \model{} and base ViT intermediate features}. Text-conditioning progressively steers internal features across layers.
+% Cosine divergence between intermediate \model{} and vanilla ViT representations} grows throughout visual processing, indicating text conditioning progressively reshapes internal features
+}
+\vspace{-18mm}
 \label{fig:feature_divergence}
 \end{wrapfigure}
+
+\subsubsection{Layer-wise Effects of Text Conditioning}
+
 To further analyze how text conditioning reshapes the global image representation, we measure the divergence ($1-\cos(Z_v^{(\ell)}, \tilde{Z}_v^{(\ell)})$) between intermediate representations produced by \model{} ($Z_v$) and its underlying vanilla ViT ($\tilde{Z}_v$) after each transformer block $\ell$. Divergence is averaged across all COCO validation images conditioned on a randomly selected object present in the scene.
 As illustrated in Figure~\ref{fig:feature_divergence}, divergence is already non-zero in the early-to-mid layers, indicating that the text signal is incorporated throughout the encoding process. It grows most strongly in later blocks, consistent with the view that earlier ViT layers primarily encode lower-level visual structure while later layers capture higher-level semantics \cite{ghiasi2022visiontransformerslearnvisual}. 
-% \sout{At the same time, divergence remains moderate over much of the network, suggesting that \model{} largely preserves the backbone’s visual processing while steering late representations toward a distinct prompt-aware semantic space.}
 However, the divergence profile is backbone-dependent: SteerDINOv2 remains close to its base model until the final blocks and then departs sharply; SteerSigLIP diverges slowly and gradually throughout; while SteerMAE diverges strongly in intermediate layers but converges back toward the original MAE space in the final blocks, suggesting that text conditioning enriches MAE's features with semantic structure before returning them to the original representation space.
 
-% \subsubsection{Conditional Visual Similarity on GeneCIS}
-
-% In addition to the proposed CORE benchmark, we also evaluate \model{} on the ``Focus Object'' split of GeneCIS~\cite{vaze2023gen}, a zero-shot benchmark for conditional image retrieval in real images. Whereas CORE explicitly controls object presence and scene context through synthetic inpainting, GeneCIS requires models to retrieve the image that matches the reference scene while also containing the queried object. The gallery from which to retrieve is intentionally challenging, containing distractors with a similar scenes but without the queried object, as well as distractors that contain the queried object but come from a different scene. Following the original protocol, we report R@\{1,2,3\}. 
-% Despite this substantially noisier and less controlled setting, \model{} transfers strongly in zero-shot evaluation, achieving a R@1 of 25.4\% and outperforming generic frozen backbones (DINOv2: 9.6\%) as well as the benchmark’s task-specific open-vocabulary object baseline (18.7\%).
-% These results complement the evidence from CORE and show that language-based representational steering also remains effective in a more challenging and realistic setting.
-
+\newpage
 
 
 \subsection{MOSAIC Benchmark}
@@ -153,7 +152,7 @@ We discuss this emergent multi-localization property of our method in ~\cref{app
 \subsection{Anomaly Segmentation}
 \label{apdx:anomaly_segmentation}
 
-\begin{figure}[ht]
+\begin{figure}[t]
 \centering
 \includegraphics[width=1.\textwidth]{figures/anomaly_detection_grid_carpet_leather.png}
 \includegraphics[width=1.\textwidth]{figures/anomaly_detection_metal_nut_hazelnut_bottle.png}
@@ -167,7 +166,7 @@ We discuss this emergent multi-localization property of our method in ~\cref{app
 We perform zero-shot anomaly segmentation (AS) on the MVTec~AD~\cite{bergmann_mvtech} and VisA~\cite{zou2022_visa_dataset} datasets.
 We derive the anomaly map by upsampling the continuous heatmap produced by the learned linear segmentation head.
 As for all text-steerable methods, we use an ensemble of ten anomaly prompts (e.g., \texttt{``the anomaly in the <object>.''}) and average the resulting heatmaps across prompts.
-Following standard practice in the AD literature~\cite{WinCLIP_Jeong23CVPR}, we measure the pixel-wise \textit{Area under the Receiver Operating Characteristics} ($\text{ROC}_P$), the \textit{Per-Region-Overlap} (PRO), and threshold-optimal $F_1$ score ($F_1^{\max}$).
+Following standard practice in the AD literature~\cite{WinCLIP_Jeong23CVPR}, we measure the pixel-wise \textit{area under the ROC curve} ($\text{ROC}_P$), the \textit{Per-Region-Overlap} (PRO), and threshold-optimal $F_1$ score ($F_1^{\max}$).
 Performance of existing training- and adaptation-free AS baselines is reported as stated in the original publication.
 
 \input{tables/anomaly_detection_table}
@@ -264,7 +263,7 @@ We adopt 500k iterations for all final models.
 \label{subsec:scaling}
 \input{tables/scaling_table}
 
-As shown in Table~\ref{tab:scaling}, scaling the vision backbone from ViT-S through ViT-B to ViT-L generally leads to improvements in both representational quality as well as textual understanding. 
+As shown in Table~\ref{tab:scaling}, scaling the vision backbone from ViT-S through ViT-B to ViT-L leads to improvements in both representational quality as well as textual understanding. 
 % In contrast, positive scaling behavior of similar magnitude cannot be observed with regards to the language encoder. 
 Interestingly, scaling the text encoder from RoBERTa-Base (125M parameters) to  RoBERTa-Large (355M) also improves performance on visual tasks. 
 This suggests that rich embeddings of the larger text encoder add more semantic structure to the ViT's residual stream (row 4 vs row 5).
@@ -309,10 +308,10 @@ This suggests that rich embeddings of the larger text encoder add more semantic 
 \subsection{Training Data}
 \label{apdx:data}
 
-We train on a mixture of referential segmentation and grounding datasets to ensure diversity in both visual domains and textual expression styles:
+We train on a mixture of referential segmentation and grounding datasets to ensure diversity in both visual domains and textual expression styles (see Fig.~\ref{fig:training_data}):
 
-
-
+\noindent \textbf{RefCOCO, RefCOCO+, RefCOCOg}~\cite{kazemzadeh2014referitgame, yu2016refcocog} provide referring expressions grounded in COCO images.
+RefCOCO+ excludes spatial language (e.g., ``left of''), encouraging the model to rely on appearance cues, while RefCOCOg contains longer, more descriptive expressions that exercise the model's capacity for detailed textual understanding.
 
 \begin{wrapfigure}{r}{0.4\textwidth}
 \centering
@@ -321,14 +320,12 @@ We train on a mixture of referential segmentation and grounding datasets to ensu
 % \vspace{-5mm}
 \caption{\textbf{Training data composition.} The inner ring shows unique images per source while the outer ring shows associated referring expressions. The mixture is intended to combine fine-grained object supervision, diverse referring expressions, and broad visual domain coverage.}
 % \vspace{-15mm}
-\label{fig:arch_training}
+\label{fig:training_data}
 \end{wrapfigure}
 
-\noindent \textbf{RefCOCO, RefCOCO+, RefCOCOg}~\cite{kazemzadeh2014referitgame, yu2016refcocog} provide referring expressions grounded in COCO images.
-RefCOCO+ excludes spatial language (e.g., ``left of''), encouraging the model to rely on appearance cues, while RefCOCOg contains longer, more descriptive expressions that exercise the model's capacity for detailed textual understanding.
-
-
 \noindent \textbf{LVIS}~\cite{gupta2019lvis} uses the same underlying COCO images but also considers fine-grained and long-tail object categories. 
+
+
 
 \noindent \textbf{Visual Genome}~\cite{krishna2017visual} (preprocessed following MDeTr~\cite{kamath2021mdetr}) contributes region descriptions paired with bounding boxes across densely annotated scenes.
 These descriptions span a broader vocabulary and more complex spatial relationships than the RefCOCO family, increasing the diversity of text conditioning signals.

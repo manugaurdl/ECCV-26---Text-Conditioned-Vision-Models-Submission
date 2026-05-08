@@ -16,7 +16,7 @@ While models typically trade off steerability for representation quality, \model
 %Quality–steerability trade-off: vision-only encoders yield strong (global and patch-level) features but little steerability, whereas multimodal models are steerable yet less transferable; \model{} achieves both high quality and high steerability.
 %\JR{TODO: adapt caption to new Figure}
 %=
-\vspace{-6mm}
+\vspace{-4mm}
 }
 \label{fig:teaser}
 \end{figure}
@@ -51,8 +51,8 @@ like the ``remote control'' or ``bookshelf''.
 % \YA{by all measures, DINO is not coarse.. and not "scene-level" in the typical way of "scene = places205 vs object=imagenet" kind of way........ instead fully focus on the "these models are really great, but no one has thought to make them steerable! this would be great!} scene-level semantics.
 % \YA{todo: refer to qualitative figure of Fig1}
 % \MT{this is a strong claim; I don't think it is fair to say models don't see objects beyond prominent one. They are just muted. Otherwise performance for KNN would be 0, but it is not}
-Given the lack of any other input, focusing on the dominant object seems reasonable. %However, many downstream tasks require focusing on specific objects rather than the dominant scene concept, for instance, retrieving images by a particular object in a cluttered scene, localizing a described entity, or detecting anomalies in a specific component.
-However, certain tasks, such as fine-grained localization, may require greater consideration of less prominent visual concepts.
+Given the lack of other input, focusing on the dominant object is reasonable. %However, many downstream tasks require focusing on specific objects rather than the dominant scene concept, for instance, retrieving images by a particular object in a cluttered scene, localizing a described entity, or detecting anomalies in a specific component.
+However, tasks such as fine-grained localization may require greater consideration of less prominent visual concepts.
 % But clearly there are tasks that may require focusing on less prominent visual concepts; for example, fine-grained localization.
 % the task of retrieving images of anomalous parts with small imperfections.
 % We argue that it would be useful to have generic visual representations that could be \textit{steered} based on an additional language prompt.
@@ -87,7 +87,7 @@ and \textit{how} it organizes the embedding space
 (so that clusters can be defined by specific attributes such as supercategories or object parts;~\cref{sec:tsne_viz}).
 
 
-\item \textbf{Representation quality:} The steered representation should support a wide range of 
+\item \textbf{Representation quality:} The steered representation should support diverse 
 visual tasks, such as retrieval, classification, and segmentation (\cref{subsec:pareto}).
 %Text steering does not degrade the pretrained \YA{we should say more often that we do post-training of already-pretrained models} ViT's downstream transfer on standard vision benchmarks (\cref{subsec:pareto}).
 % \item \textbf{Representation quality preservation:} Text steering, as described above, desn't degrade the base ViT's downstream transfer on standard vision benchmarks (\cref{subsec:pareto}).
@@ -101,16 +101,16 @@ Language should influence visual processing even at early layers of feature extr
 \noindent
 While our first two desiderata are capabilities that are straightforward to measure (\cref{fig:teaser}), the last is an architectural constraint that we hypothesize is crucial. 
 % \JR{with the findings from prior late-fusion models and our ablation results, do you think it's fair to argue beyond a hypothesis and claim empirical evidence for that?} 
-When considering existing multimodal vision-language architectures (see Fig.~\ref{fig:arch_comparison}), most employ {\it late fusion} of visual features with language.
-One reason is quite practical; existing unimodal encoders for language and vision are often trained at massive scales on unimodal (text or image) data, which is far more plentiful than high-quality paired (text {\it and} image) data. 
-\MG{drop vision; weave in inverted MLLM bridge}
-% \JR{I find this a bit confusing. Most MLLMs use CLIP-like encoders which are trained with paired data (i.e., multimodal?!). Data doesn't seem to be a big bottleneck for late-fusion VLMs.}
-% \MG{best vision and language encoders are unimodal; CLIP like encoders are query-agnostic, text is late fused there; For MLLMS as well - text is late fused} \JR{Yes, CLIP is late-fused. But isn't it still generally considered a multimodal model? For vision tasks, unimodal models are certainly better, but when incorporated into MLLMs, CLIP-like models have an edge.}
-It is not clear how to early-fuse text into visual encoding process, and it is far easier to late-fuse them 
+When considering existing multimodal vision-language architectures (see Fig.~\ref{fig:arch_comparison}),
+most encode visual features independently and employ {\it late fusion} with language.
+% employ {\it late fusion} of visual features with language.
+One reason is quite practical; existing language models are trained at massive scales on unimodal (text) data, which is far more plentiful than high-quality paired (text {\it and} image) data. 
+It is not clear how to early-fuse text into the visual encoding process, and it is far easier to late-fuse them 
 % via fine-tuning 
-(for example, as in CLIP~\cite{radford2021_clip} or Multimodal LLMs (MLLMs) 
+(for example, as in 
+% CLIP~\cite{radford2021_clip} or 
+Multimodal LLMs (MLLMs) 
 (e.g., \cite{zhu2025internvl3, Qwen3-VL, alayrac2022flamingo})). 
-% \JR{CLIP isn't doing fine-tuning but aligning them from scratch.}
 
 
 % However, this means that existing models produce {\it visual representations with early features that are not influenced by a given text prompt}. \MG{encoding not influenced}
@@ -211,7 +211,7 @@ Standard vision encoders produce query-agnostic visual features.
 MLLMs and OV Localization models \textit{late fuse} text after the visual encoder,
 %  for language generation.
 modeling vision-language interactions inside the LLM or task-aligned encoder.
-\model{}, instead, directly steers the internal features of a frozen ViT using text prompts (\textit{early fusion}) via lightweight cross-attention layers.
+\model{}, instead, directly steers the internal features of a frozen ViT using text prompts (\textit{early fusion}) via lightweight cross-attention layers. % Top-down information flow.
 % \sout{Standard vision encoders produce image-conditioned features.
 % Multimodal LLMs and open-vocabulary localization models combine image and language before the task head through mid-modality fusion for language generation or spatial prediction.}
 % \model{}, instead, directly steers the internal features of a frozen ViT using text prompts via lightweight cross-attention layers.
@@ -402,8 +402,8 @@ These results suggest that conditioning vision on language -- rather than langua
 
 In summary, we make the following contributions:
 \begin{enumerate}[nosep]
-\item We introduce Steerable Visual Representations, a framework
-% (\cref{sec:method})
+\item We introduce Steerable Visual Representations (SteerViT), a framework
+% new class of visual representations
 that equips \textit{any} pretrained visual encoder with text-steerable representations via a simple grounding pretext task, adding only 21M parameters.
 \item We show that \model{} achieves a Pareto improvement 
 % (\cref{fig:teaser}) 

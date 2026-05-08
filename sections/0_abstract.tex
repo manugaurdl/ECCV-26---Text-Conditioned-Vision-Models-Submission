@@ -2,16 +2,12 @@
 \vspace{-5mm}
 \begin{abstract}
 Pretrained Vision Transformers (ViTs) such as DINOv2 and MAE provide generic image features that can be applied to a variety of downstream tasks such as retrieval, classification, and segmentation.  
-However, such representations tend to focus on the most prominent object in the image, 
-% and so, are difficult to adapt to other visual concepts.
-\MG{and cannot be steered toward specific visual concepts of interest.}
-% \MG{\sout{Multimodal models such as CLIP  and MLLMs}} 
-Multimodal LLMs can be guided with textual prompts,
-% \MG{can be steered with natural language,}
+% However, such representations tend to focus on the most prominent object in the image, 
+% and cannot be steered toward specific visual concepts of interest.
+However, such representations tend to focus on the most salient visual cues in the image, with no way to direct them toward less prominent concepts of interest.  
+In contrast, Multimodal LLMs can be guided with textual prompts,
 but the resulting representations tend to be language-centric and lose their effectiveness for generic visual tasks.
 To address this, we introduce
-% \MG{Steerable ViT?}
-% \textbf{\model{}}, a framework 
 \textit{Steerable Visual Representations}, a new class of visual representations, whose global and local features can be steered with natural language.
 % While most multimodal models tend to late-fuse visual encoders with text features (e.g., CLIP), \model{} \textit{early}-fuses textual information into layers of the visual encoder using lightweight cross-attention. 
 While most vision-language models (e.g., CLIP) fuse text with visual features after encoding (\textit{late} fusion), we inject text directly into the layers of the visual encoder (\textit{early} fusion) via lightweight cross-attention. 
@@ -31,7 +27,7 @@ on anomaly detection and personalized object discrimination, exhibiting zero-sho
 \textbf{Project Website:} 
 \href{https://jonaruthardt.github.io/project/SteerViT/}{jonaruthardt.github.io/project/SteerViT}
 % \url{https://jonaruthardt.github.io/project/SteerViT/}
-\vspace{-13mm}
+\vspace{-8mm}
 \end{abstract}
 
 \begin{figure}[h!]
