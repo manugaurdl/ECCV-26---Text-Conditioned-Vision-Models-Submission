@@ -10,7 +10,8 @@
 
 \usepackage{titlesec}
 
-\titlespacing*{\paragraph}{1pc}{2pt}{0.6em}
+% \titlespacing*{\paragraph}{1pc}{2pt}{0.6em}
+\renewcommand{\paragraph}[1]{\vspace{1mm}\noindent\textbf{#1}}
 
 % Commonly used abbreviations (\eg, \ie, \etc, \cf, \etal, etc.)
 \usepackage{eccvabbrv}
@@ -19,6 +20,10 @@
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
+\usepackage{wrapfig}
+\newcommand{\model}{SteerViT}
+\usepackage[normalem]{ulem}
+
 
 \usepackage[T1]{fontenc}
 \usepackage{tikzsymbols}
@@ -136,12 +141,15 @@
 \appendix
 
 
+\noindent
 We thank the reviewers for their thoughtful feedback and for recognizing the importance of the problem (\R1, \R3, \R4), the elegance and practicality of the method (\R1, \R2, \R4), and the breadth of the evaluation (\R1, \R2, \R3).
-The main concerns are the precision of claims (\R1, \R4), the role of the training objective and architecture (\R1, \R3, \R4), and confusion about SteerViT variants (\R2), which we address below.
+The main concerns are the precision of claims (\R1, \R4), the role of early-fusion (\R3), ablating training objective and architecture (\R1, \R4), and confusion about SteerViT variants (\R2), which we address below.
 
-\paragraph{Preservation of Feature Quality.} \R4 notes that claims about preserving representation quality are overstated given the reported degradation. Post deadline, we identified an issue causing the CLS token and normalization layers to be optimized. Freezing both brings SteerViT much closer to its vanilla backbone without affecting steerability. 
-As requested by \R2, we consider additional downstream tasks in Tab.~\ref{tab:feature_preservation}. Here, SteerViT closely tails DINOv2 (87.0 vs. 88.1), confirming that no significant decline of transfer ability occurs. 
-We will update the numbers in the paper. 
+% \paragraph{Preservation of Feature Quality.} \R4 notes that claims about preserving representation quality are overstated given the reported degradation on linear probes. Post deadline, we identified an issue causing the CLS token and normalization layers to be optimized. Freezing both brings SteerViT much closer to its vanilla backbone without affecting steerability. 
+% As requested by \R2, we consider additional downstream tasks in Tab.~\ref{tab:feature_preservation}. Here, SteerViT closely tails DINOv2 (87.0 vs. 88.1), confirming that no significant decline of transfer ability occurs. 
+% We will update the numbers in the paper. 
+
+\paragraph{Preservation of Feature Quality.} \R4 correctly notes that our preservation claims are overstated. Post deadline, we found that the CLS token and normalization layers were inadvertently being optimized and freezing them recovers representation quality without affecting steerability. SteerViT now matches DINOv2 on classification and segmentation (71.2 vs.\ 71.2 average). As requested by \R2, we also evaluate on action recognition, where SteerViT only trails DINOv2 by 2.6 points (74.7 vs.\ 77.3). Tab.~\ref{tab:feature_preservation} reports the post-fix results. Overall, SteerViT preserves 98.8\% of DINOv2's performance. We will update the paper.
 
 
 
@@ -186,30 +194,68 @@ SteerViT & 91.2 & 77.7 & \textbf{94.3} & \textbf{55.4} & \textbf{53.8} & 89.4 & 
 \end{tabular}}
 \end{table}
 
+
+% Rewriting generalization...
+% don't muddle R1 and R4 concerns. its confusing else
+% concede on pods
+% stand ground on AS
+% we beat 2/3 - don't beat FADE; concede that language needs to be softenened
+
 \paragraph{Generalization Claims.}
 We agree with \R1 and \R4 that some claims were too broad. 
-``Zero-shot generalization'' was used to highlight the ability of SteerViT representations to transfer to tasks different from the referential segmentation training objective. 
-For PODS, we will follow \R1's suggestion and describe the result as an application of frozen SteerViT features.
-For anomaly segmentation, ``zero-shot'' follows the AS literature since no target-dataset tuning is used. However, we will revise ``matches or outperforms dedicated approaches'' to more precisely state that SteerViT is competitive, outperforming dedicated AS methods in 10/18 settings (Tab.~7), but not dominating all baselines.
+% ``Zero-shot generalization'' was used to highlight the ability of SteerViT representations to transfer to tasks different from the referential segmentation training objective. 
+``Zero-shot generalization'' was used to highlight that SteerViT transfers to tasks beyond the referential segmentation training objective.
+% For PODS, we will follow \R1's suggestion and describe the result as an application of frozen SteerViT features.
+For Personal Object Discrimination (PODS), we follow \R1's suggestion and reframe the result as a training-free application of frozen SteerViT features. 
+% (not liking this)
+% For anomaly segmentation, ``zero-shot'' follows the AS literature since no target-dataset tuning is used.
+% However, we will revise ``matches or outperforms dedicated approaches'' to more precisely state that SteerViT is competitive, outperforming dedicated AS methods in 10/18 settings (see Tab.~7 in Appendix), but not dominating all baselines.
+For anomaly segmentation (AS), ``zero-shot'' follows established usage in the AS literature 
+% (~\cite{zhou2022_maskclip}, ~\cite{WinCLIP_Jeong23CVPR}, ~\cite{li2024_fade}), 
+for methods not finetuned on the target dataset.
+We will, however, revise writing from ``matches or outperforms dedicated approaches'' to more accurately state that SteerViT 
+% (79.4 PRO) 
+beats dedicated AS methods
+% WinCLIP (64.6) and DIVAD (73.3) 
+but falls short of the state-of-art (see Table 2 in paper)% FADE (84.5)
+.
+
+
 
 \paragraph{Late vs. Early Fusion.}
-We agree with \R1 that early fusion should not be framed as a strict desideratum. As noted by \R3, our late-fusion ablation is a strong baseline, achieving similar steerability on CORE for DINOv2. However, Tab.~3 also shows that early fusion becomes more important when steering requires fine-grained language-vision grounding (e.g. 53.4 vs 45.3 on PODS). Moreover, SigLIP and MAE benefit more strongly from early fusion, as shown in Tab.~4. 
-We will therefore revise the introduction not to claim that late fusion cannot steer features, but that early fusion provides a more robust mechanism across tasks and backbones.
-% We will therefore revise the introduction to express that early fusion provides a more robust mechanism across tasks and backbones.
-% We will revise the introduction accordingly.
-
+% We agree with \R1 that early fusion should not be framed as a strict desideratum. As noted by \R3, our late-fusion ablation is a strong baseline, achieving similar steerability on CORE for DINOv2. However, Tab.~3 also shows that early fusion becomes more important when steering requires fine-grained language-vision grounding (e.g. 53.4 vs 45.3 on PODS). Moreover, SigLIP and MAE benefit more strongly from early fusion, as shown in Tab.~4. 
+% We will therefore revise the introduction not to claim that late fusion cannot steer features, but that early fusion provides a more robust mechanism across tasks and backbones.
+%% We will therefore revise the introduction to express that early fusion provides a more robust mechanism across tasks and backbones.
+%% We will revise the introduction accordingly.
+We agree with \R1 that our justification for early fusion is thin, and strengthen it here.
+\R3 correctly notes that late fusion is competitive for DINOv2, but this is backbone-specific: for SigLIP and MAE late fusion collapses (75.4 / 41.0 vs.\ 91.3 / 74.9 with early fusion, see Tab.~\ref{tab:cross_backbone}).
+Even for DINOv2, late fusion lags on fine-grained \sout{visual language understanding} multimodal instance discrimination (PODS 45.3 vs.\ 53.4, Tab.~3).
+We will revise the introduction to %include 
+% this cross-backbone evidence 
+%these results
+%and 
+argue for early fusion from empirical evidence rather than from assertion.
 
 \paragraph{Design Choices.}
-Addressing \R1 and \R4, we ablate data scale under a fixed 200k-iteration budget (Tab.~\ref{tab:data_arch_ablation}). Even 25\% data reaches 95.3 CORE and 55.6 PODS, close to the full-data model, suggesting that gains are not simply due to the scale of grounding data. To address \R1’s architectural concern, ungated and sigmoid-gated variants remain competitive, but tanh gating gives the best balance. Adding an FFN does not help, supporting our lightweight default design.
 
-% \section{Efficiency and Resource Requirements}
+
+\noindent Addressing \R1 and \R4, we ablate data scale and architecture under a fixed 200k-iteration budget (Tab.~\ref{tab:data_arch_ablation}). 
+% Even 25\% data reaches 95.3 CORE and 55.6 PODS, close to the full-data model, suggesting that gains are not simply due to the scale of grounding data. To address \R1’s architectural concern, ungated and sigmoid-gated variants remain competitive, but tanh gating gives the best balance. Adding an FFN does not help, supporting our lightweight default design.
+With 25\% data, SteerViT reaches 95.3 CORE versus 43.7 for base DINOv2, capturing 51.6 of the 51.8 pp gain.
+The architecture, not data scale, drives the improvement (\R4).
+All three gating variants (row 3-6) are within ~3 pp on average, showing SteerViT is robust to the specific choice. 
+Adding an FFN does not help, supporting our lightweight default design. (\R1, GCA design)
+% we will add in camera ready!
 
 \paragraph{Efficiency and Resource Requirements.} Based on feedback from reviewers \R1 and \R4, we measure and report efficiency of SteerViT and baselines in Tab.~\ref{tab:efficiency}. 
 SteerViT optimizes 21.2M parameters for ${\sim}$84 H100 hours.
+% we will add in camera ready!
 
 % \section{Individual Responses}
-\paragraph{MLLM-based Embedding Models.}
-Following \R3, we evaluated Qwen3-VL-Embedding-2B and found improvements over the non-embedding variant in global representation quality ($+2.2$) and CORE steerability ($+12.1$).
+\paragraph{MLLM Embedding Models.}
+Following \R3, we test Qwen3-VL-Embedding-2B and see improvements over the non-embedding variant in feature quality ($91.2\rightarrow93.4$ on FG-CLS) and CORE steerability ($64.9\rightarrow77.0$).
+% we still underperform SteerDino on Rep. Quality --> write in one line
+
 % FG-CLS    CORE    ADE20k
 % 91.182	64.918	37.369 (Qwen3-VL-2B)
 % 93.408	77.038	37.072 (Qwen3-VL-Embedd-2B)
@@ -298,10 +344,12 @@ Data 25\%        & tanh    & \xmark & 88.4 & 53.2 & 95.3 & 55.6 & 77.4 \\
 \rowcolor{databg}
 Data 50\%        & tanh    & \xmark & 88.0 & 54.0 & 95.2 & 52.8 & 82.6 \\
 \rowcolor{\methodcolor}
-Default          & tanh    & \xmark & \textbf{89.5} & \textbf{55.3} & \textbf{95.5} & 55.4 & 77.9 \\
+Default          & tanh    & \xmark & \textbf{89.5} & 55.3 & \textbf{95.5} & 55.4 & 77.9 \\
 \addlinespace[1pt]
 \rowcolor{archbg}
 No gating        & none    & \xmark & 88.2 & 54.7 & 95.0 & 56.0 & \textbf{82.9} \\
+\rowcolor{archbg}
+Normal gate init        & tanh  & \xmark & 88.6 & \textbf{55.5}  & 95.3  & 56.3 & 80.6 \\
 \rowcolor{archbg}
 Sigmoid gate     & sigmoid & \xmark & 88.1 & 55.2 & 95.3 & \textbf{58.9} & 82.3 \\
 \rowcolor{archbg}
@@ -333,11 +381,28 @@ We will expand on this analysis in the supplement.
 \label{fig:negation_token_length}
 \end{figure}
 
+\textcolor{red}{Deva: Since clarity is the primary concern for the borderline reject review from yCUw, I'd prioritize it and move it earlier in rebuttal.}
+
+\paragraph{Steering Frozen VFMs.}
+To clarify a misunderstanding by \R2: SteerViT freezes the ViT and trains only the GCA layers (21.2M params, Tab.~\ref{tab:efficiency}).
+% ; the ref-seg objective is a pretext for the adapters. 
+Tab.~4 in the paper is exactly the ``does it work on VFMs?'' experiment, applying SteerViT to three frozen backbones enables steerability on CORE: DINOv2 (43.5$\to$93.4), SigLIP (38.3$\to$90.9), MAE (21.8$\to$62.6).
+
 \paragraph{Presentation clarity.}
-We thank \R1 and \R2 for highlighting clarity issues. We improved Fig.~3. 
-For \R2, the linear-probe and ADE20k results are in the supplement but we will restore the omitted ADE20k column in Tab.~3.
-We will also specify the used configuration (DINOv2 ViT-B/14 with $\omega{=}1$) earlier in §4 and clarify that only Fig.~2/Fig.~7 vary the learned gates post-hoc.
+% Rewrite!!! R2 not addressed properly
+We thank \R1 and \R2 for highlighting clarity issues. We improved Fig.~3 based on \R1's feedback.
+For \R2, the linear probe results are reported in Table~3 of the paper under the column ``FG-CLS'' (accuracy averaged over three classification benchmarks). \R2 correctly notes the missing ADE20k column in Table~3, which we had moved to the supplement for space and have now restored.
+% For \R2, the linear-probe and ADE20k results are in the supplement but we will restore the omitted ADE20k column in Tab.~3.
+
+% explicitly mention R2's concern for model variant
+\textbf{Addressing \R2's confusion about model variants:} we apologise for the unclear notation. 
+Throughout the paper, ``SteerViT'' denotes the DINOv2 ViT-B/14 backbone with gating fully on ($\alpha_\ell{=}1$), unless otherwise stated; all results in Sec.~4.1 (CORE), Sec.~4.2 (MOSAIC), Sec.~4.4 (PODS), and Sec.~4.6 (MVTec) report this single model. 
+% HOW TO ADDRESS Figure 7???
+% The $\alpha^\omega$ curves in Fig.~2/Fig.~7 are not retrained variants but post-hoc rescalings of the trained gates by $\omega{\in}[0,1]$ at inference. The cross-backbone comparison (DINOv2/SigLIP/MAE) appears only in Fig.~7 and Tab.~4, both of which explicitly study generalisation across backbones."We will also specify the used configuration (DINOv2 ViT-B/14 with $\omega{=}1$) earlier in §4 and clarify that only Fig.~2/Fig.~7 vary the learned gates post-hoc.
+% 
 % We will also state the default SteerViT configuration (DINOv2 ViT-B/14 with $\omega{=}1$) upfront instead of in §4.7. This will also clarify that only Fig.~2/Fig.~7 vary the learned gates post-hoc, resulting in additional variants of the same model.
+\vspace{10mm}
+\input{tables/cross_backbone_table.tex}
 
 
 
@@ -412,91 +477,6 @@ InternVL3-2B  & 2.1B & all & n/r   & 1591.0 & 12.2 & 6.3  \\
     \bibliographystyle{splncs04}
     \bibliography{bib/main}
 }
-\clearpage
-
-% ---------------------------------------------------------------
-% TODO REBUTTAL: Enter your response below
-\section{Introduction}
-
-After receiving paper reviews, the authors may optionally submit a rebuttal to address the reviewers' comments, which will be limited to a {\bf one page} PDF file.
-Please follow the steps and style guidelines outlined below for submitting your author response.
-
-The author rebuttal is optional and, following similar guidelines to previous conferences, is meant to provide you with an opportunity to rebut factual errors or to supply additional information requested by the reviewers.
-It is NOT intended to add new contributions (theorems, algorithms, experiments) that were absent in the original submission and NOT specifically requested by the reviewers.
-You may optionally add a figure, graph, table, or proof to your rebuttal to better illustrate your answer to the reviewers' comments.
-
-Consistent with established practices in computer vision, reviewers should refrain from requesting significant additional experiments for the rebuttal or penalize for lack of additional experiments.
-Authors should refrain from including new experimental results in the rebuttal, especially when not specifically requested to do so by the reviewers.
-Authors may include figures with illustrations or comparison tables of results reported in the submission/supplemental material or in other papers.
-
-Just like the original submission, the rebuttal must maintain anonymity.
-Note that the rebuttal must not include external links.
-The rebuttal must comply with this template (the use of sections is not required, though recommended to structure the rebuttal for ease of reading).
-The rebuttal must also include line numbers as in this example document.
-This allows for easy referencing of your response by reviewers and area chairs.
-
-
-%-------------------------------------------------------------------------
-\subsection{Response length}
-Author responses must be no longer than 1 page in length including any references and figures.
-Overlength responses will simply not be reviewed.
-This includes responses where the margins and formatting are deemed to have been significantly altered from those laid down by this style guide.
-Note that this \LaTeX\ guide already sets figure captions and references in a smaller font.
-
-
-%------------------------------------------------------------------------
-\section{Formatting your Response}
-
-{\bf Make sure to update the paper title and paper ID in the appropriate place in the \verb+tex+ file.}
-
-All text must be in a two-column format.
-The total allowable size of the text area is $6\frac78$ inches (17.46 cm) wide by $8\frac78$ inches (22.54 cm) high.
-Columns are to be $3\frac14$ inches (8.25 cm) wide, with a $\frac{5}{16}$ inch (0.8 cm) space between them.
-The top margin should begin 1 inch (2.54 cm) from the top edge of the page.
-The bottom margin should be $1\frac{1}{8}$ inches (2.86 cm) from the bottom edge of the page for $8.5 \times 11$-inch paper;
-for A4 paper, approximately $1\frac{5}{8}$ inches (4.13 cm) from the bottom edge of the page.
-
-Please number any displayed equations.
-It is important for readers to be able to refer to any particular equation.
-
-Wherever Times is specified, Times Roman may also be used.
-The main text should be in 10-point Times, single-spaced.
-Section headings should be in 10 or 12 point Times.
-All paragraphs should be indented 1 pica (approx.\ $\frac{1}{6}$ inch or 0.422 cm).
-Figure and table captions should be 9-point Roman type as in \cref{fig:onecol}.
-
-
-List and number all bibliographical references in 9-point Times, single-spaced,
-at the end of your response.
-When referenced in the text, enclose the citation number in square brackets, for example~\cite{Alpher05}.
-Where appropriate, include the name(s) of editors of referenced books.
-
-\begin{figure}[t]
-  \centering
-  \fbox{\rule{0pt}{0.5in} \rule{0.9\linewidth}{0pt}}
-  %\includegraphics[width=0.8\linewidth]{egfigure.eps}
-   \caption{Example of caption.  It is set in Roman so that mathematics
-   (always set in Roman: $B \sin A = A \sin B$) may be included without an
-   ugly clash.}
-   \label{fig:onecol}
-\end{figure}
-
-To avoid ambiguities, it is best if the numbering for equations, figures, tables, and references in the author response does not overlap with that in the main paper (the reviewer or AC may wonder if you talk about \cref{fig:onecol} in the author response or in the actual paper).
-See the \LaTeX\ source of the rebuttal template for a workaround.
-
-
-%-------------------------------------------------------------------------
-\subsection{Illustrations, graphs, and photographs}
-
-Please ensure that any point you wish to make is resolvable in a printed copy of the response.
-Resize fonts in figures to at least 6\:pt ($\sim$2\:mm character height), and choose line widths that render effectively in print.
-Readers (and reviewers/ACs), even of an electronic copy, may choose to print your response in order to read it.
-You cannot insist that they do otherwise, and therefore must not assume that they can zoom in to see tiny details on a graphic.
-
-
-%-------------------------------------------------------------------------
-% References
-
 
 
 \end{document}
