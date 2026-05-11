@@ -165,7 +165,7 @@ SteerViT maintains 98.8\% of DINOv2's avg. performance across
 \textcolor{segtext}{segmentation}, and
 \textcolor{acttext}{action recognition} downstream tasks.
 % With $\omega{=}0.0$, SteerViT is identical to DINOv2.
-Setting $\omega{=}0.0$ (post-hoc gate steering) recovers DINOv2 performance. 
+% Setting $\omega{=}0.0$ (post-hoc gate steering) recovers DINOv2 performance. 
 }
 \label{tab:feature_preservation}
 \resizebox{\linewidth}{!}{
@@ -215,9 +215,9 @@ For anomaly segmentation (AS), ``zero-shot'' follows established usage in the AS
 for methods not finetuned on the target dataset.
 We will, however, revise writing from ``matches or outperforms dedicated approaches'' to more accurately state that SteerViT 
 % (79.4 PRO) 
-beats dedicated AS methods
+beats dedicated AS methods (\cite{WinCLIP_Jeong23CVPR},~\cite{hicsonmez2026training})
 % WinCLIP (64.6) and DIVAD (73.3) 
-but falls short of the state-of-art (see Table 2 in paper)% FADE (84.5)
+but falls short of the state-of-art (\cite{li2024_fade}, see Table 2 in paper)% FADE (84.5)
 .
 
 
@@ -239,17 +239,24 @@ argue for early fusion from empirical evidence rather than from assertion.
 \paragraph{Design Choices.}
 
 
-\noindent Addressing \R1 and \R4, we ablate data scale and architecture under a fixed 200k-iteration budget (Tab.~\ref{tab:data_arch_ablation}). 
+\noindent Addressing \R1 and \R4, we ablate data scale and architecture 
+under a 200k-iteration budget due to limited compute (Tab.~\ref{tab:data_arch_ablation}). 
 % Even 25\% data reaches 95.3 CORE and 55.6 PODS, close to the full-data model, suggesting that gains are not simply due to the scale of grounding data. To address \R1’s architectural concern, ungated and sigmoid-gated variants remain competitive, but tanh gating gives the best balance. Adding an FFN does not help, supporting our lightweight default design.
 With 25\% data, SteerViT reaches 95.3 CORE versus 43.7 for base DINOv2, capturing 51.6 of the 51.8 pp gain.
 The architecture, not data scale, drives the improvement (\R4).
 All three gating variants (row 3-6) are within ~3 pp on average, showing SteerViT is robust to the specific choice. 
-Adding an FFN does not help, supporting our lightweight default design. (\R1, GCA design)
+Adding an FFN does not help, supporting our lightweight default design. (\R1, GCA design). 
+% SteerViT inverts Flamingo's design (\R3) with a vision encoder cross-attending to a frozen text encoder, rather than a trainable LM cross-attending to a frozen vision encoder.
 % we will add in camera ready!
 
-\paragraph{Efficiency and Resource Requirements.} Based on feedback from reviewers \R1 and \R4, we measure and report efficiency of SteerViT and baselines in Tab.~\ref{tab:efficiency}. 
-SteerViT optimizes 21.2M parameters for ${\sim}$84 H100 hours.
-% we will add in camera ready!
+\paragraph{Training Objective (\R1).} The choice of segmentation training over pointing is justified in Appendix.~C.1 (+12.4 PODS). Exploring alternative pretext tasks (e.g.,\ VQA, captioning) as standalone or auxiliary tasks is left to future work.
+
+\paragraph{Efficiency and Resource Requirements.} 
+Based on feedback from reviewers \R1 and \R4, we measure and report efficiency of SteerViT and baselines in Tab.~\ref{tab:efficiency}. 
+SteerViT trains only 21.2M GCA parameters,
+% for ${\sim}$84 H100 hours.
+with the underlying ViT frozen (Tab.~\ref{tab:efficiency}), making training substantially lighter than baselines (Tab.~\ref{tab:efficiency}).
+
 
 % \section{Individual Responses}
 \paragraph{MLLM Embedding Models.}
